@@ -10,7 +10,7 @@ A subscription manager that allows users to track their subscriptions. Has a log
 Vladimir Alekseev (valekseev03): Back-End <br>
 Mason Enojo (enojom): Back-End <br>
 Gabriel Castejon (gabo0802): Front-End <br>
-Mr UF Online (<b>unknown</b>): Front-End <br>
+Matthew Denslinger (<b>unknown</b>): Front-End <br>
 
 
 ## Extra Project Ideas
