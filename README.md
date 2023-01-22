@@ -15,5 +15,5 @@ Matthew Denslinger (<b>unknown</b>) <br><br>
 Vladimir Alekseev (valekseev03) <br>
 Mason Enojo (enojom) <br>
 
-## Extra Project Ideas
+## Alternative Project Ideas
 UF Router: Bus Tracker
