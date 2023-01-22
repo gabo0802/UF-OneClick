@@ -9,7 +9,7 @@ A subscription manager that allows users to track their subscriptions in one cli
 ## Project Members
 ### Front-End
 Gabriel Castejon (gabo0802) <br>
-Matthew Denslinger (<b>unknown</b>) <br><br>
+Matthew Denslinger (mslinger) <br><br>
 
 ### Back-End
 Vladimir Alekseev (valekseev03) <br>
