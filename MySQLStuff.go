@@ -1,66 +1,19 @@
 package main
 
-/*
-//Start of Back-End
-//Might Work (haven't tested yet since can't get driver to work yet)
-
 import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
+	"strings"
 
-	"github.com/go-sql-driver/mysql" //error getting this to work
+	_ "github.com/go-sql-driver/mysql"
 )
 
-var db *sql.DB
-
-
-function getDatabaseSize(string database)(int64){
-	rows, err := db.Query("SELECT * FROM ?", database)
-	size := 0
-
-	for rows.Next(){
-		size := size + 1
-	}
-
-	return size
-}
-
-func SetUpDatabase(){
-	//Users
-	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), PRIMARY KEY(UserID));")
-
-	//Subscriptions
-	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions(UserID int NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID));")
-}
-
-func CreateNewUser(username string, password string){
-	//Create New User
-	db.Exec("INSERT INTO Users(Username, Password) VALUES (?,?)", username, password);
-
-	//Test If User Creation Worked
-}
-
-func Login(username string, password string){
-	//Try To Login
-	db.Query("SELECT ID FROM Users WHERE Username = ? AND Password = ?", username, password);
-
-	//Login Behavior
-}
-
-func Connect() {
-	//Config
-	cfg := mysql.Config{
-		User:   os.Getenv("DBUSER"),
-		Passwd: os.Getenv("DBPASS"),
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "recordings",
-	}
+func MySQLConnect() *sql.DB {
+	var db *sql.DB
 
 	//Try Connection
-	db, err := sql.Open("mysql", cfg.FormatDSN())
+	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/user")
 
 	//Test Connection
 	if err != nil {
@@ -75,34 +28,110 @@ func Connect() {
 	//Confirmation
 	fmt.Println("Connected")
 
-	//Function Code From: https://go.dev/doc/tutorial/database-access
+	return db
+	//Function Code Based From: https://go.dev/doc/tutorial/database-access
+}
+
+func getTableSize(db *sql.DB, tableName string) int {
+	sqlCode := "SELECT * FROM " + tableName + ";"
+
+	rows, err := db.Query(sqlCode)
+	size := 0
+
+	if err != nil {
+		fmt.Println("Error: Database Does Not Exist!")
+		return -1
+	}
+
+	for rows.Next() {
+		size += 1
+	}
+
+	return size
+}
+
+func SetUpTables(db *sql.DB) {
+	//Users
+	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), PRIMARY KEY(UserID));")
+
+	//Subscriptions
+	//db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions(UserID int NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID));")
+}
+
+func CreateNewUser(db *sql.DB, username string, password string) {
+	//Create New User
+	result, err := db.Exec("INSERT INTO Users(Username, Password) VALUES (?,?);", username, password)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			fmt.Println("Username Already Exists!")
+			return
+		} else {
+			log.Fatal(err)
+
+		}
+	}
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Rows Affected:", numRows)
+	//Test If User Creation Worked
+}
+
+func DeleteUser(db *sql.DB, username string, password string) {
+	result, err := db.Exec("DELETE FROM Users WHERE Username = ? AND Password = ?;", username, password)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Rows Affected:", numRows)
+}
+
+func Login(db *sql.DB, username string, password string) {
+	//Try To Login
+	rows, err := db.Query("SELECT UserID FROM Users WHERE Username = ? AND Password = ?;", username, password)
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	//Tests If Query Returns Empty Set or Not (Valid Username and Password or Not)
+	if rows.Next() {
+		fmt.Println("Login Successful!")
+
+		var CurrentUserID int
+		rows.Scan(&CurrentUserID)
+		fmt.Println(CurrentUserID)
+
+		//Login Behavior
+
+	} else {
+		fmt.Println("Incorrect Username or Password!")
+	}
 }
 
 func main() {
-	Connect()
-	SetUpDatabase()
+	//Testing
+	//db := MySQLConnect()
+	//SetUpTables(db)
+
+	//fmt.Println("Users Size:", getTableSize(db, "Users"))
+	//fmt.Println("Subscriptions Size:", getTableSize(db, "Subscriptions"))
+
+	//DeleteUser(db, "test2", "password")
+	//CreateNewUser(db, "test2", "password")
+	//Login(db, "test2", "password")
 }
-*/
 
-
-/*
-//SQL Commands
-
-CREATE TABLE IF NOT EXISTS Users (
-    UserID int NOT NULL AUTO_INCREMENT,
-	Username varchar(255) NOT NULL,
-	Password varchar(255) NOT NULL,
-
-	UNIQUE(Username),
-	PRIMARY KEY(UserID),
-);
-
-CREATE TABLE IF NOT EXISTS Subscriptions(
-	UserID int NOT NULL,
-	FOREIGN KEY(UserID) REFERENCES Users(UserID)
-)
-
-SELECT ID FROM Users WHERE Username = 'root' AND Password = 'password' //login, if empty username or password wrong, use ID to see subscriptions
-//SELECT MAX(UserID) AS LastID FROM Users //probably unnecessary since UserID has AUTO_INCREMENT
-
-*/
