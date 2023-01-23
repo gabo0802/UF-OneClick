@@ -18,10 +18,10 @@ Mason Enojo (enojom) <br>
 ## Alternative Project Ideas
 UF Router: Bus Tracker
 
-## Helpful Info
+## Helpful Info (Possibly Delete By End of Project)
 How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 1) Install MySQL: https://dev.mysql.com/downloads/installer/ 
-2) Run command in Command Prompt terminal:  go env -w GO111MODULE="off"
-3) Run command in Visual Studio Code terminal:  go get github.com/go-sql-driver/mysql
+2) Run command in Command Prompt terminal:  <b> go env -w GO111MODULE="off" </b>
+3) Run command in Visual Studio Code terminal:  <b> go get github.com/go-sql-driver/mysql </b>
 4) Run Server using MySQL Workbench
 5) Run MySQLStuff.go in Visual Studio terminal (like a normal Go program)
