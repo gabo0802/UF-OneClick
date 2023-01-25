@@ -30,3 +30,7 @@ How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 8) Run command in MySQL terminal: <b> CREATE DATABASE user;  </b>
 9) Run command in MySQL terminal (possibly optional): <b> USE user; </b>
 10) Run MySQLStuff.go in Visual Studio terminal (like a normal Go program)
+
+## Go-Angular Tutorial/Test Code
+
+* https://github.com/gabo0802/Go-AngularTest 
