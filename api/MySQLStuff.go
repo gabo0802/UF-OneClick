@@ -13,7 +13,8 @@ func MySQLConnect() *sql.DB {
 	var db *sql.DB
 
 	//Try Connection
-	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/user")
+	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
+	//db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/user")
 
 	//Test Connection
 	if err != nil {
@@ -26,6 +27,16 @@ func MySQLConnect() *sql.DB {
 	}
 
 	//Confirmation
+	fmt.Println("Connected")
+
+	db.Exec("CREATE DATABASE IF NOT EXISTS user;")
+	db.Exec("USE user;")
+	
+	pingErr = db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	
 	fmt.Println("Connected")
 
 	return db
