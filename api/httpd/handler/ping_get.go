@@ -40,10 +40,10 @@ func GetLogins(c *gin.Context) { // gin.Context parameter.
 
 func SetCredentials(c *gin.Context) {
 	combinedCredentials := c.Param("credentials")
-	newLoginCredentials := strings.Split(combinedCredentials, ";") //Usernames or Passwords cannot have special character ';'
+	splitCredentials := strings.Split(combinedCredentials, ";") //Usernames or Passwords cannot have special character ';' unless encryption used (future issue)
 
-	loginInfo[0].Username = newLoginCredentials[0]
-	loginInfo[0].Password = newLoginCredentials[1]
+	loginInfo[0].Username = splitCredentials[0]
+	loginInfo[0].Password = splitCredentials[1]
 
 	c.IndentedJSON(http.StatusOK, loginInfo)
 }
@@ -66,3 +66,20 @@ func PingGet(firstString string, secondString string) gin.HandlerFunc {
 		})
 	}
 }
+
+/*
+SQL Commands For Future Use:
+
+MySQL.ResetTables(db)
+MySQL.SetUpTables(db)
+
+fmt.Println("Users Size:", MySQL.GetTableSize(db, "Users"))
+fmt.Println("Subscriptions Size:", MySQL.GetTableSize(db, "Subscriptions"))
+
+MySQL.DeleteUser(db, "root", "password") //might not need
+MySQL.DeleteUser(db, 2)
+
+MySQL.CreateNewUser(db, "test", "testing")
+MySQL.Login(db, "root", "password")
+
+*/
