@@ -1,7 +1,9 @@
 package main
 
 import (
-	"./handler"
+	"fmt"
+
+	"./httpd/handler"
 
 	M "./MySQL"
 	"github.com/gin-gonic/gin"
@@ -24,16 +26,17 @@ func main() {
 	M.Login(db, "root", "password")
 
 	//Angular Connection:
-
-	//gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	/*api := r.Group("/api")
-	{
-		api.POST("/newsfeed", tableSize)
-	}*/
-	r.GET("/ping", handler.PingGet())
+	r.GET("/ping", handler.PingGet()) //IT WORKS!!!!!!
 
-	//r.Run()
+	/*
+		api := r.Group("/api")	{
+			api.GET("/ping", handler.PingGet())
+		}
+	*/
+
 	r.Run("0.0.0.0:5000")
+
+	fmt.Println("End")
 }
