@@ -5,30 +5,38 @@ import (
 
 	"./httpd/handler"
 
-	M "./MySQL"
+	"./httpd/handler/MySQL"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	//MySQL Connection:
-	db := M.MySQLConnect()
+	db := MySQL.MySQLConnect()
 
 	//M.ResetTables(db)
-	M.SetUpTables(db)
+	MySQL.SetUpTables(db)
 
-	//fmt.Println("Users Size:", M.GetTableSize(db, "Users"))
-	//fmt.Println("Subscriptions Size:", GetTableSize(db, "Subscriptions"))
+	//fmt.Println("Users Size:", MySQL.GetTableSize(db, "Users"))
+	//fmt.Println("Subscriptions Size:", MySQL.GetTableSize(db, "Subscriptions"))
 
-	//M.DeleteUser(db, "root", "password") //might not need
-	//M.DeleteUser(db, 2)
+	//MySQL.DeleteUser(db, "root", "password") //might not need
+	//MySQL.DeleteUser(db, 2)
 
-	//M.CreateNewUser(db, "test", "testing")
-	M.Login(db, "root", "password")
+	//MySQL.CreateNewUser(db, "test", "testing")
+	//MySQL.Login(db, "root", "password")
+
+	handler.SetDB(db)
 
 	//Angular Connection:
 	r := gin.Default()
 
-	r.GET("/ping", handler.PingGet()) //IT WORKS!!!!!!
+	//r.GET("/login", handler.PingGet("User_ID", strconv.Itoa(MySQL.Login(db, "root", "password")))) //Don't get why it's GET and not POST
+	r.GET("", handler.PingGet("Website", "*insert welcome page*"))
+	r.GET("/login", handler.GetLogins)
+	r.GET("/login/:credentials", handler.SetCredentials)
+	//r.POST("/login", handler.PostLogins)
+
+	r.GET("/subscriptions", handler.PingGet("Subscriptions", "*insert all of users subscriptions*"))
 
 	/*
 		api := r.Group("/api")	{
@@ -36,7 +44,7 @@ func main() {
 		}
 	*/
 
-	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000/ping
+	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
 
 	fmt.Println("End")
 }

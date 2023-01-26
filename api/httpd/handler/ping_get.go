@@ -1,15 +1,68 @@
 package handler
 
 import (
+	"database/sql"
 	"net/http"
+	"strings"
 
+	"./MySQL"
 	"github.com/gin-gonic/gin"
 )
 
-func PingGet() gin.HandlerFunc {
+type loginCredentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+var currentDB *sql.DB
+var currentID = -1
+var loginInfo = []loginCredentials{
+	{Username: "", Password: ""},
+}
+
+func SetDB(db *sql.DB) {
+	currentDB = db
+}
+
+func GetLogins(c *gin.Context) { // gin.Context parameter.
+	if loginInfo[0].Username != "" {
+		currentID = MySQL.Login(currentDB, loginInfo[0].Username, loginInfo[0].Password)
+
+		if currentID == -1 {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Incorrect Username or Password!"})
+		} else {
+			c.IndentedJSON(http.StatusOK, gin.H{"message": currentID})
+		}
+	} else {
+		c.IndentedJSON(http.StatusOK, gin.H{"message": "Enter Username and Password!"})
+	}
+}
+
+func SetCredentials(c *gin.Context) {
+	combinedCredentials := c.Param("credentials")
+	newLoginCredentials := strings.Split(combinedCredentials, ";") //Usernames or Passwords cannot have special character ';'
+
+	loginInfo[0].Username = newLoginCredentials[0]
+	loginInfo[0].Password = newLoginCredentials[1]
+
+	c.IndentedJSON(http.StatusOK, loginInfo)
+}
+
+/*func PostLogins(c *gin.Context) {
+	var newLogin loginCredentials
+	// To bind the received JSON to newTshirt, call BindJSON
+	if err := c.BindJSON(&newLogin); err != nil {
+		return
+	}
+	// Add the new tshirt to the slice.
+	loginInfo[0] = newLogin
+	c.IndentedJSON(http.StatusCreated, newLogin)
+}*/
+
+func PingGet(firstString string, secondString string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(http.StatusOK, map[string]string{
-			"hello": "Found me",
+			firstString: secondString,
 		})
 	}
 }
