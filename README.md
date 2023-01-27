@@ -18,7 +18,10 @@ Mason Enojo (enojom) <br>
 ## Alternative Project Ideas
 UF Router: Bus Tracker
 
-## Helpful Info (Possibly Delete By End of Project)
+## User Stories
+
+
+## Helpful Info for SQL (To Remove)
 How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 1) Install Go: https://go.dev/dl/
 2) Install MySQL: https://dev.mysql.com/downloads/installer/ 
