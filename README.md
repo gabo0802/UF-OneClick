@@ -21,7 +21,7 @@ UF Router: Bus Tracker
 ## User Stories
 As a site member, I wanta a login page so I can access the website
 
-## Helpful Info for SQL (To Remove)
+## Helpful Info for SQL (Remove in Future)
 How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 1) Install Go: https://go.dev/dl/
 2) Install MySQL: https://dev.mysql.com/downloads/installer/ 
@@ -35,7 +35,7 @@ How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 9) Run command in MySQL terminal (possibly optional): <b> USE user; </b>
 10) Run MySQLStuff.go in Visual Studio terminal (like a normal Go program)
 
-## Go-Angular Tutorial/Test Code
+## Go-Angular Tutorial/Test Code (Remove in Future)
 
 * https://github.com/gabo0802/Go-AngularTest 
 * https://www.globallogic.com/insights/blogs/develop-restful-api-with-go-and-gin/
