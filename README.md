@@ -25,7 +25,7 @@ How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 3) Run command in Command Prompt terminal:  <b> go env -w GO111MODULE="off" </b>
 4) Run command in Visual Studio Code terminal:  <b> go get github.com/go-sql-driver/mysql </b>
 5) Run Server using MySQL Workbench (one of apps installed from Step 1)
-5.1) Password when setting up should be MySQLP@ssw0rd
+5) Part 2: Password when setting up should be "MySQLP@ssw0rd"
 6) Run command in MySQL terminal: <b> \sql  </b>
 7) Run command in MySQL terminal: <b> \connect root@localhost  </b>
 8) Run command in MySQL terminal: <b> CREATE DATABASE user;  </b>
