@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"./MySQL"
+	"github.com/gabo0802/UF-OneClick/api/httpd/handler/MySQL"
 	"github.com/gin-gonic/gin"
 )
 
