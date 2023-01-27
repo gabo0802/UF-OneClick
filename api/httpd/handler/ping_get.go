@@ -29,7 +29,9 @@ func GetLogins(c *gin.Context) { // gin.Context parameter.
 		currentID = MySQL.Login(currentDB, loginInfo[0].Username, loginInfo[0].Password)
 
 		if currentID == -1 {
-			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Incorrect Username or Password!"})
+			c.IndentedJSON(http.StatusOK, gin.H{"message": "Incorrect Username or Password!"})
+		} else if currentID == -2 {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Error"})
 		} else {
 			c.IndentedJSON(http.StatusOK, gin.H{"message": currentID})
 		}
