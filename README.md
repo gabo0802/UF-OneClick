@@ -19,7 +19,7 @@ Mason Enojo (enojom) <br>
 UF Router: Bus Tracker
 
 ## User Stories
-
+As a site member, I wanta a login page so I can access the website
 
 ## Helpful Info for SQL (To Remove)
 How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
@@ -38,3 +38,4 @@ How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 ## Go-Angular Tutorial/Test Code
 
 * https://github.com/gabo0802/Go-AngularTest 
+* https://www.globallogic.com/insights/blogs/develop-restful-api-with-go-and-gin/
