@@ -13,8 +13,8 @@ func MySQLConnect() *sql.DB {
 	var db *sql.DB
 
 	//Try Connection
-	db, err := sql.Open("mysql", "remoteuser:Rem0teUser!@tcp(DESKTOP-KOPDURN:3306)/user")
-	//db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
+	//db, err := sql.Open("mysql", "remoteuser:Rem0teUser!@tcp(DESKTOP-KOPDURN:3306)/user")
+	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
 
 	//Test Connection
 	if err != nil {
