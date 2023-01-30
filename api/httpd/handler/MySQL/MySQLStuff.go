@@ -13,8 +13,8 @@ func MySQLConnect() *sql.DB {
 	var db *sql.DB
 
 	//Try Connection
-	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
-	//db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/user") //unnecessary
+	db, err := sql.Open("mysql", "remoteuser:Rem0teUser!@tcp(DESKTOP-KOPDURN:3306)/user")
+	//db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
 
 	//Test Connection
 	if err != nil {
@@ -29,7 +29,7 @@ func MySQLConnect() *sql.DB {
 	//Confirmation
 	fmt.Println("Connected")
 
-	db.Exec("CREATE DATABASE IF NOT EXISTS user;")
+	/*db.Exec("CREATE DATABASE IF NOT EXISTS user;")
 	db.Exec("USE user;")
 
 	pingErr = db.Ping()
@@ -37,7 +37,7 @@ func MySQLConnect() *sql.DB {
 		log.Fatal(pingErr)
 	}
 
-	fmt.Println("Connected")
+	fmt.Println("Connected")*/
 
 	return db
 	//Function Code Based From: https://go.dev/doc/tutorial/database-access
