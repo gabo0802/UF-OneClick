@@ -19,7 +19,7 @@ Mason Enojo (enojom) <br>
 UF Router: Bus Tracker
 
 ## User Stories
-* As a site member, I wanta a login page so I can access the website.
+* As a site member, I want a login page so I can access the website.
 * As a site member, I want a way to track the cost of each subscription I have so that I can see which subscriptions I spend the most on in a year.
 * As a site member, I want a profile page so that I can update or view my information.
 
