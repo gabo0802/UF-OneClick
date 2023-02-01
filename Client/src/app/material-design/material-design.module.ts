@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 
 //Angular Material imports
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [],
@@ -11,6 +13,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
   ],
   exports: [
     MatSlideToggleModule,
+    MatToolbarModule,
+    MatButtonModule
   ]
 })
 export class MaterialDesignModule { }
