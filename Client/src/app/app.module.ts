@@ -5,13 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialDesignModule } from './material-design/material-design.module';
+import { HeaderComponent } from './header/header.component';
 
-//Angular Material imports
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -19,7 +20,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatSlideToggleModule
+    MaterialDesignModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
