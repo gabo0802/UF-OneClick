@@ -14,7 +14,12 @@ func main() {
 	db := MySQL.MySQLConnect()
 	//MySQL.ResetTables(db)
 	MySQL.SetUpTables(db)
-	handler.SetDB(db)
+	MySQL.CreateNewUser(db, "root", "password")
+	fmt.Println("User Size:", MySQL.GetTableSize(db, "Users"))
+
+	MySQL.Login(db, "root", "password")
+
+	//handler.SetDB(db)
 
 	//Angular Connection:
 	r := gin.Default()
