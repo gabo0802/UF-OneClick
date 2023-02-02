@@ -145,7 +145,7 @@ func Login(db *sql.DB, username string, password string) int {
 
 		var CurrentUserID int
 		rows.Scan(&CurrentUserID)
-		fmt.Println(CurrentUserID)
+		fmt.Println("Current User ID:", CurrentUserID)
 
 		return CurrentUserID
 		//Login Behavior
