@@ -156,6 +156,8 @@ func Login(db *sql.DB, username string, password string) int {
 	}
 }
 
+// Can use for unit testing later on
+// Outputs database data onto the terminal
 func ShowDatabaseTables(db *sql.DB, databaseName string) {
 	db.Exec("USE " + databaseName + ";")
 	res, _ := db.Query("SHOW TABLES;")
@@ -168,7 +170,7 @@ func ShowDatabaseTables(db *sql.DB, databaseName string) {
 	}
 }
 
-func GetColumnData(db *sql.DB, databaseName string, columnName string, tableName string) {
+func GetColumnData(db *sql.DB, databaseName string, tableName string, columnName string) {
 	db.Exec("USE " + databaseName + ";")
 	sqlCode := "SELECT " + columnName + " FROM " + tableName + ";"
 

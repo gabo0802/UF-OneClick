@@ -16,12 +16,18 @@ func main() {
 	MySQL.SetUpTables(db)
 	MySQL.CreateNewUser(db, "root", "password")
 	fmt.Println("Number of rows in table:", MySQL.GetTableSize(db, "Users"))
-
 	MySQL.Login(db, "root", "password")
+
+	fmt.Println("Tables:")
 	MySQL.ShowDatabaseTables(db, "User")
-	MySQL.GetColumnData(db, "User", "UserID", "Users")
-	MySQL.GetColumnData(db, "User", "Username", "Users")
-	MySQL.GetColumnData(db, "User", "Password", "Users")
+
+	fmt.Println("Column Data:")
+	fmt.Println("UserID -")
+	MySQL.GetColumnData(db, "User", "Users", "UserID")
+	fmt.Println("Username -")
+	MySQL.GetColumnData(db, "User", "Users", "Username")
+	fmt.Println("Password -")
+	MySQL.GetColumnData(db, "User", "Users", "Password")
 
 	//handler.SetDB(db)
 
