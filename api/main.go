@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler"
-
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler/MySQL"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,9 +15,19 @@ func main() {
 	//MySQL.ResetTables(db)
 	MySQL.SetUpTables(db)
 	MySQL.CreateNewUser(db, "root", "password")
-	fmt.Println("User Size:", MySQL.GetTableSize(db, "Users"))
-
+	fmt.Println("Number of rows in table:", MySQL.GetTableSize(db, "Users"))
 	MySQL.Login(db, "root", "password")
+
+	fmt.Println("Tables:")
+	MySQL.ShowDatabaseTables(db, "User")
+
+	fmt.Println("Column Data:")
+	fmt.Println("UserID -")
+	MySQL.GetColumnData(db, "User", "Users", "UserID")
+	fmt.Println("Username -")
+	MySQL.GetColumnData(db, "User", "Users", "Username")
+	fmt.Println("Password -")
+	MySQL.GetColumnData(db, "User", "Users", "Password")
 
 	//handler.SetDB(db)
 

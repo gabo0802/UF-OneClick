@@ -29,7 +29,7 @@ func MySQLConnect() *sql.DB {
 	//Confirmation
 	fmt.Println("Connected")
 
-	/*db.Exec("CREATE DATABASE IF NOT EXISTS user;")
+	db.Exec("CREATE DATABASE IF NOT EXISTS user;")
 	db.Exec("USE user;")
 
 	pingErr = db.Ping()
@@ -37,7 +37,7 @@ func MySQLConnect() *sql.DB {
 		log.Fatal(pingErr)
 	}
 
-	fmt.Println("Connected")*/
+	//fmt.Println("Connected")
 
 	return db
 	//Function Code Based From: https://go.dev/doc/tutorial/database-access
@@ -66,7 +66,7 @@ func SetUpTables(db *sql.DB) {
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), PRIMARY KEY(UserID));")
 
 	//Subscriptions
-	//db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions(UserID int NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID));") //update for necessary parameters
+	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions(UserID int NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID));") //update for necessary parameters
 }
 
 func ResetTables(db *sql.DB) {
@@ -153,5 +153,33 @@ func Login(db *sql.DB, username string, password string) int {
 	} else {
 		fmt.Println("Incorrect Username or Password!")
 		return -1
+	}
+}
+
+// Can use for unit testing later on
+// Outputs database data onto the terminal
+func ShowDatabaseTables(db *sql.DB, databaseName string) {
+	db.Exec("USE " + databaseName + ";")
+	res, _ := db.Query("SHOW TABLES;")
+
+	var table string
+
+	for res.Next() {
+		res.Scan(&table)
+		fmt.Println(table)
+	}
+}
+
+func GetColumnData(db *sql.DB, databaseName string, tableName string, columnName string) {
+	db.Exec("USE " + databaseName + ";")
+	sqlCode := "SELECT " + columnName + " FROM " + tableName + ";"
+
+	rows, _ := db.Query(sqlCode)
+
+	var singleRow string
+
+	for rows.Next() {
+		rows.Scan(&singleRow)
+		fmt.Println(singleRow)
 	}
 }
