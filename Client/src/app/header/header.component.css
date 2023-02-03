@@ -1,7 +1,17 @@
+
 .example-spacer {
     flex: 1 1 auto;
 }
 
 .divider {
     width: 7px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-button {
+    border-radius: 4px;
 }

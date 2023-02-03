@@ -1,3 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+html, body { 
+  height: 100%; 
+  scroll-behavior: smooth;
+}
+body { 
+  
+}
+
+:root {
+  --UF-Orange: #fa4616;
+  --UF-Blue: #0021a5;
+  --UF-BottleBrush: #D32737;
+}
+
+/* For phones */
+@media (min-width: 576px) {
+
+}
+/* For Tablets */
+@media (min-width: 750px) {
+
+}
+/* For Laptops / Smaller Computers */
+@media (min-width: 990px) {
+
+}
+/* For larger Computers */
+@media (min-width: 1200px) {
+
+}
