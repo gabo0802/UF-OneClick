@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from './material-design/material-design.module';
 import { HeaderComponent } from './header/header.component';
+import { MatCardModule } from '@angular/material/card';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { HeaderComponent } from './header/header.component';
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialDesignModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
