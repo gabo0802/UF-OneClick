@@ -10,6 +10,7 @@
 .header {
     display: flex;
     justify-content: space-between;
+    color:"primary";
 }
 
 .header-button {
