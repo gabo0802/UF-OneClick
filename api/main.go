@@ -14,20 +14,21 @@ func main() {
 	db := MySQL.MySQLConnect()
 	//MySQL.ResetTables(db)
 	MySQL.SetUpTables(db)
+
 	MySQL.CreateNewUser(db, "root", "password")
 	fmt.Println("Number of rows in table:", MySQL.GetTableSize(db, "Users"))
 	MySQL.Login(db, "root", "password")
 
 	fmt.Println("Tables:")
-	MySQL.ShowDatabaseTables(db, "User")
+	MySQL.ShowDatabaseTables(db, "userdb")
 
 	fmt.Println("Column Data:")
 	fmt.Println("UserID -")
-	MySQL.GetColumnData(db, "User", "Users", "UserID")
+	MySQL.GetColumnData(db, "userdb", "Users", "UserID")
 	fmt.Println("Username -")
-	MySQL.GetColumnData(db, "User", "Users", "Username")
+	MySQL.GetColumnData(db, "userdb", "Users", "Username")
 	fmt.Println("Password -")
-	MySQL.GetColumnData(db, "User", "Users", "Password")
+	MySQL.GetColumnData(db, "userdb", "Users", "Password")
 
 	//handler.SetDB(db)
 
