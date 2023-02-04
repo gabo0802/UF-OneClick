@@ -30,7 +30,7 @@ func main() {
 	fmt.Println("Password -")
 	MySQL.GetColumnData(db, "userdb", "Users", "Password")
 
-	//Sets pointer in "handler" function to main.go's db
+	//Sets pointer in "handler" package to main.go's db
 	handler.SetDB(db)
 
 	//Angular Connection:
