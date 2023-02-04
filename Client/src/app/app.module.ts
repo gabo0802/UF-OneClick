@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from './material-design/material-design.module';
 import { HeaderComponent } from './header/header.component';
-import { MatCardModule } from '@angular/material/card';
+
 
 
 @NgModule({
@@ -21,8 +21,7 @@ import { MatCardModule } from '@angular/material/card';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MaterialDesignModule,
-    MatCardModule
+    MaterialDesignModule
   ],
   providers: [],
   bootstrap: [AppComponent]
