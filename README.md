@@ -42,6 +42,11 @@ How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 9) Run command in MySQL terminal (possibly optional): <b> USE user; </b>
 10) Run MySQLStuff.go in Visual Studio terminal (like a normal Go program)
 
+Access MySQL Database:
+* (For Windows): mysql.exe -h oneclickserver.mysql.database.azure.com -u adminUser -p
+* (For Mac): /usr/local/mysql/bin/mysql -h oneclickserver.mysql.database.azure.com -u adminUser -p
+* Password: MySQLP@ssw0rd
+
 ## Go-Angular Tutorial/Test Code (Remove in Future)
 
 * https://github.com/gabo0802/Go-AngularTest 
