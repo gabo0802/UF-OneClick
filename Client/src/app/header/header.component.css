@@ -15,3 +15,8 @@
 .header-button {
     border-radius: 4px;
 }
+
+.logo {
+    height: 45px;
+    margin-right: 10px;
+}
