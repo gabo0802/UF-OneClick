@@ -9,39 +9,100 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+const (
+	host     = "oneclickserver.mysql.database.azure.com"
+	database = "userdb"
+	user     = "adminUser"
+	password = "MySQLP@ssw0rd"
+)
+
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
 func MySQLConnect() *sql.DB {
 	var db *sql.DB
 
-	//Try Connection
-	//db, err := sql.Open("mysql", "remoteuser:Rem0teUser!@tcp(DESKTOP-KOPDURN:3306)/user")
-	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
+	//Connect to remote server using Microsoft Azure
+	// Initialize connection string
+	var connectionString = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?allowNativePasswords=true", user, password, host, database)
 
-	//Test Connection
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Initialize connection object
+	db, err := sql.Open("mysql", connectionString)
+	checkError(err)
+	//defer db.Close()
 
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
-	}
+	err = db.Ping()
+	checkError(err)
+	fmt.Println("Successfully created connection to database.")
+	// Drop previous table of same name if one exists.
+	_, err = db.Exec("DROP TABLE IF EXISTS inventory;")
+	checkError(err)
+	fmt.Println("Finished dropping table (if existed).")
 
-	//Confirmation
-	fmt.Println("Connected")
+	// Create table.
+	_, err = db.Exec("CREATE TABLE inventory (id serial PRIMARY KEY, name VARCHAR(50), quantity INTEGER);")
+	checkError(err)
+	fmt.Println("Finished creating table.")
 
-	db.Exec("CREATE DATABASE IF NOT EXISTS user;")
-	db.Exec("USE user;")
+	// Insert some data into table.
+	/*
+		sqlStatement, err := db.Prepare("INSERT INTO inventory (name, quantity) VALUES (?, ?);")
+		res, err := sqlStatement.Exec("banana", 150)
+		checkError(err)
+		rowCount, err := res.RowsAffected()
+		fmt.Printf("Inserted %d row(s) of data.\n", rowCount)
 
-	pingErr = db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
-	}
+		res, err = sqlStatement.Exec("orange", 154)
+		checkError(err)
+		rowCount, err = res.RowsAffected()
+		fmt.Printf("Inserted %d row(s) of data.\n", rowCount)
 
-	//fmt.Println("Connected")
+		res, err = sqlStatement.Exec("apple", 100)
+		checkError(err)
+		rowCount, err = res.RowsAffected()
+		fmt.Printf("Inserted %d row(s) of data.\n", rowCount)
+		fmt.Println("Done.")
+	*/
 
 	return db
-	//Function Code Based From: https://go.dev/doc/tutorial/database-access
 }
+
+// func MySQLConnect() *sql.DB {
+// 	var db *sql.DB
+
+// 	//Try Connection
+// 	//db, err := sql.Open("mysql", "remoteuser:Rem0teUser!@tcp(DESKTOP-KOPDURN:3306)/user")
+// 	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
+
+// 		//Test Connection
+// 		if err != nil {
+// 			log.Fatal(err)
+// 		}
+
+// 		pingErr := db.Ping()
+// 		if pingErr != nil {
+// 			log.Fatal(pingErr)
+// 		}
+
+// 		//Confirmation
+// 		fmt.Println("Connected")
+
+// 	db.Exec("CREATE DATABASE IF NOT EXISTS user;")
+// 	db.Exec("USE user;")
+
+// 	/*pingErr = db.Ping()
+// 	if pingErr != nil {
+// 		log.Fatal(pingErr)
+// 	}*/
+
+// 	//fmt.Println("Connected")
+
+// 	return db
+// 	//Function Code Based From: https://go.dev/doc/tutorial/database-access
+// }
 
 func GetTableSize(db *sql.DB, tableName string) int {
 	sqlCode := "SELECT * FROM " + tableName + ";"
