@@ -15,13 +15,18 @@ Matthew Denslinger (mslinger) <br><br>
 Vladimir Alekseev (valekseev03) <br>
 Mason Enojo (enojom) <br>
 
-## Alternative Project Ideas
-UF Router: Bus Tracker
-
 ## User Stories
 * As a site member, I want a login page so I can access the website.
 * As a site member, I want a way to track the cost of each subscription I have so that I can see which subscriptions I spend the most on in a year.
 * As a site member, I want a profile page so that I can update or view my information.
+* As a site visitor, I want a sign up page so that I can become a site member
+
+## Project Setup
+1) Install the go programming language https://go.dev/dl/
+2) Install Node.js https://nodejs.org/
+3) Install Angular via the command line <code>npm install -g @angular/cli</code>
+
+
 
 ## Helpful Info for SQL (Remove in Future)
 How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
