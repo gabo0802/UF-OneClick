@@ -7,7 +7,12 @@
 * As a site visitor, I want a sign up page so that I can become a site member
 
 ## Initial Plans
+* Create Login Page
+* Create Website
+* Create Profile Page
+* Create Sign Up Page
 
 ## Accomplishments
 
 ## What didn't work
+* Ran out of time to implement other features
