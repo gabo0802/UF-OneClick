@@ -32,7 +32,7 @@ func MySQLConnect() *sql.DB {
 	// Initialize connection object
 	db, err := sql.Open("mysql", connectionString)
 	checkError(err)
-	//defer db.Close()
+	//defer db.Close() (makes code not run)
 
 	err = db.Ping()
 	checkError(err)
@@ -66,43 +66,10 @@ func MySQLConnect() *sql.DB {
 		fmt.Printf("Inserted %d row(s) of data.\n", rowCount)
 		fmt.Println("Done.")
 	*/
+	//Function code based on https://learn.microsoft.com/en-us/azure/mysql/single-server/connect-go
 
 	return db
 }
-
-// func MySQLConnect() *sql.DB {
-// 	var db *sql.DB
-
-// 	//Try Connection
-// 	//db, err := sql.Open("mysql", "remoteuser:Rem0teUser!@tcp(DESKTOP-KOPDURN:3306)/user")
-// 	db, err := sql.Open("mysql", "root:MySQLP@ssw0rd@tcp(127.0.0.1:3306)/sys")
-
-// 		//Test Connection
-// 		if err != nil {
-// 			log.Fatal(err)
-// 		}
-
-// 		pingErr := db.Ping()
-// 		if pingErr != nil {
-// 			log.Fatal(pingErr)
-// 		}
-
-// 		//Confirmation
-// 		fmt.Println("Connected")
-
-// 	db.Exec("CREATE DATABASE IF NOT EXISTS user;")
-// 	db.Exec("USE user;")
-
-// 	/*pingErr = db.Ping()
-// 	if pingErr != nil {
-// 		log.Fatal(pingErr)
-// 	}*/
-
-// 	//fmt.Println("Connected")
-
-// 	return db
-// 	//Function Code Based From: https://go.dev/doc/tutorial/database-access
-// }
 
 func GetTableSize(db *sql.DB, tableName string) int {
 	sqlCode := "SELECT * FROM " + tableName + ";"
@@ -159,6 +126,7 @@ func CreateNewUser(db *sql.DB, username string, password string) {
 	//Test If User Creation Worked
 }
 
+// Deletes entry based on username and password from MySQL table called "Users"
 /*func DeleteUser(db *sql.DB, username string, password string) {
 	result, err := db.Exec("DELETE FROM Users WHERE Username = ? AND Password = ?;", username, password)
 
@@ -175,6 +143,7 @@ func CreateNewUser(db *sql.DB, username string, password string) {
 	fmt.Println("Rows Affected:", numRows)
 }*/
 
+// Deletes entry based on UserID from MySQL table called "Users"
 func DeleteUser(db *sql.DB, ID int) {
 	result, err := db.Exec("DELETE FROM Users WHERE UserID = ?;", ID)
 
@@ -191,6 +160,9 @@ func DeleteUser(db *sql.DB, ID int) {
 	fmt.Println("Rows Affected:", numRows)
 }
 
+// Selects entry from database "Users" based on username and password
+// Returns UserID or -1 when current user does not exist
+// Returns -2 if there is an error with database connection
 func Login(db *sql.DB, username string, password string) int {
 	//Try To Login
 	rows, err := db.Query("SELECT UserID FROM Users WHERE Username = ? AND Password = ?;", username, password)
