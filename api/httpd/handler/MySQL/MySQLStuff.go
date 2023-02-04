@@ -37,35 +37,6 @@ func MySQLConnect() *sql.DB {
 	err = db.Ping()
 	checkError(err)
 	fmt.Println("Successfully created connection to database.")
-	// Drop previous table of same name if one exists.
-	_, err = db.Exec("DROP TABLE IF EXISTS inventory;")
-	checkError(err)
-	fmt.Println("Finished dropping table (if existed).")
-
-	// Create table.
-	_, err = db.Exec("CREATE TABLE inventory (id serial PRIMARY KEY, name VARCHAR(50), quantity INTEGER);")
-	checkError(err)
-	fmt.Println("Finished creating table.")
-
-	// Insert some data into table.
-	/*
-		sqlStatement, err := db.Prepare("INSERT INTO inventory (name, quantity) VALUES (?, ?);")
-		res, err := sqlStatement.Exec("banana", 150)
-		checkError(err)
-		rowCount, err := res.RowsAffected()
-		fmt.Printf("Inserted %d row(s) of data.\n", rowCount)
-
-		res, err = sqlStatement.Exec("orange", 154)
-		checkError(err)
-		rowCount, err = res.RowsAffected()
-		fmt.Printf("Inserted %d row(s) of data.\n", rowCount)
-
-		res, err = sqlStatement.Exec("apple", 100)
-		checkError(err)
-		rowCount, err = res.RowsAffected()
-		fmt.Printf("Inserted %d row(s) of data.\n", rowCount)
-		fmt.Println("Done.")
-	*/
 	//Function code based on https://learn.microsoft.com/en-us/azure/mysql/single-server/connect-go
 
 	return db
@@ -97,7 +68,11 @@ func SetUpTables(db *sql.DB) {
 	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions(UserID int NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID));") //update for necessary parameters
 }
 
-func ResetTables(db *sql.DB) {
+func ResetTable(db *sql.DB, tableName string) {
+	db.Exec("DROP TABLE IF EXISTS " + tableName)
+}
+
+func ResetAllTables(db *sql.DB) {
 	db.Exec("DROP TABLE IF EXISTS Users;")
 	db.Exec("DROP TABLE IF EXISTS Subscriptions;")
 }
@@ -128,19 +103,19 @@ func CreateNewUser(db *sql.DB, username string, password string) {
 
 // Deletes entry based on username and password from MySQL table called "Users"
 /*func DeleteUser(db *sql.DB, username string, password string) {
-	result, err := db.Exec("DELETE FROM Users WHERE Username = ? AND Password = ?;", username, password)
+    result, err := db.Exec("DELETE FROM Users WHERE Username = ? AND Password = ?;", username, password)
 
-	if err != nil {
-		log.Fatal(err)
-	}
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	numRows, err := result.RowsAffected()
+    numRows, err := result.RowsAffected()
 
-	if err != nil {
-		log.Fatal(err)
-	}
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	fmt.Println("Rows Affected:", numRows)
+    fmt.Println("Rows Affected:", numRows)
 }*/
 
 // Deletes entry based on UserID from MySQL table called "Users"
