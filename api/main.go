@@ -16,11 +16,15 @@ func main() {
 	defer db.Close()
 
 	MySQL.ResetAllTables(db)
-	//MySQL.SetUpTables(db)
+	MySQL.SetUpTables(db)
 
-	//MySQL.CreateNewUser(db, "root", "password")
-	//MySQL.CreateNewSub(db, "Netflix", "10.99")
-	//MySQL.CreateNewUserSub(db, "root", "Netflix")
+	MySQL.CreateNewUser(db, "root", "password")
+	MySQL.CreateNewSub(db, "Netflix", "10.99")
+	MySQL.CreateNewUserSub(db, "root", "Netflix")
+
+	MySQL.CreateNewUser(db, "root2", "password2")
+	MySQL.CreateNewSub(db, "Netflix2", "10.99")
+	MySQL.CreateNewUserSub(db, "root2", "Netflix2")
 
 	//Sets pointer in "handler" package to main.go's db
 	handler.SetDB(db)

@@ -102,7 +102,7 @@ func CreateNewUser(db *sql.DB, username string, password string) {
 	}
 
 	fmt.Println("Rows Affected:", numRows)
-	//Test If User Creation Worked
+	//Test If User Creation Worked (can remove later)
 }
 
 func CreateNewSub(db *sql.DB, name string, price string) {
@@ -119,6 +119,7 @@ func CreateNewSub(db *sql.DB, name string, price string) {
 		}
 	}
 
+	//Tests to see if function worked (can remove later)
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
@@ -171,7 +172,8 @@ func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
 		//fmt.Println("User ID:", CurrentUserID)
 
 	} else {
-		fmt.Println("Incorrect Username")
+		fmt.Println("Username is Invalid")
+		return
 	}
 
 	//Gets the SubID from Subscriptions table
@@ -188,7 +190,8 @@ func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
 		//fmt.Println("Sub ID:", CurrentSubID)
 
 	} else {
-		fmt.Println("Incorrect Subscription Name")
+		fmt.Println("Subscription Name is Invalid")
+		return
 	}
 
 	//Checks to see if sub was already added to user before creating a new table value
@@ -200,6 +203,7 @@ func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
 	//Create New UserSub Data
 	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", CurrentUserID, CurrentSubID, currentTime)
 
+	//Tests to see if function worked (can remove later)
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
@@ -208,6 +212,8 @@ func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
 
 	fmt.Println("Rows Affected:", numRows)
 }
+
+//TODO: Add a way to remove a subscription linked to a user and add it to the DateRemoved column
 
 // Deletes entry based on username and password from MySQL table called "Users"
 /*func DeleteUser(db *sql.DB, username string, password string) {
