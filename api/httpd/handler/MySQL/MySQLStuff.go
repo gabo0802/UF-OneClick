@@ -65,7 +65,10 @@ func SetUpTables(db *sql.DB) {
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), PRIMARY KEY(UserID));")
 
 	//Subscriptions
-	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions(UserID int NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID));") //update for necessary parameters
+	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price varchar(255) NOT NULL, PRIMARY KEY(SubID));")
+
+	//User Subscriptions
+	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
 }
 
 func ResetTable(db *sql.DB, tableName string) {
