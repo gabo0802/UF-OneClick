@@ -111,7 +111,7 @@ func CreateNewSub(db *sql.DB, name string, price string) {
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
-			fmt.Println("Service Name Already Exists!")
+			fmt.Println("Subscription Name Already Exists!")
 			return
 		} else {
 			log.Fatal(err)
@@ -126,6 +126,27 @@ func CreateNewSub(db *sql.DB, name string, price string) {
 	}
 
 	fmt.Println("Rows Affected:", numRows)
+}
+
+func AlreadyAddedUserSub(db *sql.DB, userID int) bool {
+	rows, err := db.Query("SELECT SubID FROM UserSubs WHERE UserID = ?", userID)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	size := 0
+	//while loop that continues counting the number of rows in the SubID column that are associated with the inputted UserID
+	for rows.Next() {
+		size += 1
+	}
+
+	//Size of 1 or more means that the subscription is already associated with the user
+	if size >= 1 {
+		return true
+	} else {
+		return false
+	}
 }
 
 func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
@@ -147,7 +168,7 @@ func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
 	if user_name.Next() {
 		//Gets the UserID
 		user_name.Scan(&CurrentUserID)
-		fmt.Println("User ID:", CurrentUserID)
+		//fmt.Println("User ID:", CurrentUserID)
 
 	} else {
 		fmt.Println("Incorrect Username")
@@ -164,16 +185,20 @@ func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
 	if sub_name.Next() {
 		//Gets the SubID
 		user_name.Scan(&CurrentSubID)
-		fmt.Println("Sub ID:", CurrentSubID)
+		//fmt.Println("Sub ID:", CurrentSubID)
 
 	} else {
 		fmt.Println("Incorrect Subscription Name")
 	}
 
+	//Checks to see if sub was already added to user before creating a new table value
+	if AlreadyAddedUserSub(db, CurrentUserID) {
+		fmt.Println("Subscription already added to User's Profile!")
+		return
+	}
+
 	//Create New UserSub Data
 	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", CurrentUserID, CurrentSubID, currentTime)
-	//Can have multiple subscriptions to the same service, so no need to check for duplicates
-	//Ex. Different emails can be associated with different accounts
 
 	numRows, err := result.RowsAffected()
 

@@ -15,12 +15,12 @@ func main() {
 	//Defers the closing of the connection to the database until the end of main
 	defer db.Close()
 
-	//MySQL.ResetAllTables(db)
-	MySQL.SetUpTables(db)
+	MySQL.ResetAllTables(db)
+	//MySQL.SetUpTables(db)
 
-	MySQL.CreateNewUser(db, "root", "password")
-	MySQL.CreateNewSub(db, "Netflix", "10.99")
-	MySQL.CreateNewUserSub(db, "root", "Netflix")
+	//MySQL.CreateNewUser(db, "root", "password")
+	//MySQL.CreateNewSub(db, "Netflix", "10.99")
+	//MySQL.CreateNewUserSub(db, "root", "Netflix")
 
 	//Sets pointer in "handler" package to main.go's db
 	handler.SetDB(db)
