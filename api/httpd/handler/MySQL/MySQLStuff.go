@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -32,7 +33,6 @@ func MySQLConnect() *sql.DB {
 	// Initialize connection object
 	db, err := sql.Open("mysql", connectionString)
 	checkError(err)
-	//defer db.Close() (makes code not run)
 
 	err = db.Ping()
 	checkError(err)
@@ -64,10 +64,10 @@ func SetUpTables(db *sql.DB) {
 	//Users
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), PRIMARY KEY(UserID));")
 
-	//Subscriptions
-	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price varchar(255) NOT NULL, PRIMARY KEY(SubID));")
+	//All available subscriptions
+	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price varchar(255) NOT NULL, UNIQUE(Name), PRIMARY KEY(SubID));")
 
-	//User Subscriptions
+	//Individual user subscriptions
 	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
 }
 
@@ -78,6 +78,7 @@ func ResetTable(db *sql.DB, tableName string) {
 func ResetAllTables(db *sql.DB) {
 	db.Exec("DROP TABLE IF EXISTS Users;")
 	db.Exec("DROP TABLE IF EXISTS Subscriptions;")
+	db.Exec("DROP TABLE IF EXISTS UserSubs;")
 }
 
 func CreateNewUser(db *sql.DB, username string, password string) {
@@ -102,6 +103,85 @@ func CreateNewUser(db *sql.DB, username string, password string) {
 
 	fmt.Println("Rows Affected:", numRows)
 	//Test If User Creation Worked
+}
+
+func CreateNewSub(db *sql.DB, name string, price string) {
+	//Create New Subscription
+	result, err := db.Exec("INSERT INTO Subscriptions(name, price) VALUES (?,?);", name, price)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			fmt.Println("Service Name Already Exists!")
+			return
+		} else {
+			log.Fatal(err)
+
+		}
+	}
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Rows Affected:", numRows)
+}
+
+func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
+	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
+	currentTime := time.Now()
+	currentTime.Format("2006-01-02 15:04:05")
+
+	var CurrentUserID int
+	var CurrentSubID int
+
+	//Gets the UserID from the Users table
+	user_name, err := db.Query("SELECT UserID FROM Users WHERE Username = ?", userName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//Checks If Query Returns Empty Set or if the Username exists
+	if user_name.Next() {
+		//Gets the UserID
+		user_name.Scan(&CurrentUserID)
+		fmt.Println("User ID:", CurrentUserID)
+
+	} else {
+		fmt.Println("Incorrect Username")
+	}
+
+	//Gets the SubID from Subscriptions table
+	sub_name, err := db.Query("SELECT SubID FROM Subscriptions WHERE Name = ?", subscriptionName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//Checks If Query Returns Empty Set or if the Subscription Name exists
+	if sub_name.Next() {
+		//Gets the SubID
+		user_name.Scan(&CurrentSubID)
+		fmt.Println("Sub ID:", CurrentSubID)
+
+	} else {
+		fmt.Println("Incorrect Subscription Name")
+	}
+
+	//Create New UserSub Data
+	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", CurrentUserID, CurrentSubID, currentTime)
+	//Can have multiple subscriptions to the same service, so no need to check for duplicates
+	//Ex. Different emails can be associated with different accounts
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Rows Affected:", numRows)
 }
 
 // Deletes entry based on username and password from MySQL table called "Users"

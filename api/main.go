@@ -10,25 +10,17 @@ import (
 )
 
 func main() {
-	//MySQL Connection:
+	//Establishes a connection to the remote MySQL server's database
 	db := MySQL.MySQLConnect()
-	MySQL.ResetAllTables(db)
+	//Defers the closing of the connection to the database until the end of main
+	defer db.Close()
+
+	//MySQL.ResetAllTables(db)
 	MySQL.SetUpTables(db)
 
 	MySQL.CreateNewUser(db, "root", "password")
-	fmt.Println("Number of rows in table:", MySQL.GetTableSize(db, "Users"))
-	MySQL.Login(db, "root", "password")
-
-	fmt.Println("Tables:")
-	MySQL.ShowDatabaseTables(db, "userdb")
-
-	fmt.Println("Column Data:")
-	fmt.Println("UserID -")
-	MySQL.GetColumnData(db, "userdb", "Users", "UserID")
-	fmt.Println("Username -")
-	MySQL.GetColumnData(db, "userdb", "Users", "Username")
-	fmt.Println("Password -")
-	MySQL.GetColumnData(db, "userdb", "Users", "Password")
+	MySQL.CreateNewSub(db, "Netflix", "10.99")
+	MySQL.CreateNewUserSub(db, "root", "Netflix")
 
 	//Sets pointer in "handler" package to main.go's db
 	handler.SetDB(db)
