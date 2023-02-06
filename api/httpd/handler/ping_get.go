@@ -39,14 +39,14 @@ func GetLogins(c *gin.Context) { // gin.Context parameter.
 		currentID = MySQL.Login(currentDB, loginInfo[0].Username, loginInfo[0].Password)
 
 		if currentID == -1 {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "Incorrect Username or Password!"})
+			c.JSON(http.StatusOK, gin.H{"message": "Incorrect Username or Password!"})
 		} else if currentID == -2 {
-			c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Error"})
+			c.JSON(http.StatusNotFound, gin.H{"message": "Error"})
 		} else {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": currentID})
+			c.JSON(http.StatusOK, gin.H{"message": currentID})
 		}
 	} else {
-		c.IndentedJSON(http.StatusOK, gin.H{"message": "Enter Username and Password!"})
+		c.JSON(http.StatusOK, gin.H{"message": "Enter Username and Password!"})
 	}
 
 	loginInfo = []loginCredentials{
@@ -59,15 +59,15 @@ func NewUser(c *gin.Context) {
 		rowsAffected := MySQL.CreateNewUser(currentDB, loginInfo[0].Username, loginInfo[0].Password)
 
 		if rowsAffected == 0 {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "Error: Username Already Exists!"})
+			c.JSON(http.StatusOK, gin.H{"message": "Error: Username Already Exists!"})
 		} else if rowsAffected == -1 {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "Error"})
+			c.JSON(http.StatusOK, gin.H{"message": "Error"})
 		} else {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "New User Created!"})
+			c.JSON(http.StatusOK, gin.H{"message": "New User Created!"})
 		}
 
 	} else {
-		c.IndentedJSON(http.StatusOK, gin.H{"message": "Create New User!"})
+		c.JSON(http.StatusOK, gin.H{"message": "Create New User!"})
 	}
 
 	loginInfo = []loginCredentials{
@@ -81,18 +81,18 @@ func ChangePass(c *gin.Context) {
 			rowsAffected := MySQL.ChangePassword(currentDB, currentID, loginInfo[0].Username, loginInfo[0].Password)
 
 			if rowsAffected == 0 {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Error: Wrong Username or Password!"})
+				c.JSON(http.StatusOK, gin.H{"message": "Error: Wrong Username or Password!"})
 			} else if rowsAffected == -1 {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Error"})
+				c.JSON(http.StatusOK, gin.H{"message": "Error"})
 			} else {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Password Changed!"})
+				c.JSON(http.StatusOK, gin.H{"message": "Password Changed!"})
 			}
 		} else {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "Enter Old Password and New Password!"})
+			c.JSON(http.StatusOK, gin.H{"message": "Enter Old Password and New Password!"})
 		}
 
 	} else {
-		c.IndentedJSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
 	}
 
 	loginInfo = []loginCredentials{
@@ -112,7 +112,7 @@ func SetCredentials(c *gin.Context) {
 		loginInfo[0].Password = ""
 	}
 
-	c.IndentedJSON(http.StatusOK, loginInfo)
+	c.JSON(http.StatusOK, loginInfo)
 }
 
 func GetAllUserSubs(c *gin.Context) {
@@ -123,7 +123,7 @@ func GetAllUserSubs(c *gin.Context) {
 		//can order by anything
 
 		if err != nil {
-			c.IndentedJSON(http.StatusBadGateway, gin.H{"message": "Error"})
+			c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
 		}
 
 		for rows.Next() {
@@ -135,7 +135,7 @@ func GetAllUserSubs(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, usersubInfo)
 
 	} else {
-		c.IndentedJSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
 	}
 
 }
@@ -146,19 +146,45 @@ func NewUserSub(c *gin.Context) {
 			rowsAffected := MySQL.CreateNewUserSub(currentDB, currentID, loginInfo[0].Username)
 
 			if rowsAffected == 0 {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Already Active!"})
+				c.JSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Already Active!"})
 			} else if rowsAffected == -1 {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Error"})
+				c.JSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Already Active!"})
+			} else if rowsAffected == -2 {
+				c.JSON(http.StatusOK, gin.H{"message": "Error"})
 			} else if rowsAffected > 1 {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Renewed!"})
+				c.JSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Renewed!"})
 			} else {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Added!"})
+				c.JSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Added!"})
 			}
 		} else {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "Choose Subscription to Add or Renew!"})
+			c.JSON(http.StatusOK, gin.H{"message": "Choose Subscription to Add or Renew!"})
 		}
 	} else {
-		c.IndentedJSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
+	}
+
+	loginInfo = []loginCredentials{
+		{Username: "", Password: ""},
+	}
+}
+
+func NewSub(c *gin.Context) {
+	if currentID != -1 {
+		if loginInfo[0].Username != "" {
+			rowsAffected := MySQL.CreateNewSub(currentDB, loginInfo[0].Username, loginInfo[0].Password)
+
+			if rowsAffected == 0 {
+				c.JSON(http.StatusOK, gin.H{"message": "Error: Subscription to " + loginInfo[0].Username + " Already Exists!"})
+			} else if rowsAffected == -1 {
+				c.JSON(http.StatusOK, gin.H{"message": "Error"})
+			} else {
+				c.JSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Created!"})
+			}
+		} else {
+			c.JSON(http.StatusOK, gin.H{"message": "Enter Name and Pricing of New Subscription!"})
+		}
+	} else {
+		c.JSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
 	}
 
 	loginInfo = []loginCredentials{
@@ -172,17 +198,17 @@ func CancelSub(c *gin.Context) {
 			rowsAffected := MySQL.CancelUserSub(currentDB, currentID, loginInfo[0].Username)
 
 			if rowsAffected == 0 {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Error: Subscription to " + loginInfo[0].Username + " Does Not Exist!"})
+				c.JSON(http.StatusOK, gin.H{"message": "Error: Subscription to " + loginInfo[0].Username + " Does Not Exist!"})
 			} else if rowsAffected == -1 {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Error"})
+				c.JSON(http.StatusOK, gin.H{"message": "Error"})
 			} else {
-				c.IndentedJSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Canceled!"})
+				c.JSON(http.StatusOK, gin.H{"message": "Subscription to " + loginInfo[0].Username + " Canceled!"})
 			}
 		} else {
-			c.IndentedJSON(http.StatusOK, gin.H{"message": "Choose Subscription to Cancel!"})
+			c.JSON(http.StatusOK, gin.H{"message": "Choose Subscription to Cancel!"})
 		}
 	} else {
-		c.IndentedJSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "Error: You Should Not Be Here"})
 	}
 
 	loginInfo = []loginCredentials{

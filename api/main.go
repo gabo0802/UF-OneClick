@@ -41,6 +41,9 @@ func main() {
 
 		api.GET("/subscriptions", handler.GetAllUserSubs)
 
+		api.GET("/subscriptions/createsubscription", handler.NewSub)
+		api.GET("/subscriptions/createsubscription/:credentials", handler.SetCredentials)
+
 		api.GET("/subscriptions/addsubscription", handler.NewUserSub)
 		api.GET("/subscriptions/addsubscription/:credentials", handler.SetCredentials)
 
