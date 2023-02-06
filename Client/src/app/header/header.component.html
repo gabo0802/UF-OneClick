@@ -1,13 +1,44 @@
 
 
 <mat-toolbar class="header" color="primary">
-   <img class="logo" src="../../assets/oneclick-logo-files/png/oneclick-high-resolution-logo-black-on-transparent-background.png">
-    <span class="example-spacer"></span>
-    <button class="header-button" mat-raised-button color="accent">
+    
+    <span class="navigation nav-b">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>list</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>sentiment_satisfied</mat-icon>
+              <span><a href="#intro-part">Intro</a></span>
+            </button>
+            <button mat-menu-item disabled>
+              <mat-icon>business_center</mat-icon>
+              <span><a href="#visual">How it Works</a></span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>wifi</mat-icon>
+              <span><a href="#new-features">Planned Features</a></span>
+            </button>
+          </mat-menu>
+    </span>
+    <span class="logo-containter">
+        <img class="logo" src="../../assets/oneclick-logo-files/png/oneclick-high-resolution-logo-black-on-transparent-background.png">  
+    </span>
+    <span class="navigation nav-a">
+      <nav id="navbar" class="nav">
+        <ul class="nav-list">
+          <li><a href="#intro-part">Intro</a></li>
+          <li><a href="#visual">How it Works</a></li>
+          <li><a href="#new-features">Planned Features</a></li>
+        </ul>
+      </nav>
+    </span>
+    <span class="buttons">
+       <button class="header-button" mat-raised-button color="accent">
         Login
-    </button>
-    <span class="divider"></span>
-    <button class="header-button"  mat-raised-button color="accent">
-        Sign Up
-    </button>
+        </button>
+        <button class="header-button"  mat-raised-button color="accent">
+            Sign Up
+        </button> 
+    </span>
 </mat-toolbar>

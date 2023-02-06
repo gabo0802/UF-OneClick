@@ -18,7 +18,8 @@ body {
   --UF-Orange: #fa4616;
   --UF-Blue: #0021a5;
   --UF-BottleBrush: #D32737;
-  --background-image: url(https://www.gsb.stanford.edu/sites/default/files/styles/1630x_variable/public/qa-tien-subscription.jpg?itok=zGQJeKxA);
+  /* Credit to Cottonbro studios in pexels.com */
+  --background-image: url(https://images.pexels.com/photos/4009409/pexels-photo-4009409.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
 }
 
 /* For phones */
