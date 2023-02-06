@@ -266,6 +266,20 @@ func CancelSubsriptionService(c *gin.Context) {
 	}
 }
 
+func ResetDatabase(c *gin.Context) {
+	if currentID == 1 {
+		MySQL.ResetAllTables(currentDB)
+		MySQL.SetUpTables(currentDB)
+		MySQL.CreateAdminUser(currentDB)
+
+		changeMessage("Admin Database Reset! Enter Username and Password!")
+		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
+	} else {
+		setDefaultMessage()
+		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+	}
+}
+
 /*func PostLogins(c *gin.Context) {
 	var newLogin loginCredentials
 	// To bind the received JSON to newTshirt, call BindJSON

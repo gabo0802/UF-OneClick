@@ -40,6 +40,7 @@ func main() {
 		api.GET("/changepassword/:data", handler.SetCookie("/api/changepassword"))
 
 		api.GET("/logout", handler.Logout("Enter"))
+		api.GET("/reset", handler.ResetDatabase)
 
 		//Subscription Management
 		api.GET("/subscriptions", handler.GetAllUserSubscriptions())

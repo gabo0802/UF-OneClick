@@ -76,9 +76,12 @@ func ResetTable(db *sql.DB, tableName string) {
 }
 
 func ResetAllTables(db *sql.DB) {
-	db.Exec("DROP TABLE IF EXISTS Users;")
-	db.Exec("DROP TABLE IF EXISTS Subscriptions;")
+	db.Exec("DROP TABLE IF EXISTS Users;")         //won't work due to foreign key constraints
+	db.Exec("DROP TABLE IF EXISTS Subscriptions;") //won't work due to foreign key constraints
 	db.Exec("DROP TABLE IF EXISTS UserSubs;")
+
+	db.Exec("DELETE Users WHERE UserID > 1;")
+	db.Exec("DELETE Subscriptions WHERE SubID > 1;")
 }
 
 func CreateNewUser(db *sql.DB, username string, password string) int {
@@ -105,6 +108,10 @@ func CreateNewUser(db *sql.DB, username string, password string) int {
 	//Test If User Creation Worked (can remove later)
 
 	return int(numRows)
+}
+
+func CreateAdminUser(db *sql.DB) {
+	db.Exec("INSERT INTO Users(UserID, Username, Password) VALUES (1,root,password);")
 }
 
 func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
