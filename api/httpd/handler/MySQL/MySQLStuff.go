@@ -68,7 +68,7 @@ func SetUpTables(db *sql.DB) {
 	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price varchar(255) NOT NULL, UNIQUE(Name), PRIMARY KEY(SubID));")
 
 	//Individual user subscriptions
-	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
+	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded varchar(255) NOT NULL, DateRemoved varchar(255), FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
 }
 
 func ResetTable(db *sql.DB, tableName string) {
@@ -81,17 +81,17 @@ func ResetAllTables(db *sql.DB) {
 	db.Exec("DROP TABLE IF EXISTS UserSubs;")
 }
 
-func CreateNewUser(db *sql.DB, username string, password string) {
+func CreateNewUser(db *sql.DB, username string, password string) int {
 	//Create New User
 	result, err := db.Exec("INSERT INTO Users(Username, Password) VALUES (?,?);", username, password)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
 			fmt.Println("Username Already Exists!")
-			return
+			return 0
 		} else {
 			log.Fatal(err)
-
+			return -1
 		}
 	}
 
@@ -103,6 +103,23 @@ func CreateNewUser(db *sql.DB, username string, password string) {
 
 	fmt.Println("Rows Affected:", numRows)
 	//Test If User Creation Worked (can remove later)
+
+	return int(numRows)
+}
+
+func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
+	result, err := db.Exec("UPDATE Users SET Password = ? WHERE userID = ? AND Password = ?;", newPassword, userID, oldPassword)
+	if err != nil {
+		return -1
+	}
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		return -1
+	}
+
+	return int(numRows)
 }
 
 func CreateNewSub(db *sql.DB, name string, price string) {
@@ -129,55 +146,85 @@ func CreateNewSub(db *sql.DB, name string, price string) {
 	fmt.Println("Rows Affected:", numRows)
 }
 
-func AlreadyAddedUserSub(db *sql.DB, userID int) bool {
-	rows, err := db.Query("SELECT SubID FROM UserSubs WHERE UserID = ?", userID)
+func CanAddUserSub(db *sql.DB, userID int, subID int) int {
+	rows, err := db.Query("SELECT DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? ORDER BY DateRemoved;", userID, subID)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	size := 0
-	//while loop that continues counting the number of rows in the SubID column that are associated with the inputted UserID
-	for rows.Next() {
-		size += 1
+	if rows.Next() {
+		var currentDateRemoved string
+		rows.Scan(&currentDateRemoved)
+
+		if currentDateRemoved == "" { //tests if the subscription has been canceled (DateRemoved = nil)
+			return -1 //if not then subscription still exists
+		} else {
+			return 1 //can add new subscription
+		}
 	}
 
-	//Size of 1 or more means that the subscription is already associated with the user
-	if size >= 1 {
-		return true
-	} else {
-		return false
-	}
+	return 0 //doesn't exist yet
 }
 
-func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
+func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
 	currentTime := time.Now()
 	currentTime.Format("2006-01-02 15:04:05")
 
-	var CurrentUserID int
 	var CurrentSubID int
 
-	//Gets the UserID from the Users table
-	user_name, err := db.Query("SELECT UserID FROM Users WHERE Username = ?", userName)
+	//Gets the SubID from Subscriptions table
+	sub_name, err := db.Query("SELECT SubID FROM Subscriptions WHERE Name = ?;", subscriptionName)
 
 	if err != nil {
 		log.Fatal(err)
+		return -1
 	}
 
-	//Checks If Query Returns Empty Set or if the Username exists
-	if user_name.Next() {
-		//Gets the UserID
-		user_name.Scan(&CurrentUserID)
-		//fmt.Println("User ID:", CurrentUserID)
+	//Checks If Query Returns Empty Set or if the Subscription Name exists
+	if sub_name.Next() {
+		//Gets the SubID
+		sub_name.Scan(&CurrentSubID)
+		//fmt.Println("Sub ID:", CurrentSubID)
 
 	} else {
-		fmt.Println("Username is Invalid")
-		return
+		fmt.Println("Subscription Name is Invalid")
+		return -1
 	}
 
+	//Checks to see if sub was already added to user before creating a new table value
+	var isRenewed int = CanAddUserSub(db, userID, CurrentSubID)
+	if isRenewed < 0 {
+		fmt.Println("Subscription already added to User's Profile!")
+		return 0
+	}
+
+	//Create New UserSub Data
+	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, currentTime.Format("2006-01-02 15:04:05"))
+
+	//Tests to see if function worked (can remove later)
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+		return -1
+	}
+
+	fmt.Println("Rows Affected:", numRows)
+	return int(numRows) + isRenewed
+}
+
+// Sets DateRemoved Value to current time based on userID and subscriptionName
+func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
+	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
+	currentTime := time.Now()
+	currentTime.Format("2006-01-02 15:04:05")
+
+	var CurrentSubID int
+
 	//Gets the SubID from Subscriptions table
-	sub_name, err := db.Query("SELECT SubID FROM Subscriptions WHERE Name = ?", subscriptionName)
+	sub_name, err := db.Query("SELECT SubID FROM Subscriptions WHERE Name = ?;", subscriptionName)
 
 	if err != nil {
 		log.Fatal(err)
@@ -186,34 +233,30 @@ func CreateNewUserSub(db *sql.DB, userName string, subscriptionName string) {
 	//Checks If Query Returns Empty Set or if the Subscription Name exists
 	if sub_name.Next() {
 		//Gets the SubID
-		user_name.Scan(&CurrentSubID)
+		sub_name.Scan(&CurrentSubID)
 		//fmt.Println("Sub ID:", CurrentSubID)
 
 	} else {
 		fmt.Println("Subscription Name is Invalid")
-		return
+		return 0
 	}
 
-	//Checks to see if sub was already added to user before creating a new table value
-	if AlreadyAddedUserSub(db, CurrentUserID) {
-		fmt.Println("Subscription already added to User's Profile!")
-		return
-	}
-
-	//Create New UserSub Data
-	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", CurrentUserID, CurrentSubID, currentTime)
+	//Update UserSub Data
+	result, _ := db.Exec("UPDATE UserSubs SET DateRemoved = ? WHERE UserID = ? AND SubID = ? AND DateRemoved IS NULL;", currentTime.Format("2006-01-02 15:04:05"), userID, CurrentSubID)
 
 	//Tests to see if function worked (can remove later)
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
 		log.Fatal(err)
+		return -1
 	}
 
 	fmt.Println("Rows Affected:", numRows)
+	return int(numRows)
 }
 
-//TODO: Add a way to remove a subscription linked to a user and add it to the DateRemoved column
+//TODO: Add a way to remove a subscription linked to a user and add it to the DateRemoved column <- No We Keep This For Future Data Use
 
 // Deletes entry based on username and password from MySQL table called "Users"
 /*func DeleteUser(db *sql.DB, username string, password string) {
