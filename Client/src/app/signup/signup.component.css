@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    justify-content: center; 
+    
+}
+
+.form-container {
+    margin: 100px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-card-header {
+    margin-bottom: 10px;
+}
+
+mat-card {    
+    padding: 35px;
+}

@@ -9,6 +9,7 @@ import { MaterialDesignModule } from './material-design/material-design.module';
 import { HeaderComponent } from './header/header.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 
 
 
@@ -17,7 +18,8 @@ import { LoginComponent } from './login/login.component';
     AppComponent,
     HeaderComponent,
     LandingPageComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
