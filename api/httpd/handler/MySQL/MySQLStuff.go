@@ -76,9 +76,12 @@ func ResetTable(db *sql.DB, tableName string) {
 }
 
 func ResetAllTables(db *sql.DB) {
-	db.Exec("DROP TABLE IF EXISTS Users;")
-	db.Exec("DROP TABLE IF EXISTS Subscriptions;")
+	db.Exec("DROP TABLE IF EXISTS Users;")         //won't work due to foreign key constraints
+	db.Exec("DROP TABLE IF EXISTS Subscriptions;") //won't work due to foreign key constraints
 	db.Exec("DROP TABLE IF EXISTS UserSubs;")
+
+	db.Exec("DELETE FROM Users WHERE UserID > 1;")
+	db.Exec("DELETE FROM Subscriptions WHERE SubID > 1;")
 }
 
 func CreateNewUser(db *sql.DB, username string, password string) int {
@@ -107,6 +110,10 @@ func CreateNewUser(db *sql.DB, username string, password string) int {
 	return int(numRows)
 }
 
+func CreateAdminUser(db *sql.DB) {
+	db.Exec("INSERT INTO Users(UserID, Username, Password) VALUES (1,root,password);")
+}
+
 func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
 	result, err := db.Exec("UPDATE Users SET Password = ? WHERE userID = ? AND Password = ?;", newPassword, userID, oldPassword)
 	if err != nil {
@@ -122,17 +129,17 @@ func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword stri
 	return int(numRows)
 }
 
-func CreateNewSub(db *sql.DB, name string, price string) {
+func CreateNewSub(db *sql.DB, name string, price string) int {
 	//Create New Subscription
 	result, err := db.Exec("INSERT INTO Subscriptions(name, price) VALUES (?,?);", name, price)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
 			fmt.Println("Subscription Name Already Exists!")
-			return
+			return 0
 		} else {
 			log.Fatal(err)
-
+			return -1
 		}
 	}
 
@@ -141,9 +148,11 @@ func CreateNewSub(db *sql.DB, name string, price string) {
 
 	if err != nil {
 		log.Fatal(err)
+		return -1
 	}
 
 	fmt.Println("Rows Affected:", numRows)
+	return int(numRows)
 }
 
 func CanAddUserSub(db *sql.DB, userID int, subID int) int {
@@ -179,7 +188,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	if err != nil {
 		log.Fatal(err)
-		return -1
+		return -2
 	}
 
 	//Checks If Query Returns Empty Set or if the Subscription Name exists
