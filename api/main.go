@@ -27,28 +27,31 @@ func main() {
 
 	api := r.Group("/api")
 	{
-		api.GET("", handler.PingGet("Website", "*insert welcome page*"))
+		api.GET("", handler.HomePage())
 
-		api.GET("/login", handler.GetLogins)
-		api.GET("/login/:credentials", handler.SetCredentials)
-		//r.POST("/login", handler.PostLogins)
+		//Account Management
+		api.GET("/login", handler.TryLogin)
+		api.GET("/login/:data", handler.SetCookie("/api/login"))
 
 		api.GET("/accountcreation", handler.NewUser)
-		api.GET("/accountcreation/:credentials", handler.SetCredentials)
+		api.GET("/accountcreation/:data", handler.SetCookie("/api/accountcreation"))
 
-		api.GET("/changepassword", handler.ChangePass)
-		api.GET("/changepassword/:credentials", handler.SetCredentials)
+		api.GET("/changepassword", handler.ChangeUserPassword)
+		api.GET("/changepassword/:data", handler.SetCookie("/api/changepassword"))
 
-		api.GET("/subscriptions", handler.GetAllUserSubs)
+		api.GET("/logout", handler.Logout("Enter"))
 
-		api.GET("/subscriptions/createsubscription", handler.NewSub)
-		api.GET("/subscriptions/createsubscription/:credentials", handler.SetCredentials)
+		//Subscription Management
+		api.GET("/subscriptions", handler.GetAllUserSubscriptions())
 
-		api.GET("/subscriptions/addsubscription", handler.NewUserSub)
-		api.GET("/subscriptions/addsubscription/:credentials", handler.SetCredentials)
+		api.GET("/subscriptions/createsubscription", handler.NewSubscriptionService)
+		api.GET("/subscriptions/createsubscription/:data", handler.SetCookie("/api/subscriptions/createsubscription"))
 
-		api.GET("/subscriptions/cancelsubscription", handler.CancelSub)
-		api.GET("/subscriptions/cancelsubscription/:credentials", handler.SetCredentials)
+		api.GET("/subscriptions/addsubscription", handler.NewUserSubscription)
+		api.GET("/subscriptions/addsubscription/:data", handler.SetCookie("/api/subscriptions/addsubscription"))
+
+		api.GET("/subscriptions/cancelsubscription", handler.CancelSubsriptionService)
+		api.GET("/subscriptions/cancelsubscription/:data", handler.SetCookie("/api/subscriptions/cancelsubscription"))
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
