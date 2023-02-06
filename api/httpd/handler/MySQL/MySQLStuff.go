@@ -80,8 +80,8 @@ func ResetAllTables(db *sql.DB) {
 	db.Exec("DROP TABLE IF EXISTS Subscriptions;") //won't work due to foreign key constraints
 	db.Exec("DROP TABLE IF EXISTS UserSubs;")
 
-	db.Exec("DELETE Users WHERE UserID > 1;")
-	db.Exec("DELETE Subscriptions WHERE SubID > 1;")
+	db.Exec("DELETE FROM Users WHERE UserID > 1;")
+	db.Exec("DELETE FROM Subscriptions WHERE SubID > 1;")
 }
 
 func CreateNewUser(db *sql.DB, username string, password string) int {

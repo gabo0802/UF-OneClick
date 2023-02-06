@@ -40,7 +40,6 @@ func main() {
 		api.GET("/changepassword/:data", handler.SetCookie("/api/changepassword"))
 
 		api.GET("/logout", handler.Logout("Enter"))
-		api.GET("/reset", handler.ResetDatabase)
 
 		//Subscription Management
 		api.GET("/subscriptions", handler.GetAllUserSubscriptions())
@@ -51,8 +50,14 @@ func main() {
 		api.GET("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.GET("/subscriptions/addsubscription/:data", handler.SetCookie("/api/subscriptions/addsubscription"))
 
-		api.GET("/subscriptions/cancelsubscription", handler.CancelSubsriptionService)
+		api.GET("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
 		api.GET("/subscriptions/cancelsubscription/:data", handler.SetCookie("/api/subscriptions/cancelsubscription"))
+
+		//Admin Commands
+		api.GET("/reset", handler.ResetDatabase)
+		api.GET("/alldata", handler.GetAllUserData())
+		api.GET("/alldata/:data", handler.SetCookie("/api/alldata"))
+
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
