@@ -25,26 +25,27 @@ Mason Enojo (enojom) <br>
 1) Install the go programming language https://go.dev/dl/
 2) Install Node.js https://nodejs.org/
 3) Install Angular via the command line <code>npm install -g @angular/cli</code>
+4) Install MySQL (might be optional, see <i> How to Install MySQL </i> for more info)
 
+## How to Run Project (Using Visual Studio)
+1) Clone repository
+2) Terminal -> New Terminal
+3) Terminal -> Split Terminal
+4) Run <code> cd Client </code> then <code> npm start </code> in first terminal
+5) Run <code> make dev </code> in second terminal
 
-
-## Helpful Info for SQL (Remove in Future)
+## How to Install MySQL
 How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
 1) Install Go: https://go.dev/dl/
 2) Install MySQL: https://dev.mysql.com/downloads/installer/ 
-3) Run command in Command Prompt terminal:  <b> go env -w GO111MODULE="off" </b>
-4) Run command in Visual Studio Code terminal:  <b> go get github.com/go-sql-driver/mysql </b>
-5) Run Server using MySQL Workbench (one of apps installed from Step 1)
-5) Part 2: Password when setting up should be "MySQLP@ssw0rd"
-6) Run command in MySQL terminal (possibly optional): <b> \sql  </b>
-7) Run command in MySQL terminal (possibly optional): <b> \connect root@localhost  </b>
-8) Run command in MySQL terminal (optional): <b> CREATE DATABASE user;  </b>
-9) Run command in MySQL terminal (possibly optional): <b> USE user; </b>
-10) Run MySQLStuff.go in Visual Studio terminal (like a normal Go program)
+3) Run command in Command Prompt terminal:  <code> go env -w GO111MODULE="off" </code>
+4) Run command in Visual Studio Code terminal: <code> go get github.com/go-sql-driver/mysql </code>
 
 Access MySQL Database:
-* (For Windows): mysql.exe -h oneclickserver.mysql.database.azure.com -u adminUser -p
-* (For Mac): /usr/local/mysql/bin/mysql -h oneclickserver.mysql.database.azure.com -u adminUser -p
+* (For Windows): <code> mysql.exe -h oneclickserver.mysql.database.azure.com -u adminUser -p </code>
+* (For Mac): <code> /usr/local/mysql/bin/mysql -h oneclickserver.mysql.database.azure.com -u adminUser -p </code>
+* Hostname: oneclickserver.mysql.database.azure.com
+* Username: adminUser
 * Password: MySQLP@ssw0rd
 
 ## Go-Angular Tutorial/Test Code (Remove in Future)
