@@ -22,6 +22,12 @@
     align-items: center;
     justify-content: space-between;
     color:"primary";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+    z-index: 10;
 }
 
 @media (max-width: 700px) {
@@ -62,7 +68,10 @@
 .logo {
     height: 40px;
 }
-
+a {
+  text-decoration: none;
+  color: inherit;
+}
 /*Nav stuff */
 nav {
     

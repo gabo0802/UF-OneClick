@@ -20,6 +20,10 @@ body {
   --UF-BottleBrush: #D32737;
   /* Credit to Cottonbro studios in pexels.com */
   --background-image: url(https://images.pexels.com/photos/4009409/pexels-photo-4009409.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  /* Credit to Lisa Fotios in pexels.com */
+  --background-image2: url(https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  /* Credit to Andrea Piacquadio in pexels.com */
+  --background-image3: url(https://images.pexels.com/photos/3811867/pexels-photo-3811867.jpeg?auto=compress&cs=tinysrgb&w=1600);
 }
 
 /* For phones */

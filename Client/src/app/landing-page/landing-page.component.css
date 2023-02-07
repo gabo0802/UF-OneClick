@@ -1,53 +1,52 @@
 
 .intro {
-
+  margin-top: 60px;
   height: 75%;
   width: 100%;
   content: "";
   background: var(--background-image);
   background-size: cover;
   background-position: center;
-  opacity: 0.9;
+  opacity: 0.8;
+  position: relative;
 }
 
 .intro-box {
-
-  display: inline-block;
-  width: 40%;
-  max-width: 300px;
-  max-height: 100px;
-  min-width: 200px;
-  min-height: 50px;
-  height: 12%;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin: auto;
+  width: 100%;
+  max-width: 700px;
+  height: 100%;
+  max-height: 175px;
+  min-width: 175px;
+  min-height: 25px;
+  background: rgba(255, 255, 255, 0.534);
   border-radius: 5px;
-  text-align: center;
-  justify-content: center;
- 
+  margin: 50px auto auto auto;
 }
 
 .intro-logo {
   width: 100%;
-  max-width: 200px;
   height: 100%;
-  max-height: 50px;
-  min-width: 175px;
-  min-height: 25px;
+  padding: 10px;
+}
+
+@media (max-width: 700px) {
+  .intro-box {
+    max-width: 500px;
+    max-height: 125px;
+  }
 }
 .description {
-
+  height: 100px;
 }
 
 .sub-list {
-
+  height: 100px;
 }
 
 .app-visual {
-
+  height: 100px;
 }
 
 .potential-list {
-
+  height: 100px;
 }

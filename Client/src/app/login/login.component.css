@@ -1,7 +1,12 @@
 .container {
     display: flex;
     justify-content: center; 
-    
+    background: var(--background-image2);
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8;
+    margin-top: 60px;
 }
 
 .form-container {
