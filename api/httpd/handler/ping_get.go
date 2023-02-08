@@ -14,12 +14,14 @@ import (
 type Cookie struct {
 	First  string `json:"first"`
 	Second string `json:"second"`
+	Third  string `json:"third"`
 }
 
 type userData struct {
 	UserID      string `json:"userid"`
 	Username    string `json:"username"`
 	Password    string `json:"password"`
+	Email       string `json:"email"`
 	SubID       string `json:"subid"`
 	Name        string `json:"name"`
 	Price       string `json:"price"`
@@ -59,6 +61,7 @@ func tryDefaultMessage(newMessage string) {
 func setDefaultMessage() {
 	currentCookie.First = "Default Message"
 	currentCookie.Second = ""
+	currentCookie.Third = ""
 }
 
 func changeMessage(newMessage string) {
@@ -106,15 +109,19 @@ func Logout(message string) gin.HandlerFunc {
 }
 
 func NewUser(c *gin.Context) {
-	tryDefaultMessage("Enter Username and Password to Create New User!")
+	tryDefaultMessage("Enter Username, Password, and Email to Create New User!")
 
 	if !strings.Contains(currentCookie.First, "Message: ") {
-		rowsAffected := MySQL.CreateNewUser(currentDB, currentCookie.First, currentCookie.Second)
+		rowsAffected := MySQL.CreateNewUser(currentDB, currentCookie.First, currentCookie.Second, currentCookie.Third)
 
 		if rowsAffected == 0 {
 			changeMessage("Error: Username " + currentCookie.First + " Already Exists!")
+		} else if rowsAffected == 10 {
+			changeMessage("Error: Email " + currentCookie.Third + " Already In Use!")
 		} else if rowsAffected == -1 {
 			changeMessage("Error")
+		} else if rowsAffected == -2 {
+			changeMessage("Enter Value Into All Columns!")
 		} else {
 			changeMessage("New User " + currentCookie.First + " Has Been Created! Enter Username and Password!")
 			c.Redirect(http.StatusTemporaryRedirect, "/api/login")
@@ -136,6 +143,8 @@ func ChangeUserPassword(c *gin.Context) {
 				changeMessage("Incorrect Old Password!")
 			} else if rowsAffected == -1 {
 				changeMessage("Error")
+			} else if rowsAffected == -2 {
+				changeMessage("Enter Value Into All Columns!")
 			} else {
 				changeMessage("Password Has Been Changed! Re-enter Username and Password!")
 				currentID = -1
@@ -163,6 +172,12 @@ func SetCookie(url string) gin.HandlerFunc {
 			currentCookie.Second = splitData[1]
 		} else {
 			currentCookie.Second = ""
+		}
+
+		if len(splitData) > 2 {
+			currentCookie.Third = splitData[2]
+		} else {
+			currentCookie.Third = ""
 		}
 
 		c.Redirect(http.StatusTemporaryRedirect, url)
@@ -212,6 +227,9 @@ func NewUserSubscription(c *gin.Context) {
 			} else if rowsAffected == -2 {
 				changeMessage("Error")
 
+			} else if rowsAffected == -3 {
+				changeMessage("Enter Value Into All Columns!")
+
 			} else if rowsAffected > 1 {
 				changeMessage("Subscription to " + currentCookie.First + " Renewed!")
 
@@ -240,6 +258,10 @@ func NewSubscriptionService(c *gin.Context) {
 				changeMessage("Error: Subscription to " + currentCookie.First + " Already Exists!")
 			} else if rowsAffected == -1 {
 				changeMessage("Error")
+
+			} else if rowsAffected == -2 {
+				changeMessage("Enter Value Into All Columns!")
+
 			} else {
 				changeMessage("Subscription to " + currentCookie.First + " Created!")
 			}
@@ -323,7 +345,7 @@ func GetAllUserData() gin.HandlerFunc {
 				}
 
 			} else if strings.Contains(currentCookie.First, "Users") {
-				rows, err := currentDB.Query("SELECT UserID, Username, Password FROM Users;")
+				rows, err := currentDB.Query("SELECT UserID, Username, Password, Email FROM Users;")
 
 				if err != nil {
 					c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
@@ -333,18 +355,20 @@ func GetAllUserData() gin.HandlerFunc {
 					var id int
 					var username string
 					var password string
+					var email string
 
-					rows.Scan(&id, &username, &password)
+					rows.Scan(&id, &username, &password, &email)
 
 					var newData userData
 					newData.UserID = strconv.Itoa(id)
 					newData.Username = username
 					newData.Password = password
+					newData.Email = email
 
 					allUserData = append(allUserData, newData)
 				}
 			} else {
-				rows, err := currentDB.Query("SELECT UserSubs.UserID, Username, Password, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID;")
+				rows, err := currentDB.Query("SELECT UserSubs.UserID, Username, Password, Email, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID;")
 
 				if err != nil {
 					c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
@@ -359,8 +383,9 @@ func GetAllUserData() gin.HandlerFunc {
 					var price string
 					var dateadded string
 					var dateremoved string
+					var email string
 
-					rows.Scan(&id, &username, &password, &subid, &name, &price, &dateadded, &dateremoved)
+					rows.Scan(&id, &username, &password, &email, &subid, &name, &price, &dateadded, &dateremoved)
 
 					var newData userData
 					newData.UserID = strconv.Itoa(id)
@@ -371,6 +396,7 @@ func GetAllUserData() gin.HandlerFunc {
 					newData.DateRemoved = dateremoved
 					newData.Price = price
 					newData.Name = name
+					newData.Email = email
 
 					allUserData = append(allUserData, newData)
 				}

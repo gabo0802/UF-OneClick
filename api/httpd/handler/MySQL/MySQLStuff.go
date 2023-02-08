@@ -62,7 +62,7 @@ func GetTableSize(db *sql.DB, tableName string) int {
 
 func SetUpTables(db *sql.DB) {
 	//Users
-	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), PRIMARY KEY(UserID));")
+	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Email varchar(255) NOT NULL, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), UNIQUE(Email), PRIMARY KEY(UserID));")
 
 	//All available subscriptions
 	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price varchar(255) NOT NULL, UNIQUE(Name), PRIMARY KEY(SubID));")
@@ -76,22 +76,31 @@ func ResetTable(db *sql.DB, tableName string) {
 }
 
 func ResetAllTables(db *sql.DB) {
-	db.Exec("DROP TABLE IF EXISTS Users;")         //won't work due to foreign key constraints
-	db.Exec("DROP TABLE IF EXISTS Subscriptions;") //won't work due to foreign key constraints
 	db.Exec("DROP TABLE IF EXISTS UserSubs;")
+	db.Exec("DROP TABLE IF EXISTS Users;")
+	db.Exec("DROP TABLE IF EXISTS Subscriptions;")
 
-	db.Exec("DELETE FROM Users WHERE UserID > 1;")
-	db.Exec("DELETE FROM Subscriptions WHERE SubID > 1;")
+	//db.Exec("DELETE FROM Users WHERE UserID > 1;")
+	//db.Exec("DELETE FROM Subscriptions WHERE SubID > 1;")
 }
 
-func CreateNewUser(db *sql.DB, username string, password string) int {
+func CreateNewUser(db *sql.DB, username string, password string, email string) int {
 	//Create New User
-	result, err := db.Exec("INSERT INTO Users(Username, Password) VALUES (?,?);", username, password)
+	if username == "" || password == "" || email == "" {
+		return -2
+	}
+
+	result, err := db.Exec("INSERT INTO Users(Username, Password, Email) VALUES (?,?,?);", username, password, email)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
-			fmt.Println("Username Already Exists!")
-			return 0
+			if strings.Contains(err.Error(), "email") {
+				fmt.Println("Email Already Exists!")
+				return 10
+			} else {
+				fmt.Println("Username Already Exists!")
+				return 0
+			}
 		} else {
 			log.Fatal(err)
 			return -1
@@ -111,10 +120,26 @@ func CreateNewUser(db *sql.DB, username string, password string) int {
 }
 
 func CreateAdminUser(db *sql.DB) {
-	db.Exec("INSERT INTO Users(UserID, Username, Password) VALUES (1,root,password);")
+	result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"root\", \"password\", \"companyemail@gmail.com\");")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Rows Affected:", numRows)
 }
 
 func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
+	if oldPassword == "" || newPassword == "" {
+		return -2
+	}
+
 	result, err := db.Exec("UPDATE Users SET Password = ? WHERE userID = ? AND Password = ?;", newPassword, userID, oldPassword)
 	if err != nil {
 		return -1
@@ -131,6 +156,10 @@ func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword stri
 
 func CreateNewSub(db *sql.DB, name string, price string) int {
 	//Create New Subscription
+	if name == "" || price == "" {
+		return -2
+	}
+
 	result, err := db.Exec("INSERT INTO Subscriptions(name, price) VALUES (?,?);", name, price)
 
 	if err != nil {
@@ -177,6 +206,10 @@ func CanAddUserSub(db *sql.DB, userID int, subID int) int {
 }
 
 func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
+	if subscriptionName == "" {
+		return -3
+	}
+
 	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
 	currentTime := time.Now()
 	currentTime.Format("2006-01-02 15:04:05")
@@ -224,8 +257,60 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	return int(numRows) + isRenewed
 }
 
+func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded string) int {
+	if subscriptionName == "" || dateAdded == "" {
+		return -3
+	}
+
+	var CurrentSubID int
+
+	//Gets the SubID from Subscriptions table
+	sub_name, err := db.Query("SELECT SubID FROM Subscriptions WHERE Name = ?;", subscriptionName)
+
+	if err != nil {
+		log.Fatal(err)
+		return -2
+	}
+
+	//Checks If Query Returns Empty Set or if the Subscription Name exists
+	if sub_name.Next() {
+		//Gets the SubID
+		sub_name.Scan(&CurrentSubID)
+		//fmt.Println("Sub ID:", CurrentSubID)
+
+	} else {
+		fmt.Println("Subscription Name is Invalid")
+		return -1
+	}
+
+	//Checks to see if sub was already added to user before creating a new table value (night be irrelevent, future issue)
+	var isRenewed int = CanAddUserSub(db, userID, CurrentSubID)
+	if isRenewed < 0 {
+		fmt.Println("Subscription already added to User's Profile!")
+		return 0
+	}
+
+	//Create New UserSub Data
+	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, dateAdded)
+
+	//Tests to see if function worked (can remove later)
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+		return -1
+	}
+
+	fmt.Println("Rows Affected:", numRows)
+	return int(numRows) + isRenewed
+}
+
 // Sets DateRemoved Value to current time based on userID and subscriptionName
 func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
+	if subscriptionName == "" {
+		return -2
+	}
+
 	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
 	currentTime := time.Now()
 	currentTime.Format("2006-01-02 15:04:05")
