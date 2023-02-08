@@ -35,7 +35,7 @@ func main() {
 		//Account Management
 		//api.GET("/login", handler.TryLogin)
 		//api.GET("/login/:data", handler.SetCookie("/api/login"))
-		api.POST("/logintest", handler.TryLogin)
+		//api.POST("/logintest", handler.TryLogin)
 
 		api.POST("/accountcreation", handler.NewUser)
 		//api.GET("/accountcreation", handler.NewUser)
@@ -64,7 +64,7 @@ func main() {
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
-
+	//r.Run("localhost:4200")
 	fmt.Println("End")
 }
 

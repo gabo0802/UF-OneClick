@@ -2,7 +2,6 @@ package handler
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -11,7 +10,7 @@ import (
 )
 
 // New Data Types
-type userData struct {
+type allData struct {
 	UserID      string `json:"userid"`
 	Username    string `json:"username"`
 	Password    string `json:"password"`
@@ -21,6 +20,12 @@ type userData struct {
 	Price       string `json:"price"`
 	DateAdded   string `json:"dateadded"`
 	DateRemoved string `json:"dateremoved"`
+}
+
+type userData struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 }
 
 type userSubscriptions struct {
@@ -39,7 +44,7 @@ var usersubInfo = []userSubscriptions{
 	//{Name: "", Price: "", DateAdded: "", DateRemoved: ""},
 }
 
-var allUserData = []userData{}
+var allUserData = []allData{}
 
 func SetDB(db *sql.DB) {
 	currentDB = db
@@ -51,23 +56,23 @@ func GetOutput(c *gin.Context) {
 }
 
 func TryLogin(c *gin.Context) { // gin.Context parameter.
-	username := c.PostForm("username")
+	var login userData
+	c.BindJSON(&login)
+
+	username := login.Username
 	if username == "" {
-		fmt.Println(username + "?")
 		funcOutput = "No Username"
 		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
 		return
 	}
 
-	password := c.PostForm("password")
+	password := login.Password
 	if password == "" {
-		fmt.Println(username + ", " + password + "?")
 		funcOutput = "No Password"
 		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
 		return
 	}
 
-	fmt.Println(username + ", " + password)
 	currentID = MySQL.Login(currentDB, username, password)
 
 	if currentID == -1 {
@@ -85,25 +90,25 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 }
 
 func NewUser(c *gin.Context) {
-	username := c.PostForm("username")
+	var login userData
+	c.BindJSON(&login)
+
+	username := login.Username
 	if username == "" {
-		fmt.Println("?")
 		funcOutput = "No Username"
 		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
 		return
 	}
 
-	password := c.PostForm("password")
+	password := login.Password
 	if password == "" {
-		fmt.Println(username + " ?")
 		funcOutput = "No Password"
 		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
 		return
 	}
 
-	email := c.PostForm("email")
-	if password == "" {
-		fmt.Println(username + " " + password + " ?")
+	email := login.Email
+	if email == "" {
 		funcOutput = "No Email"
 		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
 		return
@@ -341,7 +346,7 @@ func ResetDatabase(c *gin.Context) {
 func GetAllUserData() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if currentID == 1 {
-			allUserData = []userData{}
+			allUserData = []allData{}
 			var id int
 			var username string
 			var password string
@@ -361,7 +366,7 @@ func GetAllUserData() gin.HandlerFunc {
 			for rows.Next() {
 				rows.Scan(&subid, &name, &price)
 
-				var newData userData
+				var newData allData
 				newData.SubID = strconv.Itoa(subid)
 				newData.Price = price
 				newData.Name = name
@@ -378,7 +383,7 @@ func GetAllUserData() gin.HandlerFunc {
 			for rows.Next() {
 				rows.Scan(&id, &username, &password, &email)
 
-				var newData userData
+				var newData allData
 				newData.UserID = strconv.Itoa(id)
 				newData.Username = username
 				newData.Password = password
@@ -395,7 +400,7 @@ func GetAllUserData() gin.HandlerFunc {
 			for rows.Next() {
 				rows.Scan(&id, &username, &password, &email, &subid, &name, &price, &dateadded, &dateremoved)
 
-				var newData userData
+				var newData allData
 				newData.UserID = strconv.Itoa(id)
 				newData.SubID = strconv.Itoa(subid)
 				newData.Username = username
