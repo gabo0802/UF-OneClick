@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-signup',
@@ -7,6 +8,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit{
+
+  constructor(private api: ApiService) {};
 
   hide = true;
 
@@ -21,6 +24,7 @@ export class SignupComponent implements OnInit{
   }
 
   onSubmit(){
-    console.log(this.signUpForm);
+    
+    this.api.createUser(this.signUpForm.value);
   }
 }
