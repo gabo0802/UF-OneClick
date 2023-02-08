@@ -30,8 +30,6 @@ func main() {
 	{
 		//api.GET("", handler.HomePage())
 
-		api.GET("/output", handler.GetOutput)
-
 		//Account Management
 		//api.GET("/login", handler.TryLogin)
 		//api.GET("/login/:data", handler.SetCookie("/api/login"))

@@ -10,7 +10,7 @@ import (
 )
 
 // New Data Types
-type allData struct {
+type userData struct {
 	UserID      string `json:"userid"`
 	Username    string `json:"username"`
 	Password    string `json:"password"`
@@ -22,12 +22,6 @@ type allData struct {
 	DateRemoved string `json:"dateremoved"`
 }
 
-type userData struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-}
-
 type userSubscriptions struct {
 	Name        string `json:"name"`
 	Price       string `json:"price"`
@@ -36,24 +30,18 @@ type userSubscriptions struct {
 }
 
 // Global Variables:
-var funcOutput = ""
 var currentDB *sql.DB
 var currentID = -1
 
-var usersubInfo = []userSubscriptions{
+/*var usersubInfo = []userSubscriptions{
 	//{Name: "", Price: "", DateAdded: "", DateRemoved: ""},
-}
-
-var allUserData = []allData{}
+}*/
 
 func SetDB(db *sql.DB) {
 	currentDB = db
 }
 
 // GET and POST Functions:
-func GetOutput(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
-}
 
 func TryLogin(c *gin.Context) { // gin.Context parameter.
 	var login userData
@@ -61,31 +49,26 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	username := login.Username
 	if username == "" {
-		funcOutput = "No Username"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "No Username"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		funcOutput = "No Password"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "No Password"})
 		return
 	}
 
 	currentID = MySQL.Login(currentDB, username, password)
 
 	if currentID == -1 {
-		funcOutput = "Incorrect Username or Password!"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "Incorrect Username or Password!"})
 
 	} else if currentID == -2 {
-		funcOutput = "Error"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "Error"})
 
 	} else {
-		funcOutput = strconv.Itoa(currentID)
-		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+		c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
 	}
 }
 
@@ -95,42 +78,34 @@ func NewUser(c *gin.Context) {
 
 	username := login.Username
 	if username == "" {
-		funcOutput = "No Username"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "No Username"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		funcOutput = "No Password"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "No Password"})
 		return
 	}
 
 	email := login.Email
 	if email == "" {
-		funcOutput = "No Email"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "No Email"})
 		return
 	}
 
 	rowsAffected := MySQL.CreateNewUser(currentDB, username, password, email)
 
 	if rowsAffected == 0 {
-		funcOutput = "Error: Username " + username + " Already Exists!"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "Error: Username " + username + " Already Exists!"})
 	} else if rowsAffected == 10 {
-		funcOutput = "Error: Email " + email + " Already In Use!"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
 	} else if rowsAffected == -1 {
-		funcOutput = "Error"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "Error"})
 	} else if rowsAffected == -2 {
-		funcOutput = "Enter Value Into All Columns!"
-		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		c.JSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
 	} else {
-		funcOutput = "New User " + username + " Has Been Created! Enter Username and Password!"
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created! Enter Username and Password!"})
 	}
 }
 
@@ -336,7 +311,7 @@ func ResetDatabase(c *gin.Context) {
 		MySQL.SetUpTables(currentDB)
 		MySQL.CreateAdminUser(currentDB)
 
-		funcOutput = "Admin Database Reset! Enter Username and Password!"
+		//funcOutput = "Admin Database Reset! Enter Username and Password!"
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
@@ -346,7 +321,7 @@ func ResetDatabase(c *gin.Context) {
 func GetAllUserData() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if currentID == 1 {
-			allUserData = []allData{}
+			var allUserData = []userData{}
 			var id int
 			var username string
 			var password string
@@ -366,7 +341,7 @@ func GetAllUserData() gin.HandlerFunc {
 			for rows.Next() {
 				rows.Scan(&subid, &name, &price)
 
-				var newData allData
+				var newData userData
 				newData.SubID = strconv.Itoa(subid)
 				newData.Price = price
 				newData.Name = name
@@ -383,7 +358,7 @@ func GetAllUserData() gin.HandlerFunc {
 			for rows.Next() {
 				rows.Scan(&id, &username, &password, &email)
 
-				var newData allData
+				var newData userData
 				newData.UserID = strconv.Itoa(id)
 				newData.Username = username
 				newData.Password = password
@@ -400,7 +375,7 @@ func GetAllUserData() gin.HandlerFunc {
 			for rows.Next() {
 				rows.Scan(&id, &username, &password, &email, &subid, &name, &price, &dateadded, &dateremoved)
 
-				var newData allData
+				var newData userData
 				newData.UserID = strconv.Itoa(id)
 				newData.SubID = strconv.Itoa(subid)
 				newData.Username = username
