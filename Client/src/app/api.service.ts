@@ -6,13 +6,18 @@ import { Injectable } from '@angular/core';
 })
 export class ApiService {
 
+  public output: string = '';
+
   constructor(private http: HttpClient) { }
 
+  
 
   createUser(userData: {email: string, password: string, username: string}){
     
     this.http.post('/api/accountcreation', JSON.stringify(userData)).subscribe((res)=>{
+
       console.log(res);
+    
       //console.log(userData.username);
       //console.log(userData.password);
       //console.log(userData.email);
@@ -22,5 +27,9 @@ export class ApiService {
       console.log(res);
     });*/
 
+  }
+
+  public getOutput() {
+    return this.output;
   }
 }
