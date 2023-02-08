@@ -96,7 +96,11 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 func HomePage() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Redirect(http.StatusTemporaryRedirect, "")
+		//Testing Redirects:
+
+		c.Redirect(http.StatusTemporaryRedirect, "/signup") //redirect to front-end component
+		//c.Redirect(http.StatusTemporaryRedirect, "/api/accountcreation")                        //redirect to back-end component
+		//c.Redirect(http.StatusTemporaryRedirect, "https://www.youtube.com/watch?v=dQw4w9WgXcQ") //redirect to external website
 	}
 }
 
