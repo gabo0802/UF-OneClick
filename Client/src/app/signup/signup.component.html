@@ -2,7 +2,7 @@
     <div class="form-container">
         <mat-card>
             <mat-card-header>
-                <mat-card-title><h4>Sign Up</h4></mat-card-title>
+                <mat-card-title><h3>Sign Up</h3></mat-card-title>
                 <mat-card-subtitle>Please enter the required information below.</mat-card-subtitle>
             </mat-card-header>        
             
@@ -10,18 +10,18 @@
                 <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">                    
                         <mat-form-field appearance="fill">
                             <mat-label>Username</mat-label>            
-                            <input matInput required>
+                            <input matInput formControlName="username">
                         </mat-form-field>
 
                         <mat-form-field appearance="fill">
                             <mat-label>Email</mat-label>            
-                            <input matInput type="email" required>
+                            <input matInput type="email" formControlName="email">
                         </mat-form-field>
                     
                     
                         <mat-form-field appearance="fill">
                             <mat-label>Password</mat-label>            
-                            <input matInput type="password" required>
+                            <input matInput type="password" formControlName="password">
                         </mat-form-field>                          
             
                     <mat-card-actions>
