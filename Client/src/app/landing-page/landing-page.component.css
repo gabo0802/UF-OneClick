@@ -37,16 +37,26 @@
 }
 .description {
   border-top: solid rgba(141, 59, 34, 0.041) 10px;
-  height: 25vh;
-  background: rgb(141, 59, 34);
+  height: 50vh;
+  color: "primary";
   display: flex;
   justify-content: center;
 }
+
+.description-icon {
+  flex: 1;
+  font-size: 50px;
+  text-align: center;
+  
+}
 .description-card {
+  color: black;
+  flex: 4;
   width: 50%;
   height: auto;
-  padding: 15px;
-  margin-bottom: 20px;
+  padding: 30px 2px;
+  margin-bottom: 25px;
+  margin-top: 15px;
 }
 
 .description-title {
@@ -55,7 +65,14 @@
 }
 
 .description-content {
+  max-height: 40vh;
   text-align: center;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  
 }
 
 .sub-list {
