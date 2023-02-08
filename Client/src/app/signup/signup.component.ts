@@ -28,9 +28,13 @@ export class SignupComponent implements OnInit{
 
   onSubmit(){
     
-    this.message = this.api.getOutput()
+    //this.message = this.api.getOutput()
 
     this.api.createUser(this.signUpForm.value)
+
+  }
+
+  ngOnDestroy(){
 
   }
 }
