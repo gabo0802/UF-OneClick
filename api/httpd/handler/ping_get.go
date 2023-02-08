@@ -5,19 +5,12 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler/MySQL"
 	"github.com/gin-gonic/gin"
 )
 
 // New Data Types
-type Cookie struct {
-	First  string `json:"first"`
-	Second string `json:"second"`
-	Third  string `json:"third"`
-}
-
 type userData struct {
 	UserID      string `json:"userid"`
 	Username    string `json:"username"`
@@ -38,9 +31,9 @@ type userSubscriptions struct {
 }
 
 // Global Variables:
+var funcOutput = ""
 var currentDB *sql.DB
 var currentID = -1
-var currentCookie = Cookie{First: "Default Message", Second: ""}
 
 var usersubInfo = []userSubscriptions{
 	//{Name: "", Price: "", DateAdded: "", DateRemoved: ""},
@@ -52,48 +45,91 @@ func SetDB(db *sql.DB) {
 	currentDB = db
 }
 
-// JSON:
-func tryDefaultMessage(newMessage string) {
-	if strings.Contains(currentCookie.First, "Default Message") {
-		currentCookie.First = "Message: " + newMessage
-	}
-}
-
-func setDefaultMessage() {
-	currentCookie.First = "Default Message"
-	currentCookie.Second = ""
-	currentCookie.Third = ""
-}
-
-func changeMessage(newMessage string) {
-	currentCookie.First = "Message: " + newMessage
-}
-
-func printMessage(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"Message": strings.Replace(currentCookie.First, "Message: ", "", 1)})
-}
-
 // GET and POST Functions:
-func TryLogin(c *gin.Context) { // gin.Context parameter.
-	tryDefaultMessage("Enter Username and Password!")
-
-	if !strings.Contains(currentCookie.First, "Message: ") {
-		currentID = MySQL.Login(currentDB, currentCookie.First, currentCookie.Second)
-
-		if currentID == -1 {
-			changeMessage("Incorrect Username or Password!")
-		} else if currentID == -2 {
-			changeMessage("Error")
-		} else {
-			setDefaultMessage()
-			c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
-		}
-	}
-
-	printMessage(c)
-	setDefaultMessage()
+func GetOutput(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
 }
 
+func TryLogin(c *gin.Context) { // gin.Context parameter.
+	username := c.PostForm("username")
+	if username == "" {
+		fmt.Println(username + "?")
+		funcOutput = "No Username"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		return
+	}
+
+	password := c.PostForm("password")
+	if password == "" {
+		fmt.Println(username + ", " + password + "?")
+		funcOutput = "No Password"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		return
+	}
+
+	fmt.Println(username + ", " + password)
+	currentID = MySQL.Login(currentDB, username, password)
+
+	if currentID == -1 {
+		funcOutput = "Incorrect Username or Password!"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+
+	} else if currentID == -2 {
+		funcOutput = "Error"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+
+	} else {
+		funcOutput = strconv.Itoa(currentID)
+		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+	}
+}
+
+func NewUser(c *gin.Context) {
+	username := c.PostForm("username")
+	if username == "" {
+		fmt.Println("?")
+		funcOutput = "No Username"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		return
+	}
+
+	password := c.PostForm("password")
+	if password == "" {
+		fmt.Println(username + " ?")
+		funcOutput = "No Password"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		return
+	}
+
+	email := c.PostForm("email")
+	if password == "" {
+		fmt.Println(username + " " + password + " ?")
+		funcOutput = "No Email"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+		return
+	}
+
+	rowsAffected := MySQL.CreateNewUser(currentDB, username, password, email)
+
+	if rowsAffected == 0 {
+		funcOutput = "Error: Username " + username + " Already Exists!"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+	} else if rowsAffected == 10 {
+		funcOutput = "Error: Email " + email + " Already In Use!"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+	} else if rowsAffected == -1 {
+		funcOutput = "Error"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+	} else if rowsAffected == -2 {
+		funcOutput = "Enter Value Into All Columns!"
+		c.JSON(http.StatusOK, gin.H{"Output": funcOutput})
+	} else {
+		funcOutput = "New User " + username + " Has Been Created! Enter Username and Password!"
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+}
+
+/*
 func HomePage() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//Testing Redirects:
@@ -111,30 +147,6 @@ func Logout(message string) gin.HandlerFunc {
 
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
-}
-
-func NewUser(c *gin.Context) {
-	tryDefaultMessage("Enter Username, Password, and Email to Create New User!")
-
-	if !strings.Contains(currentCookie.First, "Message: ") {
-		rowsAffected := MySQL.CreateNewUser(currentDB, currentCookie.First, currentCookie.Second, currentCookie.Third)
-
-		if rowsAffected == 0 {
-			changeMessage("Error: Username " + currentCookie.First + " Already Exists!")
-		} else if rowsAffected == 10 {
-			changeMessage("Error: Email " + currentCookie.Third + " Already In Use!")
-		} else if rowsAffected == -1 {
-			changeMessage("Error")
-		} else if rowsAffected == -2 {
-			changeMessage("Enter Value Into All Columns!")
-		} else {
-			changeMessage("New User " + currentCookie.First + " Has Been Created! Enter Username and Password!")
-			c.Redirect(http.StatusTemporaryRedirect, "/api/login")
-		}
-	}
-
-	printMessage(c)
-	setDefaultMessage()
 }
 
 func ChangeUserPassword(c *gin.Context) {
@@ -261,7 +273,6 @@ func NewUserSubscription(c *gin.Context) {
 
 func NewSubscriptionService(c *gin.Context) {
 	if currentID != -1 {
-		tryDefaultMessage("Enter Name and Pricing of New Subscription!")
 
 		if !strings.Contains(currentCookie.First, "Message: ") {
 			rowsAffected := MySQL.CreateNewSub(currentDB, currentCookie.First, currentCookie.Second)
@@ -312,7 +323,7 @@ func CancelSubscriptionService(c *gin.Context) {
 		setDefaultMessage()
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
-}
+}*/
 
 func ResetDatabase(c *gin.Context) {
 	if currentID == 1 {
@@ -320,10 +331,9 @@ func ResetDatabase(c *gin.Context) {
 		MySQL.SetUpTables(currentDB)
 		MySQL.CreateAdminUser(currentDB)
 
-		changeMessage("Admin Database Reset! Enter Username and Password!")
-		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
+		funcOutput = "Admin Database Reset! Enter Username and Password!"
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
-		setDefaultMessage()
 		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 	}
 }
@@ -331,93 +341,75 @@ func ResetDatabase(c *gin.Context) {
 func GetAllUserData() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if currentID == 1 {
-			tryDefaultMessage("UserSubs")
 			allUserData = []userData{}
+			var id int
+			var username string
+			var password string
+			var subid int
+			var name string
+			var price string
+			var dateadded string
+			var dateremoved string
+			var email string
 
-			if strings.Contains(currentCookie.First, "Subscriptions") {
-				rows, err := currentDB.Query("SELECT SubID, Name, Price FROM Subscriptions;")
+			rows, err := currentDB.Query("SELECT SubID, Name, Price FROM Subscriptions;")
 
-				if err != nil {
-					c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
-				}
+			if err != nil {
+				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+			}
 
-				for rows.Next() {
-					var subid int
-					var name string
-					var price string
+			for rows.Next() {
+				rows.Scan(&subid, &name, &price)
 
-					rows.Scan(&subid, &name, &price)
+				var newData userData
+				newData.SubID = strconv.Itoa(subid)
+				newData.Price = price
+				newData.Name = name
 
-					var newData userData
-					newData.SubID = strconv.Itoa(subid)
-					newData.Price = price
-					newData.Name = name
+				allUserData = append(allUserData, newData)
+			}
 
-					allUserData = append(allUserData, newData)
-				}
+			rows, err = currentDB.Query("SELECT UserID, Username, Password, Email FROM Users;")
 
-			} else if strings.Contains(currentCookie.First, "Users") {
-				rows, err := currentDB.Query("SELECT UserID, Username, Password, Email FROM Users;")
+			if err != nil {
+				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+			}
 
-				if err != nil {
-					c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
-				}
+			for rows.Next() {
+				rows.Scan(&id, &username, &password, &email)
 
-				for rows.Next() {
-					var id int
-					var username string
-					var password string
-					var email string
+				var newData userData
+				newData.UserID = strconv.Itoa(id)
+				newData.Username = username
+				newData.Password = password
+				newData.Email = email
+				allUserData = append(allUserData, newData)
+			}
 
-					rows.Scan(&id, &username, &password, &email)
+			rows, err = currentDB.Query("SELECT UserSubs.UserID, Username, Password, Email, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID;")
 
-					var newData userData
-					newData.UserID = strconv.Itoa(id)
-					newData.Username = username
-					newData.Password = password
-					newData.Email = email
+			if err != nil {
+				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+			}
 
-					allUserData = append(allUserData, newData)
-				}
-			} else {
-				rows, err := currentDB.Query("SELECT UserSubs.UserID, Username, Password, Email, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID;")
+			for rows.Next() {
+				rows.Scan(&id, &username, &password, &email, &subid, &name, &price, &dateadded, &dateremoved)
 
-				if err != nil {
-					c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
-				}
-
-				for rows.Next() {
-					var id int
-					var username string
-					var password string
-					var subid int
-					var name string
-					var price string
-					var dateadded string
-					var dateremoved string
-					var email string
-
-					rows.Scan(&id, &username, &password, &email, &subid, &name, &price, &dateadded, &dateremoved)
-
-					var newData userData
-					newData.UserID = strconv.Itoa(id)
-					newData.SubID = strconv.Itoa(subid)
-					newData.Username = username
-					newData.Password = password
-					newData.DateAdded = dateadded
-					newData.DateRemoved = dateremoved
-					newData.Price = price
-					newData.Name = name
-					newData.Email = email
-
-					allUserData = append(allUserData, newData)
-				}
+				var newData userData
+				newData.UserID = strconv.Itoa(id)
+				newData.SubID = strconv.Itoa(subid)
+				newData.Username = username
+				newData.Password = password
+				newData.DateAdded = dateadded
+				newData.DateRemoved = dateremoved
+				newData.Price = price
+				newData.Name = name
+				newData.Email = email
+				allUserData = append(allUserData, newData)
 			}
 
 			c.IndentedJSON(http.StatusOK, allUserData)
-			setDefaultMessage()
 		} else {
-			setDefaultMessage()
 			c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 		}
 	}
