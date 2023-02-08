@@ -9,6 +9,8 @@ import { ApiService } from '../api.service';
 })
 export class SignupComponent implements OnInit{
 
+  public message: string = 'Please enter the required information below.';
+
   constructor(private api: ApiService) {};
 
   hide = true;
@@ -16,6 +18,7 @@ export class SignupComponent implements OnInit{
   signUpForm: FormGroup = {} as FormGroup;
 
   ngOnInit(){
+
     this.signUpForm = new FormGroup({
       'username': new FormControl(null,[Validators.required, Validators.pattern('[A-z0-9]+')]),
       'email': new FormControl(null, [Validators.required, Validators.email]),
@@ -25,6 +28,9 @@ export class SignupComponent implements OnInit{
 
   onSubmit(){
     
-    this.api.createUser(this.signUpForm.value);
+    this.message = this.api.getOutput()
+
+    this.api.createUser(this.signUpForm.value)
+
   }
 }

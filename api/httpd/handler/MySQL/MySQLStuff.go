@@ -94,11 +94,12 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
-			if strings.Contains(err.Error(), "email") {
+			if strings.Contains(err.Error(), "mail") {
 				fmt.Println("Email Already Exists!")
 				return 10
 			} else {
 				fmt.Println("Username Already Exists!")
+				fmt.Println(err.Error())
 				return 0
 			}
 		} else {
