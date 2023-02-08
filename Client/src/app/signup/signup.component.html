@@ -7,8 +7,7 @@
             </mat-card-header>        
             
             <mat-card-content>
-                <form action="">
-                    
+                <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">                    
                         <mat-form-field appearance="fill">
                             <mat-label>Username</mat-label>            
                             <input matInput required>
