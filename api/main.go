@@ -33,6 +33,7 @@ func main() {
 		//Account Management
 		api.GET("/login", handler.TryLogin)
 		api.GET("/login/:data", handler.SetCookie("/api/login"))
+		api.POST("/login", handler.SetCookie("/api/login"))
 
 		api.GET("/accountcreation", handler.NewUser)
 		api.GET("/accountcreation/:data", handler.SetCookie("/api/accountcreation"))
@@ -53,7 +54,6 @@ func main() {
 
 		api.GET("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
 		api.GET("/subscriptions/cancelsubscription/:data", handler.SetCookie("/api/subscriptions/cancelsubscription"))
-
 		//Admin Commands
 		api.GET("/reset", handler.ResetDatabase)
 		api.GET("/alldata", handler.GetAllUserData())

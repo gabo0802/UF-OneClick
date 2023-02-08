@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -163,7 +164,14 @@ func ChangeUserPassword(c *gin.Context) {
 
 func SetCookie(url string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		combinedData := c.Param("data")
+		combinedData, doesExist := c.GetPostForm("data")
+		if !doesExist {
+			combinedData = c.Param("data")
+			fmt.Println("Get: " + combinedData)
+		} else {
+			fmt.Println("Post: " + combinedData)
+		}
+
 		splitData := strings.Split(combinedData, ";") //Usernames or Passwords cannot have special character ';' unless encryption used (future issue)
 
 		currentCookie.First = splitData[0]
