@@ -31,21 +31,16 @@ func main() {
 		//api.GET("", handler.HomePage())
 
 		//Account Management
-		//api.GET("/login", handler.TryLogin)
-		//api.GET("/login/:data", handler.SetCookie("/api/login"))
-		//api.POST("/logintest", handler.TryLogin)
+		api.POST("/login", handler.TryLogin)
 
 		api.POST("/accountcreation", handler.NewUser)
-		//api.GET("/accountcreation", handler.NewUser)
-		//api.GET("/accountcreation/:data", handler.SetCookie("/api/accountcreation"))
-
 		//api.GET("/changepassword", handler.ChangeUserPassword)
 		//api.GET("/changepassword/:data", handler.SetCookie("/api/changepassword"))
 
 		//api.GET("/logout", handler.Logout("Enter"))
 
 		//Subscription Management
-		//api.GET("/subscriptions", handler.GetAllUserSubscriptions())
+		api.POST("/subscriptions", handler.GetAllUserSubscriptions())
 
 		//api.GET("/subscriptions/createsubscription", handler.NewSubscriptionService)
 		//api.GET("/subscriptions/createsubscription/:data", handler.SetCookie("/api/subscriptions/createsubscription"))

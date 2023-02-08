@@ -13,14 +13,10 @@ export class ApiService {
     
     this.http.post('/api/accountcreation', JSON.stringify(userData)).subscribe((res)=>{
       console.log(res);
-
-      console.log("Hello World");
-
-      console.log(userData.username);
-      console.log(userData.password);
-      console.log(userData.email);
-
-    }); //Can't get parameters
+      //console.log(userData.username);
+      //console.log(userData.password);
+      //console.log(userData.email);
+    });
 
     /*this.http.post('http://localhost:8000/', JSON.stringify(userData)).subscribe((res)=>{
       console.log(res);

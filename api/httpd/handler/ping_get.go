@@ -22,20 +22,9 @@ type userData struct {
 	DateRemoved string `json:"dateremoved"`
 }
 
-type userSubscriptions struct {
-	Name        string `json:"name"`
-	Price       string `json:"price"`
-	DateAdded   string `json:"dateadded"`
-	DateRemoved string `json:"dateremoved"`
-}
-
 // Global Variables:
 var currentDB *sql.DB
 var currentID = -1
-
-/*var usersubInfo = []userSubscriptions{
-	//{Name: "", Price: "", DateAdded: "", DateRemoved: ""},
-}*/
 
 func SetDB(db *sql.DB) {
 	currentDB = db
@@ -68,7 +57,8 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 		c.JSON(http.StatusOK, gin.H{"Output": "Error"})
 
 	} else {
-		c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
+		//c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
+		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 	}
 }
 
@@ -106,6 +96,32 @@ func NewUser(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created! Enter Username and Password!"})
+	}
+}
+
+func GetAllUserSubscriptions() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var usersubInfo = []userData{}
+
+		if currentID != -1 {
+			rows, err := currentDB.Query("SELECT Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? ORDER BY DateAdded ASC", currentID)
+			//can order by anything
+
+			if err != nil {
+				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+			}
+
+			for rows.Next() {
+				var newUserSub userData
+				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
+				usersubInfo = append(usersubInfo, newUserSub)
+			}
+
+			c.IndentedJSON(http.StatusOK, usersubInfo)
+
+		} else {
+			c.Redirect(http.StatusTemporaryRedirect, "/login")
+		}
 	}
 }
 
@@ -185,33 +201,6 @@ func SetCookie(url string) gin.HandlerFunc {
 		}
 
 		c.Redirect(http.StatusTemporaryRedirect, url)
-	}
-}
-
-func GetAllUserSubscriptions() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		usersubInfo = []userSubscriptions{}
-
-		if currentID != -1 {
-			rows, err := currentDB.Query("SELECT Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? ORDER BY DateAdded ASC", currentID)
-			//can order by anything
-
-			if err != nil {
-				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
-			}
-
-			for rows.Next() {
-				var newUserSub userSubscriptions
-				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
-				usersubInfo = append(usersubInfo, newUserSub)
-			}
-
-			c.IndentedJSON(http.StatusOK, usersubInfo)
-
-		} else {
-			setDefaultMessage()
-			c.Redirect(http.StatusTemporaryRedirect, "/api/login")
-		}
 	}
 }
 
@@ -314,7 +303,8 @@ func ResetDatabase(c *gin.Context) {
 		//funcOutput = "Admin Database Reset! Enter Username and Password!"
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 	}
 }
 
@@ -390,7 +380,8 @@ func GetAllUserData() gin.HandlerFunc {
 
 			c.IndentedJSON(http.StatusOK, allUserData)
 		} else {
-			c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+			c.Redirect(http.StatusTemporaryRedirect, "/login")
+			//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 		}
 	}
 }
