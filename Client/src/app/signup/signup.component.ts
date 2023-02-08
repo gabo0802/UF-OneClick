@@ -8,6 +8,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class SignupComponent implements OnInit{
 
+  hide = true;
+
   signUpForm: FormGroup = {} as FormGroup;
 
   ngOnInit(){
