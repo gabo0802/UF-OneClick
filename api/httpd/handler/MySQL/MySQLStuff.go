@@ -49,7 +49,7 @@ func GetTableSize(db *sql.DB, tableName string) int {
 	size := 0
 
 	if err != nil {
-		fmt.Println("Error: Database Does Not Exist!")
+		fmt.Printf("Error: Table \"%v\" Does Not Exist!\n", tableName)
 		return -1
 	}
 
@@ -76,6 +76,7 @@ func ResetTable(db *sql.DB, tableName string) {
 }
 
 func ResetAllTables(db *sql.DB) {
+	//Must drop UserSubs first since its foreign keys depend on the other tables for primary keys
 	db.Exec("DROP TABLE IF EXISTS UserSubs;")
 	db.Exec("DROP TABLE IF EXISTS Users;")
 	db.Exec("DROP TABLE IF EXISTS Subscriptions;")

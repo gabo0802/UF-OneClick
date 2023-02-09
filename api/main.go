@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// UserID will normally be taken automatically from the database
+// UserID and dateAdded will normally be taken automatically from the database
 // instead of specifying it directly, unlike in this test
 func testBackend(db *sql.DB) {
 	fmt.Println("Type -1 to quit the test.")
@@ -27,7 +27,7 @@ func testBackend(db *sql.DB) {
 			fmt.Println("Choice 2: Setting up all tables for database \"userdb.\"")
 		} else if choice == 3 {
 			fmt.Println("Choice 3: Getting table sizes.")
-			fmt.Println("Subscription table size: " + strconv.Itoa(MySQL.GetTableSize(db, "subscriptions")))
+			fmt.Println("Subscriptions table size: " + strconv.Itoa(MySQL.GetTableSize(db, "subscriptions")))
 			fmt.Println("Users table size: " + strconv.Itoa(MySQL.GetTableSize(db, "users")))
 			fmt.Println("UserSubs table size: " + strconv.Itoa(MySQL.GetTableSize(db, "usersubs")))
 		} else if choice == 4 {
@@ -57,12 +57,13 @@ func testBackend(db *sql.DB) {
 			fmt.Scanln(&a, &b)
 			MySQL.CancelUserSub(db, a, b)
 		} else if choice == 8 {
-			fmt.Println("Choice 8: Resubscribes to subscription service.")
-			fmt.Println("Enter a UserID, Subscription Name, and Date Added: ")
+			fmt.Println("Choice 8: Adds pre-existing subscription service.")
+			fmt.Println("Enter a UserID, Subscription Name, Date, and Time: ")
 			var a int
-			var b, c string
-			fmt.Scanln(&a, &b, &c)
-			MySQL.AddOldUserSub(db, a, b, c)
+			var b, c, d string
+			fmt.Scanln(&a, &b, &c, &d)
+			dateAndTime := c + " " + d
+			MySQL.AddOldUserSub(db, a, b, dateAndTime)
 		} else if choice == 9 {
 			fmt.Println("Choice 9: Deletes user that is specified.")
 			fmt.Println("Enter a UserID: ")
