@@ -16,6 +16,8 @@ func main() {
 	//Defers the closing of the connection to the database until the end of main
 	defer db.Close()
 
+	//MySQL.TestBackend(db)
+
 	//MySQL.ResetAllTables(db)
 	MySQL.SetUpTables(db)
 	//MySQL.CreateAdminUser(db)
