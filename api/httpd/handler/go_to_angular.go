@@ -40,13 +40,13 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	username := login.Username
 	if username == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Username"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Username Entered!"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Password"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Password Entered!"})
 		return
 	}
 
@@ -62,11 +62,11 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 	//Try Login
 	currentID = MySQL.Login(currentDB, username, password)
 
-	if currentID == -1 {
+	if currentID == -401 { //unauthorized
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Incorrect Username or Password!"})
 
-	} else if currentID == -2 {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error"})
+	} else if currentID == -502 { //server error
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error!"})
 
 	} else {
 		//c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
@@ -80,19 +80,19 @@ func NewUser(c *gin.Context) {
 
 	username := login.Username
 	if username == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Username"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Username Entered!"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Password"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Password Entered!"})
 		return
 	}
 
 	email := login.Email
 	if email == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Email"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Email Entered!"})
 		return
 	}
 
@@ -108,13 +108,13 @@ func NewUser(c *gin.Context) {
 	//Try Create New User
 	rowsAffected := MySQL.CreateNewUser(currentDB, encryptedusername, password, email)
 
-	if rowsAffected == 0 {
+	if rowsAffected == (-223 + 0) { //already exists
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Username Already Exists!"})
-	} else if rowsAffected == 10 {
+	} else if rowsAffected == (-223 + 2) {
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
-	} else if rowsAffected == -1 {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error"})
-	} else if rowsAffected == -2 {
+	} else if rowsAffected == -502 { //bad gateway
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error!"})
+	} else if rowsAffected == -204 { //no content
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created! Enter Username and Password!"})

@@ -51,7 +51,7 @@ func GetTableSize(db *sql.DB, tableName string) int {
 
 	if err != nil {
 		fmt.Printf("Error: Table \"%v\" Does Not Exist!\n", tableName)
-		return -1
+		return -404
 	}
 
 	for rows.Next() {
@@ -89,7 +89,7 @@ func ResetAllTables(db *sql.DB) {
 func CreateNewUser(db *sql.DB, username string, password string, email string) int {
 	//Create New User
 	if username == "" || password == "" || email == "" {
-		return -2
+		return -204 //no content
 	}
 
 	result, err := db.Exec("INSERT INTO Users(Username, Password, Email) VALUES (?,?,?);", username, password, email)
@@ -98,15 +98,15 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 		if strings.Contains(err.Error(), "Duplicate entry") {
 			if strings.Contains(err.Error(), "mail") {
 				fmt.Println("Email Already Exists!")
-				return 10
+				return (-223 + 2) //already exists (third variable)
 			} else {
 				fmt.Println("Username Already Exists!")
 				fmt.Println(err.Error())
-				return 0
+				return (-223 + 0) //already exists (first variable)
 			}
 		} else {
 			log.Fatal(err)
-			return -1
+			return -502 //server error
 		}
 	}
 
@@ -141,18 +141,18 @@ func CreateAdminUser(db *sql.DB) {
 
 func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
 	if oldPassword == "" || newPassword == "" {
-		return -2
+		return -204
 	}
 
 	result, err := db.Exec("UPDATE Users SET Password = ? WHERE userID = ? AND Password = ?;", newPassword, userID, oldPassword)
 	if err != nil {
-		return -1
+		return -502
 	}
 
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
-		return -1
+		return -502
 	}
 
 	return int(numRows)
@@ -161,7 +161,7 @@ func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword stri
 func CreateNewSub(db *sql.DB, name string, price string) int {
 	//Create New Subscription
 	if name == "" || price == "" {
-		return -2
+		return -204
 	}
 
 	result, err := db.Exec("INSERT INTO Subscriptions(name, price) VALUES (?,?);", name, price)
@@ -169,10 +169,10 @@ func CreateNewSub(db *sql.DB, name string, price string) int {
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
 			fmt.Println("Subscription Name Already Exists!")
-			return 0
+			return -223
 		} else {
 			log.Fatal(err)
-			return -1
+			return -502
 		}
 	}
 
@@ -181,7 +181,7 @@ func CreateNewSub(db *sql.DB, name string, price string) int {
 
 	if err != nil {
 		log.Fatal(err)
-		return -1
+		return -502
 	}
 
 	fmt.Println("Rows Affected:", numRows)
@@ -200,7 +200,7 @@ func CanAddUserSub(db *sql.DB, userID int, subID int) int {
 		rows.Scan(&currentDateRemoved)
 
 		if currentDateRemoved == "" { //tests if the subscription has been canceled (DateRemoved = nil)
-			return -1 //if not then subscription still exists
+			return -401 //if not then subscription still exists
 		} else {
 			return 1 //can add new subscription
 		}
@@ -212,7 +212,7 @@ func CanAddUserSub(db *sql.DB, userID int, subID int) int {
 // Adds based on the current time
 func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	if subscriptionName == "" {
-		return -3
+		return -204
 	}
 
 	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
@@ -226,7 +226,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	if err != nil {
 		log.Fatal(err)
-		return -2
+		return -502
 	}
 
 	//Checks If Query Returns Empty Set or if the Subscription Name exists
@@ -237,14 +237,14 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	} else {
 		fmt.Println("Subscription Name is Invalid")
-		return -1
+		return -404
 	}
 
 	//Checks to see if sub was already added to user before creating a new table value
 	var isRenewed int = CanAddUserSub(db, userID, CurrentSubID)
 	if isRenewed < 0 {
 		fmt.Println("Subscription already added to User's Profile!")
-		return 0
+		return -223
 	}
 
 	//Create New UserSub Data
@@ -255,7 +255,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	if err != nil {
 		log.Fatal(err)
-		return -1
+		return -402
 	}
 
 	fmt.Println("Rows Affected:", numRows)
@@ -269,7 +269,7 @@ func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 	}
 	if rows.Next() && oldCanceledDate == "" {
 		fmt.Println("Error: Can't Have Old Subscription and New Subscription At The Same Time")
-		return -1
+		return -401
 	}
 
 	rows, err = db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded <= ? AND DateRemoved >= ?;", userID, subID, oldDate, oldDate)
@@ -278,7 +278,7 @@ func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 	}
 	if rows.Next() {
 		fmt.Println("Error: Can Have The Same Subscription In The Middle Of A Subscription")
-		return -1
+		return -401
 	}
 
 	rows, err = db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? ;", userID, subID, oldDate)
@@ -287,7 +287,7 @@ func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 	}
 	if rows.Next() {
 		fmt.Println("Error: Can't Have The Same Subscription Be On the Same Exact Time")
-		return -1
+		return -401
 	}
 
 	if oldCanceledDate != "" {
@@ -299,7 +299,7 @@ func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 
 		if rows.Next() {
 			fmt.Println("Error: Can Have The Same Subscription In The Middle Of A Subscription")
-			return -1
+			return -401
 		}
 	}
 
@@ -315,7 +315,7 @@ func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 
 		if currentDateRemoved == "" { //tests if the subscription has been canceled (DateRemoved = nil)
 			fmt.Println("Error: Old Un-Canceled Subscription Still Exists!")
-			return -1 //if not then subscription still exists
+			return -401 //if not then subscription still exists
 		} else {
 			return 1 //can add new subscription
 		}
@@ -330,7 +330,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	if err != nil {
 		fmt.Println("Error: Date Added Not Formatted Properly")
 		log.Fatal(err)
-		return -2
+		return -415
 	}
 
 	if dateCanceled != "" {
@@ -338,17 +338,17 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		if err != nil {
 			log.Fatal(err)
 			fmt.Println("Error: Date Canceled Not Formatted Properly")
-			return -2
+			return -415
 		}
 	}
 
 	if dateCanceled != "" && dateCanceled < dateAdded {
 		fmt.Println("Error: Can't Cancel Subscription Before Adding It")
-		return -2
+		return -401
 	}
 
 	if subscriptionName == "" || dateAdded == "" {
-		return -3
+		return -204
 	}
 
 	var CurrentSubID int
@@ -358,7 +358,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 
 	if err != nil {
 		log.Fatal(err)
-		return -2
+		return -502
 	}
 
 	//Checks If Query Returns Empty Set or if the Subscription Name exists
@@ -369,7 +369,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 
 	} else {
 		fmt.Println("Subscription Name is Invalid")
-		return -1
+		return -404
 	}
 
 	//Checks to see if sub was already added to user before creating a new table value (night be irrelevent, future issue)
@@ -377,7 +377,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	if isRenewed < 0 {
 		fmt.Println("Subscription already added to User's Profile!")
 		fmt.Println(dateAdded + ", " + dateCanceled)
-		return 0
+		return -223
 	}
 
 	//Create New UserSub Data
@@ -394,7 +394,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 
 	if err != nil {
 		log.Fatal(err)
-		return -1
+		return -502
 	}
 
 	fmt.Println("Rows Affected:", numRows)
@@ -404,7 +404,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 // Sets DateRemoved Value to current time based on userID and subscriptionName
 func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	if subscriptionName == "" {
-		return -2
+		return -204
 	}
 
 	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
@@ -418,6 +418,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	if err != nil {
 		log.Fatal(err)
+		return -502
 	}
 
 	//Checks If Query Returns Empty Set or if the Subscription Name exists
@@ -428,7 +429,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	} else {
 		fmt.Println("Subscription Name is Invalid")
-		return 0
+		return -404
 	}
 
 	//Update UserSub Data
@@ -439,7 +440,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	if err != nil {
 		log.Fatal(err)
-		return -1
+		return -502
 	}
 
 	fmt.Println("Rows Affected:", numRows)
@@ -490,7 +491,7 @@ func Login(db *sql.DB, username string, password string) int {
 
 	if err != nil {
 		log.Fatal(err)
-		return -2
+		return -502
 	}
 
 	//Tests If Query Returns Empty Set or Not (Valid Username and Password or Not)
@@ -506,7 +507,7 @@ func Login(db *sql.DB, username string, password string) int {
 
 	} else {
 		fmt.Println("Incorrect Username or Password!")
-		return -1
+		return -401
 	}
 }
 
