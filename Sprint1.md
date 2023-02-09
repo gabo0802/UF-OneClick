@@ -13,6 +13,7 @@
 * Create Profile Page
 * Create Sign Up Page
 * Connect and Create a Database to Store Information
+* Store User Information and Subscriptions in the Database
 
 ## Accomplishments
 Front-End:
@@ -20,7 +21,7 @@ Front-End:
 * Created main Website Page
 * Created Login Page with form with some validators
 * Created Sign Up Page with form also with some validators
-* Created a http request to verify connection with backend
+* Created an http request to verify connection with backend
 
 Back-End:
 * Created a remote database and established a connection to it by using the mysql package.
