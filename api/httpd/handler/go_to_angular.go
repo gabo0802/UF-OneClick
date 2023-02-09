@@ -38,23 +38,23 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	username := login.Username
 	if username == "" {
-		c.JSON(http.StatusOK, gin.H{"Output": "No Username"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Username"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		c.JSON(http.StatusOK, gin.H{"Output": "No Password"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Password"})
 		return
 	}
 
 	currentID = MySQL.Login(currentDB, username, password)
 
 	if currentID == -1 {
-		c.JSON(http.StatusOK, gin.H{"Output": "Incorrect Username or Password!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Incorrect Username or Password!"})
 
 	} else if currentID == -2 {
-		c.JSON(http.StatusOK, gin.H{"Output": "Error"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error"})
 
 	} else {
 		//c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})

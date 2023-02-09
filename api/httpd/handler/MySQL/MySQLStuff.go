@@ -261,8 +261,91 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	return int(numRows) + isRenewed
 }
 
+func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanceledDate string) int {
+	rows, err := db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded > ?;", userID, subID, oldDate) //sub in future already exists (need to have old sub be canceled)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if rows.Next() && oldCanceledDate == "" {
+		fmt.Println("Error: Can't Have Old Subscription and New Subscription At The Same Time")
+		return -1
+	}
+
+	rows, err = db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded <= ? AND DateRemoved >= ?;", userID, subID, oldDate, oldDate)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if rows.Next() {
+		fmt.Println("Error: Can Have The Same Subscription In The Middle Of A Subscription")
+		return -1
+	}
+
+	rows, err = db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? ;", userID, subID, oldDate)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if rows.Next() {
+		fmt.Println("Error: Can't Have The Same Subscription Be On the Same Exact Time")
+		return -1
+	}
+
+	if oldCanceledDate != "" {
+		rows, err = db.Query("SELECT DateAdded FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded < ? AND DateAdded > ?;", userID, subID, oldCanceledDate, oldDate)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if rows.Next() {
+			fmt.Println("Error: Can Have The Same Subscription In The Middle Of A Subscription")
+			return -1
+		}
+	}
+
+	rows, err = db.Query("SELECT DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded < ?;", userID, subID, oldDate)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if rows.Next() {
+		var currentDateRemoved string
+		rows.Scan(&currentDateRemoved)
+
+		if currentDateRemoved == "" { //tests if the subscription has been canceled (DateRemoved = nil)
+			fmt.Println("Error: Old Un-Canceled Subscription Still Exists!")
+			return -1 //if not then subscription still exists
+		} else {
+			return 1 //can add new subscription
+		}
+	}
+
+	return 0 //doesn't exist yet
+}
+
 // Allows pre-existing subscriptions with dates other than the current time to be added
-func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded string) int {
+func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded string, dateCanceled string) int {
+	_, err := time.Parse("2006-01-02 15:04:01", dateAdded)
+	if err != nil {
+		fmt.Println("Error: Date Added Not Formatted Properly")
+		log.Fatal(err)
+		return -2
+	}
+
+	if dateCanceled != "" {
+		_, err = time.Parse("2006-01-02 15:04:01", dateCanceled)
+		if err != nil {
+			log.Fatal(err)
+			fmt.Println("Error: Date Canceled Not Formatted Properly")
+			return -2
+		}
+	}
+
+	if dateCanceled != "" && dateCanceled < dateAdded {
+		fmt.Println("Error: Can't Cancel Subscription Before Adding It")
+		return -2
+	}
+
 	if subscriptionName == "" || dateAdded == "" {
 		return -3
 	}
@@ -289,14 +372,21 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	}
 
 	//Checks to see if sub was already added to user before creating a new table value (night be irrelevent, future issue)
-	var isRenewed int = CanAddUserSub(db, userID, CurrentSubID)
+	var isRenewed int = CanAddOldUserSub(db, userID, CurrentSubID, dateAdded, dateCanceled)
 	if isRenewed < 0 {
 		fmt.Println("Subscription already added to User's Profile!")
+		fmt.Println(dateAdded + ", " + dateCanceled)
 		return 0
 	}
 
 	//Create New UserSub Data
-	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, dateAdded)
+	result, _ := db.Exec("")
+
+	if dateCanceled != "" {
+		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", userID, CurrentSubID, dateAdded, dateCanceled)
+	} else {
+		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, dateAdded)
+	}
 
 	//Tests to see if function worked (can remove later)
 	numRows, err := result.RowsAffected()
@@ -466,12 +556,13 @@ func TestBackend(db *sql.DB) {
 			CancelUserSub(db, a, b)
 		} else if choice == 8 {
 			fmt.Println("Choice 8: Adds pre-existing subscription service.")
-			fmt.Println("Enter a UserID, Subscription Name, Date, and Time: ")
+			fmt.Println("Enter a UserID, Subscription Name, Date, Time Added, and Time Canceled (Possibly Optional): ")
 			var a int
-			var b, c, d string
-			fmt.Scanln(&a, &b, &c, &d)
+			var b, c, d, e, f string
+			fmt.Scanln(&a, &b, &c, &d, &e, &f)
 			dateAndTime := c + " " + d
-			AddOldUserSub(db, a, b, dateAndTime)
+			dateAndTimeCanceled := e + " " + f
+			AddOldUserSub(db, a, b, dateAndTime, dateAndTimeCanceled)
 		} else if choice == 9 {
 			fmt.Println("Choice 9: Deletes user that is specified.")
 			fmt.Println("Enter a UserID: ")

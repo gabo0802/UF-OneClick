@@ -5,7 +5,6 @@ import (
 
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler"
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler/MySQL"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,7 +58,7 @@ func main() {
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
-	//r.Run("localhost:4200")
+	r.Run("localhost:4200")
 	fmt.Println("End")
 }
 
