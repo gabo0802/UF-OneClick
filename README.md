@@ -32,8 +32,8 @@ Mason Enojo (enojom) <br><br>
 1) Clone repository
 2) Terminal -> New Terminal
 3) Terminal -> Split Terminal
-4) Run <code> make dev </code> in first terminal
-5) Run <code> cd Client </code> then <code> npm start </code> in second terminal
+4) Run <code> make first </code> in first terminal
+5) Run <code> make second </code> in second terminal
 6) Go to: http://localhost:4200/ <br>
 
 ## How to Install MySQL
