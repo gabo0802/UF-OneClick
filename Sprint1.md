@@ -38,6 +38,6 @@ Front-End:
 * As for implementing the profile page we need to learn more about user authentication.
 
 ## Videos
-* Front-End: 
+* Front-End: https://youtu.be/u1g7j0PRHL4
 * Back-End: https://drive.google.com/file/d/1aYG7Ip5u3QTHMfdX3eGR1fYjquJGs92R/view?usp=sharing
 
