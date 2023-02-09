@@ -14,6 +14,8 @@ export class ApiService {
 
   createUser(userData: {email: string, password: string, username: string}){
     
+
+    // Figure out how use res because I am wasting too much time on it
     this.http.post('/api/accountcreation', JSON.stringify(userData)).subscribe((res)=> {
 
     

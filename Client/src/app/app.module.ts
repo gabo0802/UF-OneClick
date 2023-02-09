@@ -10,6 +10,7 @@ import { HeaderComponent } from './header/header.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { ScrollBarComponent } from './scroll-bar/scroll-bar.component';
 
 
 
@@ -19,7 +20,8 @@ import { SignupComponent } from './signup/signup.component';
     HeaderComponent,
     LandingPageComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    ScrollBarComponent
   ],
   imports: [
     BrowserModule,

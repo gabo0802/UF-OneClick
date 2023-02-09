@@ -1,0 +1,7 @@
+<mat-toolbar color="primary" class="scroll-bar">
+  <div class="scroll-area" #scrollArea>
+    <ng-container *ngFor="let logo of logos">
+      <img [src]="logo" class="logo" />
+    </ng-container>
+  </div>
+</mat-toolbar>
