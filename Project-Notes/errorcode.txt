@@ -7,4 +7,4 @@
 -415: Incorrect data format
 
 <Variables Affected>
-(+n): The nth - 1 variable affected by the code
+(- n): The nth - 1 variable affected by the code
