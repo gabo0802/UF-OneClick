@@ -27,7 +27,8 @@ Back-End:
 * Created a remote database and established a connection to it by using the mysql package.
 * Added the ability to set up tables to store main user data, all subscriptions available, and subscriptions linked to users.
 * Can reset tables, add usernames and passwords, add new subscription names, and link subs to users with a date and time that tracks when it is added or removed.
-* Login functionality that checks if the username and password exist on the "Users" table before accessing the account.
+* Login checks if the username and password exist on the "Users" table before accessing the account.
+* Beginner functionality in connecting to the frontend where data can be stored in the database through the "Sign Up" page on the website.
 
 ## What didn't work
 Front-End:
