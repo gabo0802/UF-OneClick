@@ -63,9 +63,11 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 	currentID = MySQL.Login(currentDB, username, password)
 
 	if currentID == -401 { //unauthorized
+		currentID = -1
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Incorrect Username or Password!"})
 
 	} else if currentID == -502 { //server error
+		currentID = -1
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error!"})
 
 	} else {
@@ -108,9 +110,9 @@ func NewUser(c *gin.Context) {
 	//Try Create New User
 	rowsAffected := MySQL.CreateNewUser(currentDB, encryptedusername, password, email)
 
-	if rowsAffected == (-223 + 0) { //already exists
+	if rowsAffected == (-223 - 0) { //already exists
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Username Already Exists!"})
-	} else if rowsAffected == (-223 + 2) {
+	} else if rowsAffected == (-223 - 2) {
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
 	} else if rowsAffected == -502 { //bad gateway
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error!"})

@@ -98,11 +98,11 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 		if strings.Contains(err.Error(), "Duplicate entry") {
 			if strings.Contains(err.Error(), "mail") {
 				fmt.Println("Email Already Exists!")
-				return (-223 + 2) //already exists (third variable)
+				return (-223 - 2) //already exists (third variable)
 			} else {
 				fmt.Println("Username Already Exists!")
 				fmt.Println(err.Error())
-				return (-223 + 0) //already exists (first variable)
+				return (-223 - 0) //already exists (first variable)
 			}
 		} else {
 			log.Fatal(err)
@@ -330,7 +330,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	if err != nil {
 		fmt.Println("Error: Date Added Not Formatted Properly")
 		log.Fatal(err)
-		return -415
+		return (-415 - 2)
 	}
 
 	if dateCanceled != "" {
@@ -338,7 +338,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		if err != nil {
 			log.Fatal(err)
 			fmt.Println("Error: Date Canceled Not Formatted Properly")
-			return -415
+			return (-415 - 3)
 		}
 	}
 
