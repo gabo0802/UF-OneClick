@@ -1,0 +1,10 @@
+<Code> 
+-404: Thing does not exist
+-223: Thing already exists and cannot be modified
+-204: Missing input
+-502: Database Connection Error
+-401: Unauthorized action (or impossible to do)
+-415: Incorrect data format
+
+<Variables Affected>
+(+n): The nth - 1 variable affected by the code
