@@ -16,10 +16,10 @@ func main() {
 	//Defers the closing of the connection to the database until the end of main
 	defer db.Close()
 
-	MySQL.TestBackend(db)
+	//MySQL.TestBackend(db)
 
 	//MySQL.ResetAllTables(db)
-	//MySQL.SetUpTables(db)
+	MySQL.SetUpTables(db)
 	//MySQL.CreateAdminUser(db)
 
 	//Sets pointer in "handler" package to main.go's db
