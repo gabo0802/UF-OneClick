@@ -16,6 +16,11 @@
 
 ## Accomplishments
 Front-End:
+* Created a sketch of Website pages
+* Created main Website Page
+* Created Login Page with form with some validators
+* Created Sign Up Page with form also with some validators
+* Created a http request to verify connection with backend
 
 Back-End:
 * Created a remote database and established a connection to it by using the mysql package.
@@ -24,4 +29,13 @@ Back-End:
 * Login functionality that checks if the username and password exist on the "Users" table before accessing the account.
 
 ## What didn't work
+Front-End:
 * Ran out of time to implement other features.
+* Ran out of time to implement profile page because we were learning the basics of angular and go.
+* As for implementing the profile page we need to learn more about user authentication.
+
+## Videos
+
+* Front-End: 
+* Back-End:
+
