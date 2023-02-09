@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
@@ -207,6 +208,7 @@ func CanAddUserSub(db *sql.DB, userID int, subID int) int {
 	return 0 //doesn't exist yet
 }
 
+// Adds based on the current time
 func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	if subscriptionName == "" {
 		return -3
@@ -259,6 +261,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	return int(numRows) + isRenewed
 }
 
+// Allows pre-existing subscriptions with dates other than the current time to be added
 func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded string) int {
 	if subscriptionName == "" || dateAdded == "" {
 		return -3
@@ -352,8 +355,6 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	return int(numRows)
 }
 
-//TODO: Add a way to remove a subscription linked to a user and add it to the DateRemoved column <- No We Keep This For Future Data Use
-
 // Deletes entry based on username and password from MySQL table called "Users"
 /*func DeleteUser(db *sql.DB, username string, password string) {
     result, err := db.Exec("DELETE FROM Users WHERE Username = ? AND Password = ?;", username, password)
@@ -414,6 +415,76 @@ func Login(db *sql.DB, username string, password string) int {
 	} else {
 		fmt.Println("Incorrect Username or Password!")
 		return -1
+	}
+}
+
+// UserID and dateAdded will normally be taken automatically from the database
+// instead of specifying it directly, unlike in this test
+func TestBackend(db *sql.DB) {
+	fmt.Println("Type -1 to quit the test.")
+	var choice int
+	for choice != -1 {
+		fmt.Print("Enter a number from 1 - 10: ")
+		fmt.Scanln(&choice)
+		if choice == 1 {
+			ResetAllTables(db)
+			fmt.Println("Choice 1: Clearing tables from database \"userdb.\"")
+		} else if choice == 2 {
+			SetUpTables(db)
+			fmt.Println("Choice 2: Setting up all tables for database \"userdb.\"")
+		} else if choice == 3 {
+			fmt.Println("Choice 3: Getting table sizes.")
+			fmt.Println("Subscriptions table size: " + strconv.Itoa(GetTableSize(db, "subscriptions")))
+			fmt.Println("Users table size: " + strconv.Itoa(GetTableSize(db, "users")))
+			fmt.Println("UserSubs table size: " + strconv.Itoa(GetTableSize(db, "usersubs")))
+		} else if choice == 4 {
+			fmt.Println("Choice 4: Creates new user.")
+			fmt.Println("Enter a username, password, and email: ")
+			var a, b, c string
+			fmt.Scanln(&a, &b, &c)
+			CreateNewUser(db, a, b, c)
+		} else if choice == 5 {
+			fmt.Println("Choice 5: Creates new subscription.")
+			fmt.Println("Enter a name and price: ")
+			var a, b string
+			fmt.Scanln(&a, &b)
+			CreateNewSub(db, a, b)
+		} else if choice == 6 {
+			fmt.Println("Choice 6: Subscribes to subscription service.")
+			fmt.Println("Enter a UserID and Subscription Name: ")
+			var a int
+			var b string
+			fmt.Scanln(&a, &b)
+			CreateNewUserSub(db, a, b)
+		} else if choice == 7 {
+			fmt.Println("Choice 7: Cancels subscription service.")
+			fmt.Println("Enter a UserID and Subscription Name: ")
+			var a int
+			var b string
+			fmt.Scanln(&a, &b)
+			CancelUserSub(db, a, b)
+		} else if choice == 8 {
+			fmt.Println("Choice 8: Adds pre-existing subscription service.")
+			fmt.Println("Enter a UserID, Subscription Name, Date, and Time: ")
+			var a int
+			var b, c, d string
+			fmt.Scanln(&a, &b, &c, &d)
+			dateAndTime := c + " " + d
+			AddOldUserSub(db, a, b, dateAndTime)
+		} else if choice == 9 {
+			fmt.Println("Choice 9: Deletes user that is specified.")
+			fmt.Println("Enter a UserID: ")
+			var a int
+			fmt.Scanln(&a)
+			DeleteUser(db, a)
+		} else if choice == 10 {
+			fmt.Println("Choice 10: Changes the password of specified user.")
+			fmt.Println("Enter a UserID, the Old Password, and the New Password: ")
+			var a int
+			var b, c string
+			fmt.Scanln(&a, &b, &c)
+			ChangePassword(db, a, b, c)
+		}
 	}
 }
 
