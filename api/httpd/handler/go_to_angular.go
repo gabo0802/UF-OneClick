@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"crypto/sha256"
 	"database/sql"
+	"encoding/base64"
 	"net/http"
 	"strconv"
 
@@ -48,6 +50,16 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 		return
 	}
 
+	//Encrypt Username and Password
+	stringEncrypter := sha256.New()
+	stringEncrypter.Write([]byte(username))
+	username = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+
+	stringEncrypter = sha256.New()
+	stringEncrypter.Write([]byte(password))
+	password = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+
+	//Try Login
 	currentID = MySQL.Login(currentDB, username, password)
 
 	if currentID == -1 {
@@ -84,10 +96,20 @@ func NewUser(c *gin.Context) {
 		return
 	}
 
-	rowsAffected := MySQL.CreateNewUser(currentDB, username, password, email)
+	//Encrypt Username and Password
+	stringEncrypter := sha256.New()
+	stringEncrypter.Write([]byte(username))
+	encryptedusername := base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+
+	stringEncrypter = sha256.New()
+	stringEncrypter.Write([]byte(password))
+	password = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+
+	//Try Create New User
+	rowsAffected := MySQL.CreateNewUser(currentDB, encryptedusername, password, email)
 
 	if rowsAffected == 0 {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Username " + username + " Already Exists!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Username Already Exists!"})
 	} else if rowsAffected == 10 {
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
 	} else if rowsAffected == -1 {
@@ -96,6 +118,7 @@ func NewUser(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created! Enter Username and Password!"})
+		username = ""
 	}
 }
 
