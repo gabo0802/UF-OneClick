@@ -374,6 +374,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 // Deletes entry based on UserID from MySQL table called "Users"
 func DeleteUser(db *sql.DB, ID int) {
+	db.Exec("DELETE FROM UserSubs WHERE UserID = ?;", ID)
 	result, err := db.Exec("DELETE FROM Users WHERE UserID = ?;", ID)
 
 	if err != nil {

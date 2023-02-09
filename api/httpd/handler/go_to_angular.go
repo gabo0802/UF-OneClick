@@ -68,32 +68,32 @@ func NewUser(c *gin.Context) {
 
 	username := login.Username
 	if username == "" {
-		c.JSON(http.StatusOK, gin.H{"Output": "No Username"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Username"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		c.JSON(http.StatusOK, gin.H{"Output": "No Password"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Password"})
 		return
 	}
 
 	email := login.Email
 	if email == "" {
-		c.JSON(http.StatusOK, gin.H{"Output": "No Email"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Email"})
 		return
 	}
 
 	rowsAffected := MySQL.CreateNewUser(currentDB, username, password, email)
 
 	if rowsAffected == 0 {
-		c.JSON(http.StatusOK, gin.H{"Output": "Error: Username " + username + " Already Exists!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Username " + username + " Already Exists!"})
 	} else if rowsAffected == 10 {
-		c.JSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
 	} else if rowsAffected == -1 {
-		c.JSON(http.StatusOK, gin.H{"Output": "Error"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error"})
 	} else if rowsAffected == -2 {
-		c.JSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created! Enter Username and Password!"})
 	}
@@ -108,7 +108,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 			//can order by anything
 
 			if err != nil {
-				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
 			}
 
 			for rows.Next() {
@@ -325,7 +325,7 @@ func GetAllUserData() gin.HandlerFunc {
 			rows, err := currentDB.Query("SELECT SubID, Name, Price FROM Subscriptions;")
 
 			if err != nil {
-				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
 			}
 
 			for rows.Next() {
@@ -342,7 +342,7 @@ func GetAllUserData() gin.HandlerFunc {
 			rows, err = currentDB.Query("SELECT UserID, Username, Password, Email FROM Users;")
 
 			if err != nil {
-				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
 			}
 
 			for rows.Next() {
@@ -359,7 +359,7 @@ func GetAllUserData() gin.HandlerFunc {
 			rows, err = currentDB.Query("SELECT UserSubs.UserID, Username, Password, Email, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID;")
 
 			if err != nil {
-				c.JSON(http.StatusBadGateway, gin.H{"message": "Error"})
+				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
 			}
 
 			for rows.Next() {
