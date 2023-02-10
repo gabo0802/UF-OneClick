@@ -13,16 +13,14 @@ export class ApiService {
   
 
   createUser(userData: {email: string, password: string, username: string}){
-    
+    document.cookie = "signupOutput=none; path=/; max-age=100" 
 
-    // Figure out how use res because I am wasting too much time on it
     this.http.post('/api/accountcreation', JSON.stringify(userData)).subscribe((res)=> {
-
-    
-      var ex = res
-      this.output = ex.toString()
+      this.output = document.cookie
       console.log(res)
-    
+      //console.log(document.cookie)
+      console.log(this.output)
+
       //console.log(userData.username);
       //console.log(userData.password);
       //console.log(userData.email);
