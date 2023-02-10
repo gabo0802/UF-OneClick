@@ -159,10 +159,14 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
 			}
 
+			var index = 0
 			for rows.Next() {
 				var newUserSub userData
 				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
 				usersubInfo = append(usersubInfo, newUserSub)
+
+				c.SetCookie("outputSubscriptions"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
+				index += 1
 			}
 
 			c.IndentedJSON(http.StatusOK, usersubInfo)
