@@ -35,6 +35,15 @@ func SetDB(db *sql.DB) {
 // GET and POST Functions:
 
 func TryLogin(c *gin.Context) { // gin.Context parameter.
+	/*_, err := c.Cookie("currentUserID")
+	if err == nil {
+		fmt.Println("Logged In Already!")
+		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+		return
+	} else {
+		fmt.Println("Not Logged In Already!")
+	}*/
+
 	var login userData
 	c.BindJSON(&login)
 
@@ -73,6 +82,7 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	} else {
 		//c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
+		c.SetCookie("currentUserID", strconv.Itoa(currentID), 60*60, "/", "localhost", false, false)
 		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 	}
 }
