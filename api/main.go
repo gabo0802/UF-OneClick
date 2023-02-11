@@ -19,7 +19,10 @@ func main() {
 
 	//MySQL.ResetAllTables(db)
 	MySQL.SetUpTables(db)
-	//MySQL.CreateAdminUser(db)
+
+	if MySQL.GetTableSize(db, "Users") == 0 {
+		MySQL.CreateAdminUser(db)
+	}
 
 	//Sets pointer in "handler" package to main.go's db
 	handler.SetDB(db)
