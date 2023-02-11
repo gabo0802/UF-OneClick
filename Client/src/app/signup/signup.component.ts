@@ -22,16 +22,21 @@ export class SignupComponent implements OnInit{
     this.signUpForm = new FormGroup({
       'username': new FormControl(null,[Validators.required, Validators.pattern('^[A-z0-9]+$')]),
       'email': new FormControl(null, [Validators.required, Validators.email]),
-      'password': new FormControl(null, [Validators.required, Validators.minLength(3)])
+      'password': new FormControl(null, [Validators.required, Validators.minLength(8)])
     });
   }
 
+  ngAfterContentChecked()	{
+    this.message = this.api.getOutput()
+  }
+
   onSubmit(){
-    
-    //this.message = this.api.getOutput()
-
-    this.api.createUser(this.signUpForm.value)
-
+    if (!this.signUpForm.invalid){
+      this.api.createUser(this.signUpForm.value)
+      this.signUpForm.reset();
+    }else{
+      console.log("Not Submitted!")
+    }
   }
 
   ngOnDestroy(){

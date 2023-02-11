@@ -28,7 +28,7 @@
                               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
                             </button>
                             <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">Please enter a password</mat-error>
-                            <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">Please enter a longer password</mat-error>
+                            <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">Password needs to be at least 8 characters long</mat-error>
                           </mat-form-field>                         
             
                     <mat-card-actions>

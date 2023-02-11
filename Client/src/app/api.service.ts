@@ -16,15 +16,18 @@ export class ApiService {
     document.cookie = "signupOutput=none; path=/; max-age=100" 
 
     this.http.post('/api/accountcreation', JSON.stringify(userData)).subscribe((res)=> {
+      //console.log("Inside .subscribe")
       this.output = document.cookie
       console.log(res)
-      //console.log(document.cookie)
-      console.log(this.output)
+      console.log(document.cookie)
 
       //console.log(userData.username);
       //console.log(userData.password);
       //console.log(userData.email);
     });
+
+    //console.log("Outside .subscribe") //different value
+    //console.log(document.cookie)
 
     /*this.http.post('http://localhost:8000/', JSON.stringify(userData)).subscribe((res)=>{
       console.log(res);
@@ -33,6 +36,9 @@ export class ApiService {
   }
 
   public getOutput() {
+    if (this.output == '' || this.output == 'signupOutput=none'){
+      this.output = 'Please enter the required information below!'
+    }
     return this.output;
   }
 }
