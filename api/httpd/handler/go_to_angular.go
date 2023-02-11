@@ -49,6 +49,7 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Password Entered!"})
 		return
 	}
+	login = userData{}
 
 	//Encrypt Username and Password
 	stringEncrypter := sha256.New()
@@ -77,26 +78,39 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 }
 
 func NewUser(c *gin.Context) {
+	//Trys to Get Cookie called postOutput
+	_, err := c.Cookie("signupOutput")
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Cookie Does Not Exist!"})
+		return
+	}
+
+	//Trys to Get username, password, and email
 	var login userData
 	c.BindJSON(&login)
 
 	username := login.Username
 	if username == "" {
+		c.SetCookie("signupOutput", "Error: No Username Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Username Entered!"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
+		c.SetCookie("signupOutput", "Error: No Password Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Password Entered!"})
 		return
 	}
 
 	email := login.Email
 	if email == "" {
+		c.SetCookie("signupOutput", "Error: No Email Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Email Entered!"})
 		return
 	}
+	login = userData{}
 
 	//Encrypt Username and Password
 	stringEncrypter := sha256.New()
@@ -111,14 +125,23 @@ func NewUser(c *gin.Context) {
 	rowsAffected := MySQL.CreateNewUser(currentDB, encryptedusername, password, email)
 
 	if rowsAffected == (-223 - 0) { //already exists
+		c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Username Already Exists!"})
+
 	} else if rowsAffected == (-223 - 2) {
+		c.SetCookie("signupOutput", "Error: Email "+email+" Already In Use!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
+
 	} else if rowsAffected == -502 { //bad gateway
+		c.SetCookie("signupOutput", "Error: Database Connection Error!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error!"})
+
 	} else if rowsAffected == -204 { //no content
+		c.SetCookie("signupOutput", "Enter Value Into All Columns!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
+
 	} else {
+		c.SetCookie("signupOutput", "New User "+username+" Has Been Created! Enter Username and Password!", 60, "/", "localhost", false, false)
 		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created! Enter Username and Password!"})
 		username = ""
 	}
@@ -136,10 +159,14 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
 			}
 
+			var index = 0
 			for rows.Next() {
 				var newUserSub userData
 				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
 				usersubInfo = append(usersubInfo, newUserSub)
+
+				c.SetCookie("outputSubscriptions"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
+				index += 1
 			}
 
 			c.IndentedJSON(http.StatusOK, usersubInfo)
