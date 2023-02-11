@@ -381,8 +381,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	}
 
 	//Create New UserSub Data
-	result, _ := db.Exec("")
-
+	var result sql.Result
 	if dateCanceled != "" {
 		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", userID, CurrentSubID, dateAdded, dateCanceled)
 	} else {

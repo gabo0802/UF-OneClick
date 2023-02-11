@@ -151,8 +151,8 @@ func NewUser(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
 
 	} else {
-		c.SetCookie("signupOutput", "New User "+username+" Has Been Created! Enter Username and Password!", 60, "/", "localhost", false, false)
-		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created! Enter Username and Password!"})
+		c.SetCookie("signupOutput", "New User "+username+" Has Been Created!", 60, "/", "localhost", false, false) //maybe add " Enter Username and Password!"
+		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created!"})                      //maybe add " Enter Username and Password!"
 		username = ""
 	}
 }
@@ -180,6 +180,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 			}
 
 			c.IndentedJSON(http.StatusOK, usersubInfo)
+			c.Redirect(http.StatusTemporaryRedirect, "/subscriptions") //change later
 
 		} else {
 			c.Redirect(http.StatusTemporaryRedirect, "/login")

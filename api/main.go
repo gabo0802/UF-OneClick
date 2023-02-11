@@ -42,6 +42,7 @@ func main() {
 
 		//Subscription Management
 		api.POST("/subscriptions", handler.GetAllUserSubscriptions())
+		api.GET("/subscriptions", handler.GetAllUserSubscriptions())
 
 		//api.GET("/subscriptions/createsubscription", handler.NewSubscriptionService)
 		//api.GET("/subscriptions/createsubscription/:data", handler.SetCookie("/api/subscriptions/createsubscription"))
