@@ -11,11 +11,13 @@
                         <mat-form-field appearance="fill">
                             <mat-label>Username</mat-label>            
                             <input matInput formControlName="username">
+                            <mat-error *ngIf="signUpForm.get('username')?.getError">Please enter a valid username</mat-error>
                         </mat-form-field>
 
                         <mat-form-field appearance="fill">
                             <mat-label>Email</mat-label>            
                             <input matInput type="email" formControlName="email">
+                            <mat-error *ngIf="signUpForm.get('email')?.getError">Please enter a valid email address</mat-error>
                         </mat-form-field>
                     
                     
@@ -23,8 +25,10 @@
                             <mat-label>Enter your password</mat-label>
                             <input matInput formControlName="password" [type]="hide ? 'password' : 'text'">
                             <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
                             </button>
+                            <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">Please enter a password</mat-error>
+                            <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">Please enter a longer password</mat-error>
                           </mat-form-field>                         
             
                     <mat-card-actions>
