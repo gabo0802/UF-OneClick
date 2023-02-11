@@ -165,7 +165,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
 				usersubInfo = append(usersubInfo, newUserSub)
 
-				c.SetCookie("outputSubscriptions"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
+				c.SetCookie("outputSubscriptions"+strconv.Itoa(currentID)+"-"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
 				index += 1
 			}
 
