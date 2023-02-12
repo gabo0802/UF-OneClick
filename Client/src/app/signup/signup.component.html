@@ -15,13 +15,6 @@
                         </mat-form-field>
 
                         <mat-form-field appearance="fill">
-                            <mat-label>Email</mat-label>            
-                            <input matInput type="email" formControlName="email">
-                            <mat-error *ngIf="signUpForm.get('email')?.getError">Please enter a valid email address</mat-error>
-                        </mat-form-field>
-                    
-                    
-                        <mat-form-field appearance="fill">
                             <mat-label>Enter your password</mat-label>
                             <input matInput formControlName="password" [type]="hide ? 'password' : 'text'">
                             <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
@@ -29,8 +22,14 @@
                             </button>
                             <mat-error *ngIf="signUpForm.get('password')?.hasError('required')">Please enter a password</mat-error>
                             <mat-error *ngIf="signUpForm.get('password')?.hasError('minlength')">Password must be at least {{ passwordCharacterLength }} characters</mat-error>
-                          </mat-form-field>                         
-            
+                          </mat-form-field>      
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Email</mat-label>            
+                            <input matInput type="email" formControlName="email">
+                            <mat-error *ngIf="signUpForm.get('email')?.getError">Please enter a valid email address</mat-error>
+                        </mat-form-field>
+                    
                     <mat-card-actions>
                         <button type="submit" mat-raised-button color="primary" [disabled]="signUpForm.invalid">Sign Up</button>
                     </mat-card-actions>
