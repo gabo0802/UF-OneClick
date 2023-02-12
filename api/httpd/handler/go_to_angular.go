@@ -49,13 +49,13 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	username := login.Username
 	if username == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Username Entered!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Username Entered"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "No Password Entered!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Password Entered"})
 		return
 	}
 	login = userData{}
@@ -74,11 +74,11 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	if currentID == -401 { //unauthorized
 		currentID = -1
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Incorrect Username or Password!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Incorrect Username or Password"})
 
 	} else if currentID == -502 { //server error
 		currentID = -1
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 	} else {
 		//c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
@@ -92,7 +92,7 @@ func NewUser(c *gin.Context) {
 	_, err := c.Cookie("signupOutput")
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Cookie Does Not Exist!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Cookie Does Not Exist"})
 		return
 	}
 
@@ -103,21 +103,21 @@ func NewUser(c *gin.Context) {
 	username := login.Username
 	if username == "" {
 		c.SetCookie("signupOutput", "Error: No Username Entered!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Username Entered!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Username Entered"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
 		c.SetCookie("signupOutput", "Error: No Password Entered!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Password Entered!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Password Entered"})
 		return
 	}
 
 	email := login.Email
 	if email == "" {
 		c.SetCookie("signupOutput", "Error: No Email Entered!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: No Email Entered!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Email Entered"})
 		return
 	}
 	login = userData{}
@@ -136,23 +136,23 @@ func NewUser(c *gin.Context) {
 
 	if rowsAffected == (-223 - 0) { //already exists
 		c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Username Already Exists!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Username Already Exists"})
 
 	} else if rowsAffected == (-223 - 2) {
 		c.SetCookie("signupOutput", "Error: Email "+email+" Already In Use!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Email " + email + " Already In Use!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Email " + email + " Already In Use"})
 
 	} else if rowsAffected == -502 { //bad gateway
 		c.SetCookie("signupOutput", "Error: Database Connection Error!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 	} else if rowsAffected == -204 { //no content
 		c.SetCookie("signupOutput", "Enter Value Into All Columns!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Output": "Enter Value Into All Columns!"})
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 	} else {
 		c.SetCookie("signupOutput", "New User "+username+" Has Been Created!", 60, "/", "localhost", false, false) //maybe add " Enter Username and Password!"
-		c.JSON(http.StatusOK, gin.H{"Output": "New User " + username + " Has Been Created!"})                      //maybe add " Enter Username and Password!"
+		c.JSON(http.StatusOK, gin.H{"Success": "New User " + username + " Has Been Created"})                      //maybe add " Enter Username and Password!"
 		username = ""
 	}
 }
@@ -166,7 +166,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 			//can order by anything
 
 			if err != nil {
-				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
+				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"Error": "Database Connection Issue"})
 			}
 
 			var index = 0
@@ -194,7 +194,7 @@ func Logout(message string) gin.HandlerFunc {
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 
 		c.SetCookie("logoutOutput", "Logged Out!"+message, 60, "/", "localhost", false, false)
-		c.JSON(http.StatusOK, gin.H{"Output": "Logged Out!" + message})
+		c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
 	}
 }
 
@@ -211,27 +211,27 @@ func NewUserSubscription(c *gin.Context) {
 
 		if rowsAffected == -223 {
 			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Already Active!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Already Active!"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
 
 		} else if rowsAffected == -404 {
 			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Does Not Exist!"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == -502 {
 			c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
-			c.SetCookie("newusersubOutput", "Error: Value Into All Columns!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Error: Value Into All Columns!"})
+			c.SetCookie("newusersubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else if rowsAffected == 223 {
 			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Renewed!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Renewed!"})
+			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
 
 		} else {
 			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Added!"})
+			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Added"})
 
 		}
 
@@ -254,19 +254,19 @@ func NewSubscriptionService(c *gin.Context) {
 
 		if rowsAffected == -223 {
 			c.SetCookie("newsubOutput", "Error: Subscription Service of "+subscriptionName+" Already Exists!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Error: Subscription Service of " + subscriptionName + " Already Exists!"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Subscription Service of " + subscriptionName + " Already Exists"})
 
 		} else if rowsAffected == -502 {
 			c.SetCookie("newsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
 			c.SetCookie("newsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Error: Enter Value Into All Columns!"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else {
 			c.SetCookie("newsubOutput", "Subscription to "+subscriptionName+" Created!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Created!"})
+			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Created"})
 		}
 
 	} else {
@@ -288,19 +288,19 @@ func CancelSubscriptionService(c *gin.Context) {
 
 		if rowsAffected == -404 {
 			c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Does Not Exist!"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == -1 {
 			c.SetCookie("cancelsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error"})
+			c.JSON(http.StatusOK, gin.H{"Error": " Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
-			c.SetCookie("cancelsubOutput", "Error: Value Into All Columns!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Error: Value Into All Columns!"})
+			c.SetCookie("cancelsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else {
 			c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Canceled!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Canceled!"})
+			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Canceled"})
 		}
 
 	} else {
