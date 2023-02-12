@@ -13,7 +13,8 @@ export class SignupComponent implements OnInit{
 
   constructor(private api: ApiService) {};
 
-  hide = true;
+  hide: boolean = true;
+  passwordCharacterLength: number = 3;
 
   signUpForm: FormGroup = {} as FormGroup;
 
@@ -22,7 +23,7 @@ export class SignupComponent implements OnInit{
     this.signUpForm = new FormGroup({
       'username': new FormControl(null,[Validators.required, Validators.pattern('^[A-z0-9]+$')]),
       'email': new FormControl(null, [Validators.required, Validators.email]),
-      'password': new FormControl(null, [Validators.required, Validators.minLength(8)])
+      'password': new FormControl(null, [Validators.required, Validators.minLength(this.passwordCharacterLength)])
     });
   }
 
@@ -31,12 +32,10 @@ export class SignupComponent implements OnInit{
   }
 
   onSubmit(){
-    if (!this.signUpForm.invalid){
-      this.api.createUser(this.signUpForm.value)
-      this.signUpForm.reset();
-    }else{
-      console.log("Not Submitted!")
-    }
+    
+    this.api.createUser(this.signUpForm.value)
+    this.signUpForm.reset();
+    
   }
 
   ngOnDestroy(){
