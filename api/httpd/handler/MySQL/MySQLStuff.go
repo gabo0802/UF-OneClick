@@ -202,11 +202,11 @@ func CanAddUserSub(db *sql.DB, userID int, subID int) int {
 		if currentDateRemoved == "" { //tests if the subscription has been canceled (DateRemoved = nil)
 			return -401 //if not then subscription still exists
 		} else {
-			return 1 //can add new subscription
+			return (223 - 1) //subscription can be renewed (added again), 1 will be added to it in CreateNewUserSubFunction
 		}
 	}
 
-	return 0 //doesn't exist yet
+	return 0 //first time adding new subscription
 }
 
 // Adds based on the current time

@@ -38,27 +38,28 @@ func main() {
 		api.POST("/login", handler.TryLogin)
 
 		api.POST("/accountcreation", handler.NewUser)
-		//api.GET("/changepassword", handler.ChangeUserPassword)
-		//api.GET("/changepassword/:data", handler.SetCookie("/api/changepassword"))
 
-		//api.GET("/logout", handler.Logout("Enter"))
+		//api.POST("/changepassword", handler.ChangeUserPassword) //need to agree on how to get user input (maybe name could be old password)
+
+		api.GET("/logout", handler.Logout(""))
+		api.POST("/logout", handler.Logout(""))
 
 		//Subscription Management
 		api.POST("/subscriptions", handler.GetAllUserSubscriptions())
 		api.GET("/subscriptions", handler.GetAllUserSubscriptions())
 
-		//api.GET("/subscriptions/createsubscription", handler.NewSubscriptionService)
-		//api.GET("/subscriptions/createsubscription/:data", handler.SetCookie("/api/subscriptions/createsubscription"))
+		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
 
-		//api.GET("/subscriptions/addsubscription", handler.NewUserSubscription)
-		//api.GET("/subscriptions/addsubscription/:data", handler.SetCookie("/api/subscriptions/addsubscription"))
+		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 
-		//api.GET("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
-		//api.GET("/subscriptions/cancelsubscription/:data", handler.SetCookie("/api/subscriptions/cancelsubscription"))
+		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
 
 		//Admin Commands
 		api.GET("/reset", handler.ResetDatabase)
+		api.POST("/reset", handler.ResetDatabase)
+
 		api.GET("/alldata", handler.GetAllUserData())
+		api.POST("/alldata", handler.GetAllUserData())
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000

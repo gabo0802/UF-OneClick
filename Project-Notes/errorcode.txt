@@ -5,6 +5,7 @@
 -502: Database Connection Error
 -401: Unauthorized action (or impossible to do)
 -415: Incorrect data format
++223: Already Existed Before
 
 <Variables Affected>
 (- n): The nth - 1 variable affected by the code

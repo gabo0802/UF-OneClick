@@ -175,7 +175,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
 				usersubInfo = append(usersubInfo, newUserSub)
 
-				c.SetCookie("outputSubscriptions"+strconv.Itoa(currentID)+"-"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
+				c.SetCookie("subscriptionsOutput"+strconv.Itoa(currentID)+"-"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
 				index += 1
 			}
 
@@ -188,26 +188,128 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 	}
 }
 
-/*
-func HomePage() gin.HandlerFunc {
+func Logout(message string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//Testing Redirects:
+		currentID = -1
+		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 
-		c.Redirect(http.StatusTemporaryRedirect, "/signup") //redirect to front-end component
-		//c.Redirect(http.StatusTemporaryRedirect, "/api/accountcreation")                        //redirect to back-end component
-		//c.Redirect(http.StatusTemporaryRedirect, "https://www.youtube.com/watch?v=dQw4w9WgXcQ") //redirect to external website
+		c.SetCookie("logoutOutput", "Logged Out!"+message, 60, "/", "localhost", false, false)
+		c.JSON(http.StatusOK, gin.H{"Output": "Logged Out!" + message})
 	}
 }
 
-func Logout(message string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		setDefaultMessage()
-		currentID = -1
+func NewUserSubscription(c *gin.Context) {
+	if currentID != -1 {
+		var userSubscriptionData userData
+		c.BindJSON(&userSubscriptionData)
 
+		subscriptionName := userSubscriptionData.Name
+		//subscriptionID := userSubscriptionData.ID
+		userSubscriptionData = userData{}
+
+		rowsAffected := MySQL.CreateNewUserSub(currentDB, currentID, subscriptionName)
+
+		if rowsAffected == -223 {
+			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Already Active!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Already Active!"})
+
+		} else if rowsAffected == -404 {
+			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Does Not Exist!"})
+
+		} else if rowsAffected == -502 {
+			c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error"})
+
+		} else if rowsAffected == -204 {
+			c.SetCookie("newusersubOutput", "Error: Value Into All Columns!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Error: Value Into All Columns!"})
+
+		} else if rowsAffected == 223 {
+			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Renewed!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Renewed!"})
+
+		} else {
+			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Added!"})
+
+		}
+
+	} else {
+		c.SetCookie("newusersubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+}
+
+func NewSubscriptionService(c *gin.Context) {
+	if currentID != -1 {
+		var subscriptionData userData
+		c.BindJSON(&subscriptionData)
+
+		subscriptionName := subscriptionData.Name
+		subscriptionPrice := subscriptionData.Price
+		subscriptionData = userData{}
+
+		rowsAffected := MySQL.CreateNewSub(currentDB, subscriptionName, subscriptionPrice)
+
+		if rowsAffected == -223 {
+			c.SetCookie("newsubOutput", "Error: Subscription Service of "+subscriptionName+" Already Exists!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Error: Subscription Service of " + subscriptionName + " Already Exists!"})
+
+		} else if rowsAffected == -502 {
+			c.SetCookie("newsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error"})
+
+		} else if rowsAffected == -204 {
+			c.SetCookie("newsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Error: Enter Value Into All Columns!"})
+
+		} else {
+			c.SetCookie("newsubOutput", "Subscription to "+subscriptionName+" Created!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Created!"})
+		}
+
+	} else {
+		c.SetCookie("newsubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+}
+
+func CancelSubscriptionService(c *gin.Context) {
+	if currentID != -1 {
+		var userSubscriptionData userData
+		c.BindJSON(&userSubscriptionData)
+
+		subscriptionName := userSubscriptionData.Name
+		//subscriptionID := userSubscriptionData.ID
+		userSubscriptionData = userData{}
+
+		rowsAffected := MySQL.CancelUserSub(currentDB, currentID, subscriptionName)
+
+		if rowsAffected == -404 {
+			c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Does Not Exist!"})
+
+		} else if rowsAffected == -1 {
+			c.SetCookie("cancelsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Error: Database Connection Error"})
+
+		} else if rowsAffected == -204 {
+			c.SetCookie("cancelsubOutput", "Error: Value Into All Columns!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Error: Value Into All Columns!"})
+
+		} else {
+			c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Canceled!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Output": "Subscription to " + subscriptionName + " Canceled!"})
+		}
+
+	} else {
+		c.SetCookie("cancelsubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
 }
 
+/*
 func ChangeUserPassword(c *gin.Context) {
 	if currentID != -1 {
 		tryDefaultMessage("Enter Old Password and New Password!")
@@ -236,126 +338,7 @@ func ChangeUserPassword(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
 }
-
-func SetCookie(url string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		combinedData, doesExist := c.GetPostForm("data")
-		if !doesExist {
-			combinedData = c.Param("data")
-			fmt.Println("Get: " + combinedData)
-		} else {
-			fmt.Println("Post: " + combinedData)
-		}
-
-		splitData := strings.Split(combinedData, ";") //Usernames or Passwords cannot have special character ';' unless encryption used (future issue)
-
-		currentCookie.First = splitData[0]
-
-		if len(splitData) > 1 {
-			currentCookie.Second = splitData[1]
-		} else {
-			currentCookie.Second = ""
-		}
-
-		if len(splitData) > 2 {
-			currentCookie.Third = splitData[2]
-		} else {
-			currentCookie.Third = ""
-		}
-
-		c.Redirect(http.StatusTemporaryRedirect, url)
-	}
-}
-
-func NewUserSubscription(c *gin.Context) {
-	if currentID != -1 {
-		tryDefaultMessage("Choose Subscription to Add or Renew!")
-
-		if !strings.Contains(currentCookie.First, "Message: ") {
-			rowsAffected := MySQL.CreateNewUserSub(currentDB, currentID, currentCookie.First)
-
-			if rowsAffected == 0 {
-				changeMessage("Subscription to " + currentCookie.First + " Already Active!")
-
-			} else if rowsAffected == -1 {
-				changeMessage("Subscription to " + currentCookie.First + " Does Not Exist!")
-
-			} else if rowsAffected == -2 {
-				changeMessage("Error")
-
-			} else if rowsAffected == -3 {
-				changeMessage("Enter Value Into All Columns!")
-
-			} else if rowsAffected > 1 {
-				changeMessage("Subscription to " + currentCookie.First + " Renewed!")
-
-			} else {
-				changeMessage("Subscription to " + currentCookie.First + " Added!")
-			}
-		}
-
-		printMessage(c)
-		setDefaultMessage()
-
-	} else {
-		setDefaultMessage()
-		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
-	}
-}
-
-func NewSubscriptionService(c *gin.Context) {
-	if currentID != -1 {
-
-		if !strings.Contains(currentCookie.First, "Message: ") {
-			rowsAffected := MySQL.CreateNewSub(currentDB, currentCookie.First, currentCookie.Second)
-
-			if rowsAffected == 0 {
-				changeMessage("Error: Subscription to " + currentCookie.First + " Already Exists!")
-			} else if rowsAffected == -1 {
-				changeMessage("Error")
-
-			} else if rowsAffected == -2 {
-				changeMessage("Enter Value Into All Columns!")
-
-			} else {
-				changeMessage("Subscription to " + currentCookie.First + " Created!")
-			}
-		}
-
-		printMessage(c)
-		setDefaultMessage()
-
-	} else {
-		setDefaultMessage()
-		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
-	}
-
-}
-
-func CancelSubscriptionService(c *gin.Context) {
-	if currentID != -1 {
-		tryDefaultMessage("Choose Subscription to Cancel!")
-
-		if !strings.Contains(currentCookie.First, "Message: ") {
-			rowsAffected := MySQL.CancelUserSub(currentDB, currentID, currentCookie.First)
-
-			if rowsAffected == 0 {
-				changeMessage("Subscription to " + currentCookie.First + " Does Not Exist!")
-			} else if rowsAffected == -1 {
-				changeMessage("Error")
-			} else {
-				changeMessage("Subscription to " + currentCookie.First + " Canceled!")
-			}
-		}
-
-		printMessage(c)
-		setDefaultMessage()
-
-	} else {
-		setDefaultMessage()
-		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
-	}
-}*/
+*/
 
 func ResetDatabase(c *gin.Context) {
 	if currentID == 1 {
@@ -448,14 +431,3 @@ func GetAllUserData() gin.HandlerFunc {
 		}
 	}
 }
-
-/*func PostLogins(c *gin.Context) {
-	var newLogin loginCredentials
-	// To bind the received JSON to newTshirt, call BindJSON
-	if err := c.BindJSON(&newLogin); err != nil {
-		return
-	}
-	// Add the new tshirt to the slice.
-	loginInfo[0] = newLogin
-	c.IndentedJSON(http.StatusCreated, newLogin)
-}*/
