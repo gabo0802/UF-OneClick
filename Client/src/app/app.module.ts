@@ -14,6 +14,7 @@ import { ScrollBarComponent } from './scroll-bar/scroll-bar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SubscriptionListComponent } from './dashboard/subscription-list/subscription-list.component';
 import { SubscriptionDetailComponent } from './dashboard/subscription-list/subscription-detail/subscription-detail.component';
+import { SignupMessageComponent } from './signup/signup-message/signup-message.component';
 
 
 
@@ -27,7 +28,8 @@ import { SubscriptionDetailComponent } from './dashboard/subscription-list/subsc
     ScrollBarComponent,
     DashboardComponent,
     SubscriptionListComponent,
-    SubscriptionDetailComponent
+    SubscriptionDetailComponent,
+    SignupMessageComponent
   ],
   imports: [
     BrowserModule,
