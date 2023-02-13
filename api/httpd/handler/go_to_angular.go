@@ -102,21 +102,21 @@ func NewUser(c *gin.Context) {
 
 	username := login.Username
 	if username == "" {
-		c.SetCookie("signupOutput", "Error: No Username Entered!", 60, "/", "localhost", false, false)
+		//c.SetCookie("signupOutput", "Error: No Username Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Username Entered"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		c.SetCookie("signupOutput", "Error: No Password Entered!", 60, "/", "localhost", false, false)
+		//c.SetCookie("signupOutput", "Error: No Password Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Password Entered"})
 		return
 	}
 
 	email := login.Email
 	if email == "" {
-		c.SetCookie("signupOutput", "Error: No Email Entered!", 60, "/", "localhost", false, false)
+		//c.SetCookie("signupOutput", "Error: No Email Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Email Entered"})
 		return
 	}
