@@ -33,8 +33,19 @@ export class SignupComponent implements OnInit{
 
   onSubmit(){
     
-    this.api.createUser(this.signUpForm.value)
-    this.signUpForm.reset();
+    this.api.createUser(this.signUpForm.value).subscribe( (res: Object) => {
+
+      
+      const response: string = JSON.stringify(res);
+      const responseMessage = JSON.parse(response);
+
+      if(responseMessage["Success"] !== undefined){
+        console.log(responseMessage["Success"]);        
+      }
+      else if(responseMessage["Error"] !== undefined){
+        console.log(responseMessage["Error"] );
+      }
+    });
     
   }
 
