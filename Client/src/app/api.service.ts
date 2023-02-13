@@ -11,6 +11,27 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   
+  Login(userData: {password: string, username: string}){
+    //document.cookie = "loginOutput=none; path=/; max-age=100" 
+
+    this.http.post('/api/login', JSON.stringify(userData)).subscribe((res)=> {
+      //console.log("Inside .subscribe")
+      this.output = document.cookie
+      console.log(res)
+      console.log(document.cookie)
+
+      //console.log(userData.username);
+      //console.log(userData.password);
+      //console.log(userData.email);
+    });
+
+    //console.log("Outside .subscribe") //different value
+    //console.log(document.cookie)
+
+    /*this.http.post('http://localhost:8000/', JSON.stringify(userData)).subscribe((res)=>{
+      console.log(res);
+    });*/
+  }
 
   createUser(userData: {email: string, password: string, username: string}){
     document.cookie = "signupOutput=none; path=/; max-age=100" 
