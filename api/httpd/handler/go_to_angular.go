@@ -135,24 +135,24 @@ func NewUser(c *gin.Context) {
 	rowsAffected := MySQL.CreateNewUser(currentDB, encryptedusername, password, email)
 
 	if rowsAffected == (-223 - 0) { //already exists
-		c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
+		//c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Username Already Exists"})
 
 	} else if rowsAffected == (-223 - 2) {
-		c.SetCookie("signupOutput", "Error: Email "+email+" Already In Use!", 60, "/", "localhost", false, false)
+		//c.SetCookie("signupOutput", "Error: Email "+email+" Already In Use!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Email " + email + " Already In Use"})
 
 	} else if rowsAffected == -502 { //bad gateway
-		c.SetCookie("signupOutput", "Error: Database Connection Error!", 60, "/", "localhost", false, false)
+		//c.SetCookie("signupOutput", "Error: Database Connection Error!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 	} else if rowsAffected == -204 { //no content
-		c.SetCookie("signupOutput", "Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+		//c.SetCookie("signupOutput", "Enter Value Into All Columns!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 	} else {
-		c.SetCookie("signupOutput", "New User "+username+" Has Been Created!", 60, "/", "localhost", false, false) //maybe add " Enter Username and Password!"
-		c.JSON(http.StatusOK, gin.H{"Success": "New User " + username + " Has Been Created"})                      //maybe add " Enter Username and Password!"
+		//c.SetCookie("signupOutput", "New User "+username+" Has Been Created!", 60, "/", "localhost", false, false) //maybe add " Enter Username and Password!"
+		c.JSON(http.StatusOK, gin.H{"Success": "New User " + username + " Has Been Created"}) //maybe add " Enter Username and Password!"
 		username = ""
 	}
 }
@@ -175,7 +175,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
 				usersubInfo = append(usersubInfo, newUserSub)
 
-				c.SetCookie("subscriptionsOutput"+strconv.Itoa(currentID)+"-"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
+				//c.SetCookie("subscriptionsOutput"+strconv.Itoa(currentID)+"-"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
 				index += 1
 			}
 
@@ -183,7 +183,8 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 			c.Redirect(http.StatusTemporaryRedirect, "/subscriptions") //change later
 
 		} else {
-			c.Redirect(http.StatusTemporaryRedirect, "/login")
+			c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
+			//c.Redirect(http.StatusTemporaryRedirect, "/login")
 		}
 	}
 }
@@ -193,7 +194,7 @@ func Logout(message string) gin.HandlerFunc {
 		currentID = -1
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 
-		c.SetCookie("logoutOutput", "Logged Out!"+message, 60, "/", "localhost", false, false)
+		//c.SetCookie("logoutOutput", "Logged Out!"+message, 60, "/", "localhost", false, false)
 		c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
 	}
 }
@@ -210,34 +211,35 @@ func NewUserSubscription(c *gin.Context) {
 		rowsAffected := MySQL.CreateNewUserSub(currentDB, currentID, subscriptionName)
 
 		if rowsAffected == -223 {
-			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Already Active!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Already Active!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
 
 		} else if rowsAffected == -404 {
-			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == -502 {
-			c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
-			c.SetCookie("newusersubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newusersubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else if rowsAffected == 223 {
-			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Renewed!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Renewed!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
 
 		} else {
-			c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Added"})
 
 		}
 
 	} else {
-		c.SetCookie("newusersubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		//c.SetCookie("newusersubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
+		//c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
 	}
 }
 
@@ -253,25 +255,27 @@ func NewSubscriptionService(c *gin.Context) {
 		rowsAffected := MySQL.CreateNewSub(currentDB, subscriptionName, subscriptionPrice)
 
 		if rowsAffected == -223 {
-			c.SetCookie("newsubOutput", "Error: Subscription Service of "+subscriptionName+" Already Exists!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newsubOutput", "Error: Subscription Service of "+subscriptionName+" Already Exists!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Subscription Service of " + subscriptionName + " Already Exists"})
 
 		} else if rowsAffected == -502 {
-			c.SetCookie("newsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			//c.SetCookie("newsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
-			c.SetCookie("newsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else {
-			c.SetCookie("newsubOutput", "Subscription to "+subscriptionName+" Created!", 60, "/", "localhost", false, false)
+			//c.SetCookie("newsubOutput", "Subscription to "+subscriptionName+" Created!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Created"})
 		}
 
 	} else {
-		c.SetCookie("newsubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		//c.SetCookie("newsubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
+		//c.Redirect(http.StatusTemporaryRedirect, "/login")
+
+		c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
 	}
 }
 
@@ -287,24 +291,24 @@ func CancelSubscriptionService(c *gin.Context) {
 		rowsAffected := MySQL.CancelUserSub(currentDB, currentID, subscriptionName)
 
 		if rowsAffected == -404 {
-			c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
+			//c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == -1 {
-			c.SetCookie("cancelsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			//c.SetCookie("cancelsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": " Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
-			c.SetCookie("cancelsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+			//c.SetCookie("cancelsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else {
-			c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Canceled!", 60, "/", "localhost", false, false)
+			//c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Canceled!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Canceled"})
 		}
 
 	} else {
-		c.SetCookie("cancelsubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
+		//c.SetCookie("cancelsubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
 }
@@ -346,7 +350,6 @@ func ResetDatabase(c *gin.Context) {
 		MySQL.SetUpTables(currentDB)
 		MySQL.CreateAdminUser(currentDB)
 
-		//funcOutput = "Admin Database Reset! Enter Username and Password!"
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
