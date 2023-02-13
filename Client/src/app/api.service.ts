@@ -34,11 +34,9 @@ export class ApiService {
     });*/
   }
 
-  createUser(userData: {email: string, password: string, username: string}): Observable<Object>{
-    document.cookie = "signupOutput=none; path=/; max-age=100" 
+  createUser(userData: {email: string, password: string, username: string}): Observable<Object>{    
 
     return this.http.post('/api/accountcreation', JSON.stringify(userData));
-
   }
 
   public getOutput() {

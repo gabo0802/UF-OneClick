@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SignupMessageComponent } from './signup-message/signup-message.component';
 
 @Component({
   selector: 'app-signup',
@@ -11,7 +13,7 @@ export class SignupComponent implements OnInit{
 
   public message: string = 'Please enter the required information below.';
 
-  constructor(private api: ApiService) {};
+  constructor(private api: ApiService, private dialog: MatDialog) {};
 
   hide: boolean = true;
   passwordCharacterLength: number = 3;
@@ -27,26 +29,41 @@ export class SignupComponent implements OnInit{
     });
   }
 
-  ngAfterContentChecked()	{
-    this.message = this.api.getOutput()
-  } *
-
   onSubmit(){
+
     
     this.api.createUser(this.signUpForm.value).subscribe( (res: Object) => {
-
       
       const response: string = JSON.stringify(res);
       const responseMessage = JSON.parse(response);
 
       if(responseMessage["Success"] !== undefined){
-        console.log(responseMessage["Success"]);        
+        console.log(responseMessage["Success"]);
+        
+        this.callDialog("Success", responseMessage["Success"]);
       }
       else if(responseMessage["Error"] !== undefined){
         console.log(responseMessage["Error"] );
+        this.callDialog("Error", responseMessage["Error"]);
       }
     });
     
+  }
+
+  callDialog(title: string, message: string){
+
+    let dialogRef = this.dialog.open(SignupMessageComponent, {
+      data: { dialogTitle: title, dialogMessage: message},      
+      height: '180px',
+      width: '370px',
+    });
+
+    if(title === "Success"){
+
+      dialogRef.afterClosed().subscribe(result => {
+        
+      });
+    }
   }
 
   ngOnDestroy(){
