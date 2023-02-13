@@ -41,12 +41,13 @@ export class SignupComponent implements OnInit{
       //User created
       if(responseMessage["Success"] !== undefined){        
         
-        this.callDialog("Success", responseMessage["Success"]);
+        this.callDialog("Success", responseMessage["Success"]);       
 
       }//username or email taken
       else if(responseMessage["Error"] !== undefined){
         
         this.callDialog("Error", responseMessage["Error"]);
+        
       }
     });
     
@@ -63,7 +64,9 @@ export class SignupComponent implements OnInit{
     if(title === "Success"){
 
       dialogRef.afterClosed().subscribe(result => {
+        
         this.router.navigate(['/login']);
+        this.signUpForm.reset();
       });
     }
   }
