@@ -24,6 +24,10 @@ func main() {
 		MySQL.CreateAdminUser(db)
 	}
 
+	if MySQL.GetTableSize(db, "Subscriptions") == 0 {
+		MySQL.CreateCommonSubscriptions(db)
+	}
+
 	//Sets pointer in "handler" package to main.go's db
 	handler.SetDB(db)
 
