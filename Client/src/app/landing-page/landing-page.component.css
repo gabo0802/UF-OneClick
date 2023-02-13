@@ -84,5 +84,54 @@
 }
 
 .potential-list {
-  height: 100px;
+  height: 500px;
+}
+
+/* Source for the scrolling container: https://codeburst.io/how-to-create-horizontal-scrolling-containers-d8069651e9c6  */
+.sub-grid {
+  height: 200px;
+  display: grid;
+  padding-top: 0vw;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  margin: 15px 0;
+  flex-grow: 1;
+  flex-basis:0;
+  padding-bottom: 0;
+}
+
+.sub-tile {
+  flex: 0 0 160px;
+  border-radius: 5%;
+  display:inline-block;
+  overflow: hidden;
+  margin-left: 5%;
+  background-color: rgba(255, 255, 255, 0.534);
+  color: white;
+}
+
+.sub-tile > img {
+  display: block;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 2%;
+}
+.sub-tile > .sub-name {
+  font-size: 1.75em;
+  text-align: center;
+  transition: 0.3s smooth;
+  padding-top: 5px;
+  padding-bottom: 0;
+}
+.sub-tile > .sub-name:hover {
+  font-weight: 700;
+  text-decoration: underline;
 }
