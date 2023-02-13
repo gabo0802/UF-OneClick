@@ -22,8 +22,48 @@
   <mat-icon class="description-icon">sentiment_satisfied</mat-icon>
 </mat-toolbar>
 
-<mat-toolbar id="subscriptions-list" class="sub-list">
- <!--<app-scroll-bar></app-scroll-bar>--> 
+<mat-toolbar id="subscriptions-list" class="sub-list" color="accent">
+  <mat-toolbar class="sub-grid" color="accent">
+    <div class="sub-tile">
+      <img src= "https://i.pcmag.com/imagery/reviews/05cItXL96l4LE9n02WfDR0h-5..v1582751026.png">
+      <p class="sub-name">Netflix</p>
+    </div>
+
+    <div class="sub-tile">
+      <img src= "https://www.telesurenglish.net/__export/1584731358366/sites/telesur/img/2020/03/20/amazon_2.jpg_1718483346.jpg">
+      <p class="sub-name">Amazon Prime</p>
+    </div>
+
+    <div class="sub-tile">
+      <img src= "data:image/png;base64,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">
+      <p class="sub-name">HBO Max</p>
+    </div>
+
+    <div class="sub-tile">
+      <img src= "https://assetshuluimcom-a.akamaihd.net/h3o/facebook_share_thumb_default_hulu.jpg">
+      <p class="sub-name">Hulu</p>
+    </div>
+
+    <div class="sub-tile">
+      <img src= "https://cdn.technadu.com/wp-content/uploads/2022/04/Disney-Plus-Logo-on-a-Blue-Background.jpg">
+      <p class="sub-name">Disney+</p>
+    </div>
+
+    <div class="sub-tile">
+      <img src= "https://www.scdn.co/i/_global/open-graph-default.png">
+      <p class="sub-name">Spotify</p>
+    </div>
+
+    <div class="sub-tile">
+      <img src= "https://9to5mac.com/wp-content/uploads/sites/6/2021/08/apple-music-logo-2021-9to5mac.jpg?quality=82&strip=all&w=1600">
+      <p class="sub-name">Apple Music</p>
+    </div>
+
+    <div class="sub-tile">
+      <img src= "https://www.androidauthority.com/wp-content/uploads/2021/11/amc-plus-logo.jpg">
+      <p class="sub-name">AMC+</p>
+    </div>
+  </mat-toolbar>
 </mat-toolbar>
 
 <div id="visual" class="app-visual">
