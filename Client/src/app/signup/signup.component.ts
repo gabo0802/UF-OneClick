@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SignupMessageComponent } from './signup-message/signup-message.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -13,7 +14,7 @@ export class SignupComponent implements OnInit{
 
   public message: string = 'Please enter the required information below.';
 
-  constructor(private api: ApiService, private dialog: MatDialog) {};
+  constructor(private api: ApiService, private dialog: MatDialog, private router: Router) {};
 
   hide: boolean = true;
   passwordCharacterLength: number = 3;
@@ -37,13 +38,14 @@ export class SignupComponent implements OnInit{
       const response: string = JSON.stringify(res);
       const responseMessage = JSON.parse(response);
 
-      if(responseMessage["Success"] !== undefined){
-        console.log(responseMessage["Success"]);
+      //User created
+      if(responseMessage["Success"] !== undefined){        
         
         this.callDialog("Success", responseMessage["Success"]);
-      }
+
+      }//username or email taken
       else if(responseMessage["Error"] !== undefined){
-        console.log(responseMessage["Error"] );
+        
         this.callDialog("Error", responseMessage["Error"]);
       }
     });
@@ -61,7 +63,7 @@ export class SignupComponent implements OnInit{
     if(title === "Success"){
 
       dialogRef.afterClosed().subscribe(result => {
-        
+        this.router.navigate(['/login']);
       });
     }
   }

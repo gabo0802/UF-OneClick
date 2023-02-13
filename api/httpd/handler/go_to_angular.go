@@ -89,12 +89,12 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 func NewUser(c *gin.Context) {
 	//Trys to Get Cookie called postOutput
-	_, err := c.Cookie("signupOutput")
+	// _, err := c.Cookie("signupOutput")
 
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Cookie Does Not Exist"})
-		return
-	}
+	// if err != nil {
+	// 	c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Cookie Does Not Exist"})
+	// 	return
+	// }
 
 	//Trys to Get username, password, and email
 	var login userData
