@@ -362,14 +362,7 @@ func GetAllUserData() gin.HandlerFunc {
 		if currentID == 1 {
 			var allUserData = []userData{}
 			var id int
-			var username string
-			var password string
 			var subid int
-			var name string
-			var price string
-			var dateadded string
-			var dateremoved string
-			var email string
 
 			rows, err := currentDB.Query("SELECT SubID, Name, Price FROM Subscriptions;")
 
@@ -378,12 +371,10 @@ func GetAllUserData() gin.HandlerFunc {
 			}
 
 			for rows.Next() {
-				rows.Scan(&subid, &name, &price)
-
 				var newData userData
+				rows.Scan(&subid, &newData.Name, &newData.Price)
+
 				newData.SubID = strconv.Itoa(subid)
-				newData.Price = price
-				newData.Name = name
 
 				allUserData = append(allUserData, newData)
 			}
@@ -395,13 +386,11 @@ func GetAllUserData() gin.HandlerFunc {
 			}
 
 			for rows.Next() {
-				rows.Scan(&id, &username, &password, &email)
-
 				var newData userData
+				rows.Scan(&id, &newData.Username, &newData.Password, &newData.Email)
+
 				newData.UserID = strconv.Itoa(id)
-				newData.Username = username
-				newData.Password = password
-				newData.Email = email
+
 				allUserData = append(allUserData, newData)
 			}
 
@@ -412,18 +401,12 @@ func GetAllUserData() gin.HandlerFunc {
 			}
 
 			for rows.Next() {
-				rows.Scan(&id, &username, &password, &email, &subid, &name, &price, &dateadded, &dateremoved)
-
 				var newData userData
+				rows.Scan(&id, &newData.Username, &newData.Password, &newData.Email, &subid, &newData.Name, &newData.Price, &newData.DateAdded, &newData.DateRemoved)
+
 				newData.UserID = strconv.Itoa(id)
 				newData.SubID = strconv.Itoa(subid)
-				newData.Username = username
-				newData.Password = password
-				newData.DateAdded = dateadded
-				newData.DateRemoved = dateremoved
-				newData.Price = price
-				newData.Name = name
-				newData.Email = email
+
 				allUserData = append(allUserData, newData)
 			}
 
