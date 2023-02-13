@@ -29,7 +29,7 @@ export class SignupComponent implements OnInit{
 
   ngAfterContentChecked()	{
     this.message = this.api.getOutput()
-  }
+  } *
 
   onSubmit(){
     
