@@ -67,10 +67,10 @@ func SetUpTables(db *sql.DB) {
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Email varchar(255) NOT NULL, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), UNIQUE(Email), PRIMARY KEY(UserID));")
 
 	//All available subscriptions
-	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price varchar(255) NOT NULL, UNIQUE(Name), PRIMARY KEY(SubID));")
+	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price float NOT NULL, UNIQUE(Name), PRIMARY KEY(SubID));")
 
 	//Individual user subscriptions
-	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded varchar(255) NOT NULL, DateRemoved varchar(255), FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
+	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
 }
 
 func ResetTable(db *sql.DB, tableName string) {
@@ -141,37 +141,37 @@ func CreateAdminUser(db *sql.DB) {
 }
 
 func CreateCommonSubscriptions(db *sql.DB) {
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Basic with ads)\",\"6.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Basic)\",\"9.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Standard)\",\"15.49\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Premium)\",\"19.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Basic with ads)\", 6.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Basic)\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Standard)\", 15.49);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Premium)\", 19.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime\",\"14.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime (Student)\",\"7.49\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime\", 14.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime (Student)\", 7.49);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Prime Video\",\"8.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Prime Video\", 8.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney+ (Basic)\",\"6.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney+ (Premium)\",\"10.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney+ (Basic)\", 6.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney+ (Premium)\", 10.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Hulu\",\"7.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Hulu\", 7.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"HBO Max (With ADS)\",\"9.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"HBO Max (AD-Free)\",\"15.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"HBO Max (With ADS)\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"HBO Max (AD-Free)\", 15.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Essential)\",\"9.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Extra)\",\"14.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Premium)\",\"17.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Essential)\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Extra)\", 14.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Premium)\", 17.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (PC)\",\"9.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (Console)\",\"9.99\");")
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (Ultimate)\",\"14.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (PC)\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (Console)\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (Ultimate)\", 14.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Spotify Premium\",\"9.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Spotify Premium\", 9.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Apple Music\",\"10.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Apple Music\", 10.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"AMC+\",\"8.99\");")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"AMC+\", 8.99);")
 }
 
 func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
@@ -199,7 +199,8 @@ func CreateNewSub(db *sql.DB, name string, price string) int {
 		return -204
 	}
 
-	result, err := db.Exec("INSERT INTO Subscriptions(name, price) VALUES (?,?);", name, price)
+	realPrice, _ := strconv.ParseFloat(price, 32)
+	result, err := db.Exec("INSERT INTO Subscriptions(name, price) VALUES (?,?);", name, realPrice)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
@@ -283,7 +284,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	}
 
 	//Create New UserSub Data
-	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, currentTime.Format("2006-01-02 15:04:05"))
+	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, currentTime)
 
 	//Tests to see if function worked (can remove later)
 	numRows, err := result.RowsAffected()
@@ -467,7 +468,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	}
 
 	//Update UserSub Data
-	result, _ := db.Exec("UPDATE UserSubs SET DateRemoved = ? WHERE UserID = ? AND SubID = ? AND DateRemoved IS NULL;", currentTime.Format("2006-01-02 15:04:05"), userID, CurrentSubID)
+	result, _ := db.Exec("UPDATE UserSubs SET DateRemoved = ? WHERE UserID = ? AND SubID = ? AND DateRemoved IS NULL;", currentTime, userID, CurrentSubID)
 
 	//Tests to see if function worked (can remove later)
 	numRows, err := result.RowsAffected()
