@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
-
-  //public output: string = '';
+export class ApiService {  
 
   constructor(private http: HttpClient) { }
 
@@ -15,9 +14,23 @@ export class ApiService {
     return this.http.post('/api/login', JSON.stringify(userData));
   }
 
-  createUser(userData: {username: string, email: string, password: string}): Observable<Object>{    
+  createUser(userData: {username: string, email: string, password: string}): Observable<Array<string>>{   
 
-    return this.http.post('/api/accountcreation', JSON.stringify(userData));
+    return this.http.post<{[key: string]: string, message: string}>('/api/accountcreation', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
   }
 
   /*public getOutput() {

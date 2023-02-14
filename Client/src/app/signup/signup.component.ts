@@ -43,23 +43,9 @@ export class SignupComponent implements OnInit{
       email: this.signUpForm.value.email,
       password: this.signUpForm.value.password,
     }
-    
-    this.api.createUser(newUser).subscribe( (res: Object) => {
-      
-      const response: string = JSON.stringify(res);
-      const responseMessage = JSON.parse(response);
 
-      //User created
-      if(responseMessage["Success"] !== undefined){        
-        
-        this.callDialog("Success", responseMessage["Success"]);       
-
-      }//username or email taken
-      else if(responseMessage["Error"] !== undefined){
-        
-        this.callDialog("Error", responseMessage["Error"]);
-        
-      }
+    this.api.createUser(newUser).subscribe(resultMessage => {
+      this.callDialog(resultMessage[0], resultMessage[1]);
     });
     
   }
