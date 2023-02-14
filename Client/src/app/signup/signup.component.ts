@@ -32,8 +32,19 @@ export class SignupComponent implements OnInit{
 
   onSubmit(){
 
+    type UserData = {
+      username: string;
+      email: string;
+      password: string;
+    }
+
+    const newUser: UserData = {
+      username: this.signUpForm.value.username,
+      email: this.signUpForm.value.email,
+      password: this.signUpForm.value.password,
+    }
     
-    this.api.createUser(this.signUpForm.value).subscribe( (res: Object) => {
+    this.api.createUser(newUser).subscribe( (res: Object) => {
       
       const response: string = JSON.stringify(res);
       const responseMessage = JSON.parse(response);

@@ -15,7 +15,7 @@ export class ApiService {
     return this.http.post('/api/login', JSON.stringify(userData));
   }
 
-  createUser(userData: {email: string, password: string, username: string}): Observable<Object>{    
+  createUser(userData: {username: string, email: string, password: string}): Observable<Object>{    
 
     return this.http.post('/api/accountcreation', JSON.stringify(userData));
   }
