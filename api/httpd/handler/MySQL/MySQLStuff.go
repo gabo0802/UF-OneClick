@@ -12,10 +12,11 @@ import (
 )
 
 const (
-	host     = "oneclickserver.mysql.database.azure.com"
-	database = "userdb"
-	user     = "adminUser"
-	password = "MySQLP@ssw0rd"
+	host         = "oneclickserver.mysql.database.azure.com"
+	database     = "userdb"
+	user         = "adminUser"
+	password     = "MySQLP@ssw0rd"
+	companyemail = "vanbestindustries@gmail.com"
 )
 
 func checkError(err error) {
@@ -123,7 +124,7 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 }
 
 func CreateAdminUser(db *sql.DB) {
-	result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"SBNJTRN-FjG7owHVrKtue7eqdM4RhdRWVl71HXN2d7I=\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", \"companyemail@gmail.com\");")
+	result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"SBNJTRN-FjG7owHVrKtue7eqdM4RhdRWVl71HXN2d7I=\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", companyemail)
 	//maybe change password to something more secure?
 
 	if err != nil {

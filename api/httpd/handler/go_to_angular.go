@@ -9,6 +9,8 @@ import (
 
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler/MySQL"
 	"github.com/gin-gonic/gin"
+
+	"net/smtp"
 )
 
 // New Data Types
@@ -24,12 +26,39 @@ type userData struct {
 	DateRemoved string `json:"dateremoved"`
 }
 
+const (
+	emailHost       = "smtp.gmail.com"
+	emailPort       = "587"
+	companyEmail    = "vanbestindustries@gmail.com"
+	emailSignInCode = "nbvuqycegwhklatc"
+)
+
 // Global Variables:
 var currentDB *sql.DB
 var currentID = -1
 
 func SetDB(db *sql.DB) {
 	currentDB = db
+}
+
+func SendEmail(toEmail string, emailSubject string, emailMessage string) {
+	companyEmailAuthentication := smtp.PlainAuth("", companyEmail, emailSignInCode, emailHost)
+
+	to := []string{toEmail}
+
+	fullEmail := []byte("To: " + toEmail + "\r\n" +
+
+		"Subject: " + emailSubject + "\r\n" +
+
+		"\r\n" +
+
+		emailMessage + "\r\n")
+
+	err := smtp.SendMail(emailHost+":"+emailPort, companyEmailAuthentication, companyEmail, to, fullEmail)
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 // GET and POST Functions:
