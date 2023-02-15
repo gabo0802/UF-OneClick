@@ -379,6 +379,7 @@ func ResetDatabase(c *gin.Context) {
 		MySQL.ResetAllTables(currentDB)
 		MySQL.SetUpTables(currentDB)
 		MySQL.CreateAdminUser(currentDB)
+		MySQL.CreateCommonSubscriptions(currentDB)
 
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
