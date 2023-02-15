@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-header',
@@ -7,15 +8,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor(private router: Router) {};  
+  constructor(private http: HttpClient, private router: Router) {};  
 
   ngOnInit(){
     if (document.cookie.includes("currentUserID=")){
+        console.log(document.cookie)
         this.router.navigate(['users']);
     }
   }
 
-  onSubmit(){
-    console.log("Test 2")
-  }
 }

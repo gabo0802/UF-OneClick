@@ -4,8 +4,12 @@ import (
 	"crypto/sha256"
 	"database/sql"
 	"encoding/base64"
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler/MySQL"
 	"github.com/gin-gonic/gin"
@@ -27,10 +31,8 @@ type userData struct {
 }
 
 const (
-	emailHost       = "smtp.gmail.com"
-	emailPort       = "587"
-	companyEmail    = "vanbestindustries@gmail.com"
-	emailSignInCode = "nbvuqycegwhklatc"
+	emailHost = "smtp.gmail.com"
+	emailPort = "587"
 )
 
 // Global Variables:
@@ -41,7 +43,30 @@ func SetDB(db *sql.DB) {
 	currentDB = db
 }
 
-func SendEmail(toEmail string, emailSubject string, emailMessage string) {
+func SendEmail(toEmail string, emailSubject string, emailMessage string) bool {
+	//Get Email from Database
+	rows, err := currentDB.Query("SELECT EMAIL FROM USERS WHERE UserID = 1;")
+
+	if err != nil {
+		fmt.Println("Database Connection Issue")
+		return false
+	}
+
+	var companyEmail string
+	for rows.Next() {
+		rows.Scan(&companyEmail)
+	}
+
+	//Get Password From .txt file
+	code, missing := os.ReadFile("EmailCode.txt")
+	if missing != nil {
+		fmt.Println("Missing EmailCode.txt file")
+		return false
+	}
+	emailSignInCode := string(code)
+	emailSignInCode = strings.ReplaceAll(emailSignInCode, "\n", "")
+
+	//Try to Send Email
 	companyEmailAuthentication := smtp.PlainAuth("", companyEmail, emailSignInCode, emailHost)
 
 	to := []string{toEmail}
@@ -54,11 +79,14 @@ func SendEmail(toEmail string, emailSubject string, emailMessage string) {
 
 		emailMessage + "\r\n")
 
-	err := smtp.SendMail(emailHost+":"+emailPort, companyEmailAuthentication, companyEmail, to, fullEmail)
+	err = smtp.SendMail(emailHost+":"+emailPort, companyEmailAuthentication, companyEmail, to, fullEmail)
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
+		return false
 	}
+
+	return true
 }
 
 func SendEmailToAllUsers(emailSubject string, emailMessage string) {
@@ -71,8 +99,84 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 		var currentEmail string
 		rows.Scan(&currentEmail)
 
-		SendEmail(currentEmail, emailSubject, emailMessage)
+		emailSent := SendEmail(currentEmail, emailSubject, emailMessage)
+
+		if !emailSent {
+			fmt.Println("Email Not Sent!")
+			return
+		}
 	}
+}
+
+func DailyReminder(c *gin.Context) {
+	_, err := c.Cookie("didReminder")
+
+	if err != nil {
+		currentTime := time.Now()
+		currentTime.Format("2006-01-02")
+		currentYear := currentTime.Format("2006")
+		nextDayTime := currentTime.Add(time.Hour * 24)
+		//nextWeekTime := currentTime.Add(time.Hour * (24 * 7))
+
+		SQLString := currentYear + "-%m-%d"
+
+		rows, err := currentDB.Query("SELECT Email, Name, Price FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email;", SQLString, currentTime, nextDayTime)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+			return
+		}
+
+		var currentEmail string = ""
+		var userMessage string = ""
+		var emailSent bool = true
+
+		for rows.Next() {
+			var newEmail string
+			var subName string
+			var subPrice string
+
+			rows.Scan(&newEmail, &subName, &subPrice)
+
+			if currentEmail == "" {
+				currentEmail = newEmail
+				userMessage = "Subscriptions to Renew" + "\n" + subName + ": $" + subPrice + "\n"
+
+			} else if newEmail == currentEmail {
+				userMessage += subName + ": $" + subPrice + "\n"
+
+			} else {
+				emailSent = SendEmail(currentEmail, "Renew Subscription", userMessage)
+				fmt.Println(userMessage)
+
+				if !emailSent {
+					c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Email Not Sent"})
+					return
+				}
+
+				currentEmail = newEmail
+				userMessage = "Subscriptions to Renew" + "/n" + subName + ": $" + subPrice + "\n"
+			}
+		}
+		emailSent = SendEmail(currentEmail, "Renew Subscription", userMessage)
+		fmt.Println(userMessage)
+
+		if !emailSent {
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Email Not Sent"})
+			return
+		}
+
+		fmt.Println("Sent Emails")
+		c.SetCookie("didReminder", "yes", 60*60*24, "/", "localhost", false, true)
+
+		c.JSON(http.StatusOK, gin.H{"Success": "Emails Were Sent!"})
+	} else {
+		c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true) //for testing
+		fmt.Println("Emails Already Sent")
+
+		c.JSON(http.StatusOK, gin.H{"Success": "Emails Already Sent!"})
+	}
+
+	//c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
 // GET and POST Functions:

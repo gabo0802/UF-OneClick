@@ -36,7 +36,9 @@ func main() {
 
 	api := r.Group("/api")
 	{
-		//api.GET("", handler.HomePage())
+		//Background
+		api.GET("/remind", handler.DailyReminder)
+		api.POST("/remind", handler.DailyReminder)
 
 		//Account Management
 		api.POST("/login", handler.TryLogin)

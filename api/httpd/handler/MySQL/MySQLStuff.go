@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -15,7 +16,6 @@ const (
 	host         = "oneclickserver.mysql.database.azure.com"
 	database     = "userdb"
 	user         = "adminUser"
-	password     = "MySQLP@ssw0rd"
 	companyemail = "vanbestindustries@gmail.com"
 )
 
@@ -28,9 +28,17 @@ func checkError(err error) {
 func MySQLConnect() *sql.DB {
 	var db *sql.DB
 
+	//Get Password From .txt file
+	code, missing := os.ReadFile("MySQLPassword.txt")
+	if missing != nil {
+		panic(missing)
+	}
+	mySQLPass := string(code)
+	mySQLPass = strings.ReplaceAll(mySQLPass, "\n", "")
+
 	//Connect to remote server using Microsoft Azure
 	// Initialize connection string
-	var connectionString = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?allowNativePasswords=true", user, password, host, database)
+	var connectionString = fmt.Sprintf("%s:%s@tcp(%s:3306)/%s?allowNativePasswords=true", user, mySQLPass, host, database)
 
 	// Initialize connection object
 	db, err := sql.Open("mysql", connectionString)
