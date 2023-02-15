@@ -23,3 +23,7 @@ mat-card-header {
 mat-card {    
     padding: 45px;
 }
+
+mat-error {
+    font-size: 12px;
+}

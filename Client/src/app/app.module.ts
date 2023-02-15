@@ -15,6 +15,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SubscriptionListComponent } from './dashboard/subscription-list/subscription-list.component';
 import { SubscriptionDetailComponent } from './dashboard/subscription-list/subscription-detail/subscription-detail.component';
 import { SignupMessageComponent } from './signup/signup-message/signup-message.component';
+import { LoginMessageComponent } from './login/login-message/login-message.component';
 
 
 
@@ -29,7 +30,8 @@ import { SignupMessageComponent } from './signup/signup-message/signup-message.c
     DashboardComponent,
     SubscriptionListComponent,
     SubscriptionDetailComponent,
-    SignupMessageComponent
+    SignupMessageComponent,
+    LoginMessageComponent
   ],
   imports: [
     BrowserModule,

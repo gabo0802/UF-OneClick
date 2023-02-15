@@ -10,8 +10,23 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  Login(userData: {password: string, username: string}): Observable<Object>{    
-    return this.http.post('/api/login', JSON.stringify(userData));
+  login(userData: {password: string, username: string}): Observable<Array<string>>{
+
+    return this.http.post<{[key: string]: string, message: string}>('/api/login', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
   }
 
   createUser(userData: {username: string, email: string, password: string}): Observable<Array<string>>{   

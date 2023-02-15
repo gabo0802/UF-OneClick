@@ -11,6 +11,7 @@
                     <mat-form-field appearance="fill">
                         <mat-label>Username</mat-label>            
                         <input matInput formControlName="username">
+                        <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                        
                     </mat-form-field>
 
                     <mat-form-field appearance="fill">
@@ -19,10 +20,11 @@
                         <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
                           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
                         </button>
+                        <mat-error *ngIf="loginForm.get('password')?.getError">Please enter a password</mat-error>  
                       </mat-form-field>      
                 
                     <mat-card-actions>
-                        <button type="submit" mat-raised-button color="primary">Login</button>
+                        <button type="submit" mat-raised-button color="primary" [disabled]="loginForm.invalid">Login</button>
                     </mat-card-actions>
                 </form>
             </mat-card-content>            

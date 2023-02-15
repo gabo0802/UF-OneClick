@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
+import { LoginMessageComponent } from './login-message/login-message.component';
 
 @Component({
   selector: 'app-login',
@@ -8,51 +11,41 @@ import { ApiService } from '../api.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+
   loginForm: FormGroup = {} as FormGroup;
-  constructor(private api: ApiService) {};
   hide: boolean = true;
+
+  constructor(private api: ApiService, private dialog: MatDialog, private router: Router) {};  
 
   ngOnInit(){
     this.loginForm = new FormGroup({
-      'username': new FormControl(null, null),
-      'password': new FormControl(null, null)
+      'username': new FormControl(null, [Validators.required, Validators.pattern('^[A-z0-9]+$')]),
+      'password': new FormControl(null, Validators.required)
     });
   }
 
   onSubmit(){
-    this.api.Login(this.loginForm.value).subscribe( (res: Object) => {
-  
-      const response: string = JSON.stringify(res);
-      const responseMessage = JSON.parse(response);
 
-      //Incorrect Password or Database Error
-      if(responseMessage["Error"] !== undefined){        
-        console.log(responseMessage["Error"])
-      }//Logged in and User Subscriptions returned
-      else{
-        //might be able to do with for loop but so far just got this to work with while only
-        let index: number = 0;
-        let test: string = "";
-        var allSubscriptions = [];
+    this.api.login(this.loginForm.value).subscribe( (resultMessage: string[]) => {
 
-        while (responseMessage[index] != null){
-          console.log(responseMessage[index]); //get Subcription
-          console.log(responseMessage[index]["name"]); //get value from Subcription (see userData for all parameters)
-
-          test = responseMessage[index]["name"];
-        
-          allSubscriptions.push(responseMessage[index]);
-
-          index += 1;
-        }
-
-        console.log("Subscription Name: " + test); //testing string variable
-        console.log(allSubscriptions); //testing array
-        console.log(document.cookie); //showing created cookie (possibly for future use)
+      if(resultMessage[0] === "Success"){
+        this.router.navigate(['users']);
       }
-    });
+      else{
+        this.callDialog(resultMessage[0], resultMessage[1]);
+      }
+    })
 
     this.loginForm.reset();
+  }
+
+  callDialog(title: string, message: string){
+
+    let dialogRef = this.dialog.open(LoginMessageComponent, {
+      data: { dialogTitle: title, dialogMessage: message},      
+      height: '180px',
+      width: '370px',
+    });    
   }
 
 }
