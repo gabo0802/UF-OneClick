@@ -71,7 +71,7 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 		var currentEmail string
 		rows.Scan(&currentEmail)
 
-		SendEmail(currentEmail, emailMessage, emailMessage)
+		SendEmail(currentEmail, emailSubject, emailMessage)
 	}
 }
 
