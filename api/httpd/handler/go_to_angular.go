@@ -61,6 +61,20 @@ func SendEmail(toEmail string, emailSubject string, emailMessage string) {
 	}
 }
 
+func SendEmailToAllUsers(emailSubject string, emailMessage string) {
+	rows, err := currentDB.Query("SELECT Email FROM Users WHERE UserID > 1;")
+	if err != nil {
+		panic(err)
+	}
+
+	for rows.Next() {
+		var currentEmail string
+		rows.Scan(&currentEmail)
+
+		SendEmail(currentEmail, emailMessage, emailMessage)
+	}
+}
+
 // GET and POST Functions:
 
 func TryLogin(c *gin.Context) { // gin.Context parameter.
