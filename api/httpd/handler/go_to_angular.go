@@ -112,7 +112,8 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 	} else {
 		//c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), 60*60, "/", "localhost", false, false)
-		c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
+		c.JSON(http.StatusOK, gin.H{"Success": "Logged In"})
 	}
 }
 
