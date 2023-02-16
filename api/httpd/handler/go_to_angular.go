@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
@@ -233,17 +234,22 @@ func startVerifyCheck(username string, email string) {
 	}
 
 	codeGenerator := sha256.New()
-	codeGenerator.Write([]byte(strconv.Itoa(ID)))
+	codeGenerator.Write([]byte(strconv.Itoa(rand.Intn(899999) + 100000)))
 	newCode := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
+
+	codeGenerator = sha256.New()
+	codeGenerator.Write([]byte(newCode))
+	newCodeEncrypted := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
 
 	currentTime := time.Now()
 	//expireDate := currentTime.Add(time.Second) //for testing
 	expireDate := currentTime.Add(time.Hour * 24)
 
-	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vE\");", ID, newCode, expireDate)
+	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vE\");", ID, newCodeEncrypted, expireDate)
 	sendEmail(email, "Verify Identity", "http://localhost:4200/api/verify/"+newCode)
 
 	fmt.Println("http://localhost:4200/api/verify/" + newCode)
+	newCode = ""
 	username = ""
 }
 
@@ -253,16 +259,12 @@ func VerifyEmail(c *gin.Context) {
 	//Verify Current User
 	currentTime := time.Now()
 	possibleCode := c.Param("code")
-	possibleCode = strings.ReplaceAll(possibleCode, "=", "")
 
-	if len(possibleCode) != 43 || strings.Contains(possibleCode, "/*") || strings.Contains(possibleCode, " ") || strings.Contains(possibleCode, ";") {
-		fmt.Println("Possible SQL Injection")
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
-		return
-	}
+	codeGenerator := sha256.New()
+	codeGenerator.Write([]byte(possibleCode))
+	possibleCodeEncrypted := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
 
-	possibleCode = possibleCode + "="
-	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vE\" AND ExpireDate > ? AND Code = ?;", currentTime, possibleCode)
+	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vE\" AND ExpireDate > ? AND Code = ?;", currentTime, possibleCodeEncrypted)
 
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
@@ -284,7 +286,10 @@ func VerifyEmail(c *gin.Context) {
 	currentTime := time.Now()
 	expireDate := currentTime.Add(time.Minute * 15)
 
-	newCode := rand.Intn(899999) + 100000
+	codeGenerator := sha256.New()
+	codeGenerator.Write([]byte(strconv.Itoa(rand.Intn(899999) + 100000)))
+	newCode := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
+
 	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vL\");", userID, newCode, expireDate)
 }
 
@@ -322,8 +327,12 @@ func TwoFactorAuthentication(c *gin.Context) {
 	var user2FA userData
 	c.BindJSON(&user2FA)
 
-	code := user2FA.Username
-	didWork := do2FA(code, currentID)
+	userCode := user2FA.Username
+	codeGenerator := sha256.New()
+	codeGenerator.Write([]byte(userCode))
+	userCodeEncrypted := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
+
+	didWork := do2FA(userCodeEncrypted, currentID)
 
 	if didWork{
 		c.JSON(http.StatusOK, gin.H{"Success": "2FA"})
