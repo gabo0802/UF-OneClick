@@ -43,7 +43,9 @@ func SetDB(db *sql.DB) {
 	currentDB = db
 }
 
-func sendReminders(rows *sql.Rows, message string) bool {
+func sendReminders(rows *sql.Rows, message string, header string) bool {
+	fmt.Println(header)
+
 	var currentEmail string = ""
 	var userMessage string = ""
 	var emailSent bool = true
@@ -63,7 +65,7 @@ func sendReminders(rows *sql.Rows, message string) bool {
 			userMessage += subName + ": $" + subPrice + "\n"
 
 		} else {
-			emailSent = sendEmail(currentEmail, "Renew Subscription", userMessage)
+			emailSent = sendEmail(currentEmail, header, userMessage)
 			fmt.Println(userMessage)
 
 			if !emailSent {
@@ -77,7 +79,7 @@ func sendReminders(rows *sql.Rows, message string) bool {
 
 	fmt.Println(userMessage)
 	if currentEmail != "" {
-		emailSent = sendEmail(currentEmail, "Renew Subscription", userMessage)
+		emailSent = sendEmail(currentEmail, header, userMessage)
 	}
 
 	return emailSent
@@ -166,6 +168,7 @@ func DailyReminder(c *gin.Context) {
 		nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+8, 0, 0, 0, 0, time.Local)
 
 		SQLString := currentYear + "-" + currentMonth + "-%d"
+		stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
 
 		rows, err := currentDB.Query("SELECT Email, Name, Price FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email;", SQLString, currentDate, nextDayDate)
 		if err != nil {
@@ -173,7 +176,7 @@ func DailyReminder(c *gin.Context) {
 			return
 		}
 
-		if !sendReminders(rows, "Subscriptions to Renew Within 1 Day") {
+		if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Day Left)") {
 			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Emails Not Sent"})
 			return
 		}
@@ -185,7 +188,7 @@ func DailyReminder(c *gin.Context) {
 			return
 		}
 
-		if !sendReminders(rows, "Subscriptions to Renew Within 1 Week") {
+		if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Week Left)") {
 			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Emails Not Sent"})
 			return
 		}

@@ -50,6 +50,8 @@ func main() {
 		api.GET("/logout", handler.Logout(""))
 		api.POST("/logout", handler.Logout(""))
 
+		api.GET("/verify/:code", handler.VerifyEmail)
+
 		//Subscription Management
 		api.POST("/subscriptions", handler.GetAllUserSubscriptions())
 		api.GET("/subscriptions", handler.GetAllUserSubscriptions())
@@ -66,8 +68,6 @@ func main() {
 
 		api.GET("/alldata", handler.GetAllUserData())
 		api.POST("/alldata", handler.GetAllUserData())
-
-		api.GET("/verify/:code", handler.VerifyEmail)
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
