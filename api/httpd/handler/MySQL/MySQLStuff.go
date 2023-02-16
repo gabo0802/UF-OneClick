@@ -79,6 +79,9 @@ func SetUpTables(db *sql.DB) {
 
 	//Individual user subscriptions
 	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
+
+	//Email Verification
+	db.Exec("CREATE TABLE IF NOT EXISTS Verification (UserID int NOT NULL, ExpireDate DATETIME NOT NULL, Code varchar(255) NOT NULL, Type varchar(255) NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID))")
 }
 
 func ResetTable(db *sql.DB, tableName string) {
@@ -87,6 +90,7 @@ func ResetTable(db *sql.DB, tableName string) {
 
 func ResetAllTables(db *sql.DB) {
 	//Must drop UserSubs first since its foreign keys depend on the other tables for primary keys
+	db.Exec("DROP TABLE IF EXISTS Verification;")
 	db.Exec("DROP TABLE IF EXISTS UserSubs;")
 	db.Exec("DROP TABLE IF EXISTS Users;")
 	db.Exec("DROP TABLE IF EXISTS Subscriptions;")
@@ -509,6 +513,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 // Deletes entry based on UserID from MySQL table called "Users"
 func DeleteUser(db *sql.DB, ID int) {
+	db.Exec("DELETE FROM Verification WHERE UserID = ?;", ID)
 	db.Exec("DELETE FROM UserSubs WHERE UserID = ?;", ID)
 	result, err := db.Exec("DELETE FROM Users WHERE UserID = ?;", ID)
 
@@ -539,7 +544,7 @@ func Login(db *sql.DB, username string, password string) int {
 
 	//Tests If Query Returns Empty Set or Not (Valid Username and Password or Not)
 	if rows.Next() {
-		fmt.Println("Login Successful!")
+		fmt.Println("Got Valid User ID!")
 
 		var CurrentUserID int
 		rows.Scan(&CurrentUserID)

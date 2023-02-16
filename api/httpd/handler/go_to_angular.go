@@ -148,6 +148,7 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 	}
 }
 
+// GET and POST Functions:
 func DailyReminder(c *gin.Context) {
 	_, err := c.Cookie("didReminder")
 
@@ -203,7 +204,68 @@ func DailyReminder(c *gin.Context) {
 	//c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
-// GET and POST Functions:
+func deleteUnverified() {
+	currentTime := time.Now()
+	deleteUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vE\" AND ExpireDate < ?;", currentTime)
+
+	if err != nil {
+		return
+	}
+
+	for deleteUser.Next() {
+		var ID int
+		deleteUser.Scan(&ID)
+
+		fmt.Println("Current User ID:", ID, "Deleted!")
+		MySQL.DeleteUser(currentDB, ID)
+	}
+}
+
+func startVerifyCheck(username string, email string) {
+	var ID int
+	row, _ := currentDB.Query("SELECT UserID FROM Users WHERE Username = ?;", username)
+
+	for row.Next() {
+		row.Scan(&ID)
+	}
+
+	codeGenerator := sha256.New()
+	codeGenerator.Write([]byte(strconv.Itoa(ID)))
+	newCode := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
+
+	currentTime := time.Now()
+	//expireDate := currentTime.Add(time.Second) //for testing
+	expireDate := currentTime.Add(time.Hour * 24)
+
+	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vE\");", ID, newCode, expireDate)
+	sendEmail(email, "Verify Identity", "http://localhost:4200/api/verify/"+newCode)
+
+	fmt.Println("http://localhost:4200/api/verify/" + newCode)
+	username = ""
+}
+
+func VerifyEmail(c *gin.Context) {
+	deleteUnverified()
+
+	//Verify Current User
+	currentTime := time.Now()
+	possibleCode := c.Param("code")
+	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vE\" AND ExpireDate > ? AND Code = ?;", currentTime, possibleCode)
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+	}
+
+	for verifyUser.Next() {
+		var ID int
+		verifyUser.Scan(&ID)
+
+		fmt.Println("Current User ID:", ID, "Verified!")
+		currentDB.Query("DELETE FROM Verification WHERE UserID = ? AND Type = \"vE\";", ID)
+	}
+
+	c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
 
 func TryLogin(c *gin.Context) { // gin.Context parameter.
 	/*_, err := c.Cookie("currentUserID")
@@ -214,6 +276,7 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 	} else {
 		fmt.Println("Not Logged In Already!")
 	}*/
+	deleteUnverified()
 
 	var login userData
 	c.BindJSON(&login)
@@ -242,6 +305,13 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	//Try Login
 	currentID = MySQL.Login(currentDB, username, password)
+
+	verifyUser, _ := currentDB.Query("SELECT * FROM Verification WHERE UserID = ? AND Type = \"vE\";", currentID)
+	if verifyUser.Next() {
+		currentID = -1
+		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Unverified Username"})
+		return
+	}
 
 	if currentID == -401 { //unauthorized
 		currentID = -1
@@ -326,6 +396,9 @@ func NewUser(c *gin.Context) {
 		//c.SetCookie("signupOutput", "New User "+username+" Has Been Created!", 60, "/", "localhost", false, false) //maybe add " Enter Username and Password!"
 		c.JSON(http.StatusOK, gin.H{"Success": "New User " + username + " Has Been Created"}) //maybe add " Enter Username and Password!"
 		username = ""
+
+		//User Verification
+		startVerifyCheck(encryptedusername, email)
 	}
 }
 
