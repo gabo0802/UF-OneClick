@@ -341,6 +341,7 @@ func TwoFactorAuthentication(c *gin.Context) {
 		currentID = -1
 
 		c.JSON(http.StatusOK, gin.H{"Error": "Invalid Code"})
+		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 
 }*/

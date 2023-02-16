@@ -43,6 +43,9 @@ func main() {
 		//Account Management
 		api.POST("/login", handler.TryLogin)
 
+		//api.GET("/2FA/:code", handler.TwoFactorAuthentication()) //testing
+		//api.POST("/2FA", handler.TwoFactorAuthentication()) //need to agree on how to send POST request
+
 		api.POST("/accountcreation", handler.NewUser)
 
 		//api.POST("/changepassword", handler.ChangeUserPassword) //need to agree on how to get user input (maybe name could be old password)
