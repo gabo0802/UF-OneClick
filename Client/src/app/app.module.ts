@@ -10,7 +10,6 @@ import { HeaderComponent } from './header/header.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { ScrollBarComponent } from './scroll-bar/scroll-bar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SubscriptionListComponent } from './dashboard/subscription-list/subscription-list.component';
 import { SubscriptionDetailComponent } from './dashboard/subscription-list/subscription-detail/subscription-detail.component';
@@ -26,7 +25,6 @@ import { LoginMessageComponent } from './login/login-message/login-message.compo
     LandingPageComponent,
     LoginComponent,
     SignupComponent,
-    ScrollBarComponent,
     DashboardComponent,
     SubscriptionListComponent,
     SubscriptionDetailComponent,

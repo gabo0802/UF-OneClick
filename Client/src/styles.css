@@ -11,7 +11,11 @@ html, body {
   scroll-behavior: smooth;
 }
 body { 
-  
+  /* Set min width for the app 
+  * Anything smaller than this looks weird
+  */
+  min-width: 420px;
+  overflow: auto/scroll;
 }
 
 :root {
