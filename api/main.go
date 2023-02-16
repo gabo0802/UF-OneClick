@@ -71,7 +71,6 @@ func main() {
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
-	r.Run("localhost:4200")
 	fmt.Println("End")
 }
 

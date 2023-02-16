@@ -273,7 +273,7 @@ func VerifyEmail(c *gin.Context) {
 		verifyUser.Scan(&ID)
 
 		fmt.Println("Current User ID:", ID, "Verified!")
-		currentDB.Query("DELETE FROM Verification WHERE UserID = ? AND Type = \"vE\";", ID)
+		currentDB.Exec("DELETE FROM Verification WHERE UserID = ? AND Type = \"vE\";", ID)
 	}
 
 	c.Redirect(http.StatusTemporaryRedirect, "/login")
@@ -284,11 +284,19 @@ func VerifyEmail(c *gin.Context) {
 	currentTime := time.Now()
 	expireDate := currentTime.Add(time.Minute * 15)
 
-	newCode := 1
+	newCode := rand.Intn(899999) + 100000
 	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vL\");", userID, newCode, expireDate)
 }
 
+func remove2FA(){
+	currentTime := time.Now()
+	currentDB.Exec("DELETE FROM Verification WHERE Type = \"vL\" AND ExpireDate < ?;", currentTime)
+}
+
 func do2FA(possibleCode string, userID int) bool {
+	//Remove Old 2FA Codes
+	remove2FA()
+
 	//Verify 2FA Code
 	currentTime := time.Now()
 	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vL\" AND ExpireDate > ? AND Code = ? AND UserID = ?;", currentTime, possibleCode, userID)
@@ -302,7 +310,7 @@ func do2FA(possibleCode string, userID int) bool {
 		verifyUser.Scan(&ID)
 
 		fmt.Println("Current User ID:", ID, "Verified!")
-		currentDB.Query("DELETE FROM Verification WHERE UserID = ? AND Type = \"vL\";", ID)
+		currentDB.Exec("DELETE FROM Verification WHERE UserID = ? AND Type = \"vL\";", ID)
 
 		return true
 	}
@@ -311,6 +319,20 @@ func do2FA(possibleCode string, userID int) bool {
 }
 
 func TwoFactorAuthentication(c *gin.Context) {
+	var user2FA userData
+	c.BindJSON(&user2FA)
+
+	code := user2FA.Username
+	didWork := do2FA(code, currentID)
+
+	if didWork{
+		c.JSON(http.StatusOK, gin.H{"Success": "2FA"})
+	}else{
+		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
+		currentID = -1
+
+		c.JSON(http.StatusOK, gin.H{"Error": "Invalid Code"})
+	}
 
 }*/
 
@@ -373,6 +395,8 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), 60*60, "/", "localhost", false, false)
 		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 		c.JSON(http.StatusOK, gin.H{"Success": "Logged In"})
+
+		//start2FA(currentID)
 	}
 }
 
