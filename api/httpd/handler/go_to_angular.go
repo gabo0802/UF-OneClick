@@ -253,6 +253,15 @@ func VerifyEmail(c *gin.Context) {
 	//Verify Current User
 	currentTime := time.Now()
 	possibleCode := c.Param("code")
+	possibleCode = strings.ReplaceAll(possibleCode, "=", "")
+
+	if len(possibleCode) != 43 || strings.Contains(possibleCode, "/*") || strings.Contains(possibleCode, " ") || strings.Contains(possibleCode, ";") {
+		fmt.Println("Possible SQL Injection")
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		return
+	}
+
+	possibleCode = possibleCode + "="
 	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vE\" AND ExpireDate > ? AND Code = ?;", currentTime, possibleCode)
 
 	if err != nil {
@@ -269,6 +278,41 @@ func VerifyEmail(c *gin.Context) {
 
 	c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
+
+/*func start2FA(userID int) {
+	//Verify 2FA Code
+	currentTime := time.Now()
+	expireDate := currentTime.Add(time.Minute * 15)
+
+	newCode := 1
+	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vL\");", userID, newCode, expireDate)
+}
+
+func do2FA(possibleCode string, userID int) bool {
+	//Verify 2FA Code
+	currentTime := time.Now()
+	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vL\" AND ExpireDate > ? AND Code = ? AND UserID = ?;", currentTime, possibleCode, userID)
+
+	if err != nil {
+		return false
+	}
+
+	for verifyUser.Next() {
+		var ID int
+		verifyUser.Scan(&ID)
+
+		fmt.Println("Current User ID:", ID, "Verified!")
+		currentDB.Query("DELETE FROM Verification WHERE UserID = ? AND Type = \"vL\";", ID)
+
+		return true
+	}
+
+	return false
+}
+
+func TwoFactorAuthentication(c *gin.Context) {
+
+}*/
 
 func TryLogin(c *gin.Context) { // gin.Context parameter.
 	/*_, err := c.Cookie("currentUserID")
@@ -561,36 +605,40 @@ func CancelSubscriptionService(c *gin.Context) {
 	}
 }
 
-/*
-func ChangeUserPassword(c *gin.Context) {
-	if currentID != -1 {
-		tryDefaultMessage("Enter Old Password and New Password!")
+/*func ChangeUserPassword(c *gin.Context) {
+	if currentID != -1{
+		var userInfo userData
+		c.BindJSON(&userInfo)
 
-		if !strings.Contains(currentCookie.First, "Message: ") {
-			rowsAffected := MySQL.ChangePassword(currentDB, currentID, currentCookie.First, currentCookie.Second)
+		oldPassword	:= userInfo.Username
+		newPassword := userInfo.Password
+		userInfo = userData{}
 
-			if rowsAffected == 0 {
-				changeMessage("Incorrect Old Password!")
-			} else if rowsAffected == -1 {
-				changeMessage("Error")
-			} else if rowsAffected == -2 {
-				changeMessage("Enter Value Into All Columns!")
-			} else {
-				changeMessage("Password Has Been Changed! Re-enter Username and Password!")
-				currentID = -1
-				c.Redirect(http.StatusTemporaryRedirect, "/api/login")
-			}
+		stringEncrypter := sha256.New()
+		stringEncrypter.Write([]byte(oldPassword))
+		oldPassword = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+
+		stringEncrypter = sha256.New()
+		stringEncrypter.Write([]byte(newPassword))
+		newPassword = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+
+		rowsAffected := MySQL.ChangePassword(currentDB, currentID, oldPassword, newPassword)
+
+		if rowsAffected == 0 {
+			c.JSON(http.StatusOK, gin.H{"Error": "Incorrect Old Password"})
+		} else if rowsAffected == -502 {
+			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+		} else if rowsAffected == -204 {
+			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+		} else {
+			currentID = -1
+			c.JSON(http.StatusOK, gin.H{"Success": "Password Changed"})
+			//c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 		}
-
-		printMessage(c)
-		setDefaultMessage()
-
-	} else {
-		setDefaultMessage()
+	}else{
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
-}
-*/
+}*/
 
 func resetCookies(c *gin.Context) {
 	c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
