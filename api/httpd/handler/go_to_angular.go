@@ -43,7 +43,47 @@ func SetDB(db *sql.DB) {
 	currentDB = db
 }
 
-func SendEmail(toEmail string, emailSubject string, emailMessage string) bool {
+func sendReminders(rows *sql.Rows, message string) bool {
+	var currentEmail string = ""
+	var userMessage string = ""
+	var emailSent bool = true
+
+	for rows.Next() {
+		var newEmail string
+		var subName string
+		var subPrice string
+
+		rows.Scan(&newEmail, &subName, &subPrice)
+
+		if currentEmail == "" {
+			currentEmail = newEmail
+			userMessage = message + "\n" + subName + ": $" + subPrice + "\n"
+
+		} else if newEmail == currentEmail {
+			userMessage += subName + ": $" + subPrice + "\n"
+
+		} else {
+			emailSent = sendEmail(currentEmail, "Renew Subscription", userMessage)
+			fmt.Println(userMessage)
+
+			if !emailSent {
+				return false
+			}
+
+			currentEmail = newEmail
+			userMessage = message + "/n" + subName + ": $" + subPrice + "\n"
+		}
+	}
+
+	fmt.Println(userMessage)
+	if currentEmail != "" {
+		emailSent = sendEmail(currentEmail, "Renew Subscription", userMessage)
+	}
+
+	return emailSent
+}
+
+func sendEmail(toEmail string, emailSubject string, emailMessage string) bool {
 	//Get Email from Database
 	rows, err := currentDB.Query("SELECT EMAIL FROM USERS WHERE UserID = 1;")
 
@@ -82,7 +122,7 @@ func SendEmail(toEmail string, emailSubject string, emailMessage string) bool {
 	err = smtp.SendMail(emailHost+":"+emailPort, companyEmailAuthentication, companyEmail, to, fullEmail)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println("Email: " + err.Error())
 		return false
 	}
 
@@ -99,7 +139,7 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 		var currentEmail string
 		rows.Scan(&currentEmail)
 
-		emailSent := SendEmail(currentEmail, emailSubject, emailMessage)
+		emailSent := sendEmail(currentEmail, emailSubject, emailMessage)
 
 		if !emailSent {
 			fmt.Println("Email Not Sent!")
@@ -113,55 +153,39 @@ func DailyReminder(c *gin.Context) {
 
 	if err != nil {
 		currentTime := time.Now()
-		currentTime.Format("2006-01-02")
-		currentYear := currentTime.Format("2006")
-		nextDayTime := currentTime.Add(time.Hour * 24)
-		//nextWeekTime := currentTime.Add(time.Hour * (24 * 7))
+		currentDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), 0, 0, 0, 0, time.Local)
 
-		SQLString := currentYear + "-%m-%d"
+		currentMonth := strconv.Itoa(int(currentDate.Month()))
+		if len(currentMonth) < 2 {
+			currentMonth = "0" + currentMonth
+		}
+		currentYear := strconv.Itoa(currentDate.Year())
 
-		rows, err := currentDB.Query("SELECT Email, Name, Price FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email;", SQLString, currentTime, nextDayTime)
+		nextDayDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+2, 0, 0, 0, 0, time.Local)
+		nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+8, 0, 0, 0, 0, time.Local)
+
+		SQLString := currentYear + "-" + currentMonth + "-%d"
+
+		rows, err := currentDB.Query("SELECT Email, Name, Price FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email;", SQLString, currentDate, nextDayDate)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 			return
 		}
 
-		var currentEmail string = ""
-		var userMessage string = ""
-		var emailSent bool = true
-
-		for rows.Next() {
-			var newEmail string
-			var subName string
-			var subPrice string
-
-			rows.Scan(&newEmail, &subName, &subPrice)
-
-			if currentEmail == "" {
-				currentEmail = newEmail
-				userMessage = "Subscriptions to Renew" + "\n" + subName + ": $" + subPrice + "\n"
-
-			} else if newEmail == currentEmail {
-				userMessage += subName + ": $" + subPrice + "\n"
-
-			} else {
-				emailSent = SendEmail(currentEmail, "Renew Subscription", userMessage)
-				fmt.Println(userMessage)
-
-				if !emailSent {
-					c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Email Not Sent"})
-					return
-				}
-
-				currentEmail = newEmail
-				userMessage = "Subscriptions to Renew" + "/n" + subName + ": $" + subPrice + "\n"
-			}
+		if !sendReminders(rows, "Subscriptions to Renew Within 1 Day") {
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Emails Not Sent"})
+			return
 		}
-		emailSent = SendEmail(currentEmail, "Renew Subscription", userMessage)
-		fmt.Println(userMessage)
 
-		if !emailSent {
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Email Not Sent"})
+		currentDate = currentDate.Add(time.Hour * 24)
+		rows, err = currentDB.Query("SELECT Email, Name, Price FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email;", SQLString, currentDate, nextWeekDate)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+			return
+		}
+
+		if !sendReminders(rows, "Subscriptions to Renew Within 1 Week") {
+			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Emails Not Sent"})
 			return
 		}
 
@@ -170,7 +194,7 @@ func DailyReminder(c *gin.Context) {
 
 		c.JSON(http.StatusOK, gin.H{"Success": "Emails Were Sent!"})
 	} else {
-		c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true) //for testing
+		//c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true) //for testing
 		fmt.Println("Emails Already Sent")
 
 		c.JSON(http.StatusOK, gin.H{"Success": "Emails Already Sent!"})
@@ -492,12 +516,18 @@ func ChangeUserPassword(c *gin.Context) {
 }
 */
 
-func ResetDatabase(c *gin.Context) {
+func resetCookies(c *gin.Context) {
+	c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
+	c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
+}
+
+func ResetALL(c *gin.Context) {
 	if currentID == 1 {
 		MySQL.ResetAllTables(currentDB)
 		MySQL.SetUpTables(currentDB)
 		MySQL.CreateAdminUser(currentDB)
 		MySQL.CreateCommonSubscriptions(currentDB)
+		resetCookies(c)
 
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {

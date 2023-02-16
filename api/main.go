@@ -61,8 +61,8 @@ func main() {
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
 
 		//Admin Commands
-		api.GET("/reset", handler.ResetDatabase)
-		api.POST("/reset", handler.ResetDatabase)
+		api.GET("/reset", handler.ResetALL)
+		api.POST("/reset", handler.ResetALL)
 
 		api.GET("/alldata", handler.GetAllUserData())
 		api.POST("/alldata", handler.GetAllUserData())
