@@ -1,11 +1,12 @@
 package handler
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
 	"database/sql"
 	"encoding/base64"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"net/http"
 	"os"
 	"strconv"
@@ -234,8 +235,11 @@ func startVerifyCheck(username string, email string) {
 	}
 
 	codeGenerator := sha256.New()
-	codeGenerator.Write([]byte(strconv.Itoa(rand.Intn(899999) + 100000)))
+	randomNumber, _ := rand.Int(rand.Reader, big.NewInt(900000))
+	codeGenerator.Write([]byte(strconv.Itoa(int(randomNumber.Int64()) + 100000)))
 	newCode := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
+
+	randomNumber.Add(randomNumber, big.NewInt(100000))
 
 	codeGenerator = sha256.New()
 	codeGenerator.Write([]byte(newCode))
@@ -287,10 +291,17 @@ func VerifyEmail(c *gin.Context) {
 	expireDate := currentTime.Add(time.Minute * 15)
 
 	codeGenerator := sha256.New()
-	codeGenerator.Write([]byte(strconv.Itoa(rand.Intn(899999) + 100000)))
+	randomNumber, _ := rand.Int(rand.Reader, big.NewInt(900000))
+	codeGenerator.Write([]byte(strconv.Itoa(int(randomNumber.Int64()) + 100000)))
 	newCode := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
 
+	var userEmail string;
+	getEmail, _ := currentDB.Query("SELECT Email FROM Users WHERE UserID = ?;", userID)
+	getEmail.scan(&userEmail)
+
+	randomNumber.Add(randomNumber, big.NewInt(100000))
 	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vL\");", userID, newCode, expireDate)
+	sendEmail(userEmail, "UF-OneClick 2FA Code", strconv.Itoa(int(randomNumber.Int64())))
 }
 
 func remove2FA(){
