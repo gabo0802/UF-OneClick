@@ -15,6 +15,9 @@ import { SubscriptionListComponent } from './dashboard/subscription-list/subscri
 import { SubscriptionDetailComponent } from './dashboard/subscription-list/subscription-detail/subscription-detail.component';
 import { SignupMessageComponent } from './signup/signup-message/signup-message.component';
 import { LoginMessageComponent } from './login/login-message/login-message.component';
+import { AuthGuard, LogInGuard } from './auth-guard.guard';
+import { AuthService } from './auth.service';
+import { ApiService } from './api.service';
 
 
 
@@ -40,7 +43,7 @@ import { LoginMessageComponent } from './login/login-message/login-message.compo
     BrowserAnimationsModule,
     MaterialDesignModule
   ],
-  providers: [],
+  providers: [AuthService, AuthGuard, ApiService, LogInGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
