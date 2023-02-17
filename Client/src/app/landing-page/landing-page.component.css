@@ -34,11 +34,13 @@
     max-width: 500px;
     max-height: 125px;
   }
+  .description {
+    
+  }
 }
 .description {
   border-top: solid rgba(141, 59, 34, 0.041) 10px;
   height: 50vh;
-  color: "primary";
   display: flex;
   justify-content: center;
 }
@@ -51,9 +53,9 @@
 }
 .description-card {
   color: black;
-  flex: 4;
+  flex: 5;
   width: 50%;
-  height: auto;
+  max-height: fit-content;
   padding: 30px 2px;
   margin-bottom: 25px;
   margin-top: 15px;
@@ -80,7 +82,7 @@
 }
 
 .app-visual {
-  height: 100px;
+  height: 80%;
 }
 
 .potential-list {
