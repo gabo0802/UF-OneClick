@@ -12,10 +12,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatCarouselModule } from '@magloft/material-carousel';
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,    
+    MatCarouselModule.forRoot()
   ],
   exports: [
     MatSlideToggleModule,
@@ -27,7 +29,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatIconModule,
     MatMenuModule,
     MatDialogModule,
-    ScrollingModule
+    ScrollingModule,
   ]
 })
 export class MaterialDesignModule { }
