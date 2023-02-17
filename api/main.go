@@ -9,13 +9,13 @@ import (
 )
 
 func main() {
-	//Establishes a connection to the remote MySQL server's database
+	//Establishes a connection to the remote MySQL server's database:
 	db := MySQL.MySQLConnect()
 
-	//Defers the closing of the connection to the database until the end of main
+	//Defers the closing of the connection to the database until the end of main:
 	defer db.Close()
 
-	//MySQL.TestBackend(db)
+	//Sets Up Tables in Database:
 
 	//MySQL.ResetAllTables(db)
 	MySQL.SetUpTables(db)
@@ -28,8 +28,12 @@ func main() {
 		MySQL.CreateCommonSubscriptions(db)
 	}
 
-	//Sets pointer in "handler" package to main.go's db
+	//Sets pointer in "handler" package to main.go's db:
 	handler.SetDB(db)
+
+	//Testing:
+	//MySQL.TestBackend(db)
+	handler.SendAllReminders()
 
 	//Angular Connection:
 	r := gin.Default()

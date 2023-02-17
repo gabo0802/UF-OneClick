@@ -50,10 +50,18 @@ func getReminderMessage(subName string, subPrice string, dateRenew string, dateA
 	const reference = "2006-01-02 15:04:05"
 
 	if !strings.Contains(subName, "Yearly") && !strings.Contains(subName, "3 Months") {
+		//fmt.Println("Monthly ", subName)
+
+		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
 		userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
+
 	} else if strings.Contains(subName, "Yearly") {
 		dateRenewTime, _ := time.Parse(reference, dateRenew)
 		dateAddedTime, _ := time.Parse(reference, dateAdded)
+		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
+
+		//fmt.Println("Yearly ", subName)
+		//fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
 
 		if int(dateRenewTime.Month()) == int(dateAddedTime.Month()) {
 			userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
@@ -61,6 +69,10 @@ func getReminderMessage(subName string, subPrice string, dateRenew string, dateA
 	} else if strings.Contains(subName, "3 Months") {
 		dateRenewTime, _ := time.Parse(reference, dateRenew)
 		dateAddedTime, _ := time.Parse(reference, dateAdded)
+		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
+
+		//fmt.Println("3 Months ", subName)
+		//fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
 
 		if (int(dateRenewTime.Month())-int(dateAddedTime.Month()))%3 == 0 {
 			userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
@@ -83,6 +95,8 @@ func sendReminders(rows *sql.Rows, message string, header string) bool {
 		var dateAdded string
 
 		rows.Scan(&newEmail, &subName, &subPrice, &dateRenew, &dateAdded)
+
+		//fmt.Println(dateRenew, ",", dateAdded)
 
 		if currentEmail == "" {
 			currentEmail = newEmail
@@ -192,7 +206,7 @@ func SendAllReminders() int {
 	nextDayDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 11, 59, 59, 0, time.Local)
 	nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+7, 11, 59, 59, 0, time.Local)
 
-	SQLStringYearMonth := currentYear + "-" + currentMonth + "-%d"
+	SQLStringYearMonth := currentYear + "-" + currentMonth + "-%d 00:00:00"
 
 	stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
 
