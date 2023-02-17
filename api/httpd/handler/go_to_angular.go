@@ -285,7 +285,7 @@ func VerifyEmail(c *gin.Context) {
 	c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
-/*func start2FA(userID int) {
+/*func start2FA() {
 	//Verify 2FA Code
 	currentTime := time.Now()
 	expireDate := currentTime.Add(time.Minute * 15)
@@ -295,27 +295,31 @@ func VerifyEmail(c *gin.Context) {
 	codeGenerator.Write([]byte(strconv.Itoa(int(randomNumber.Int64()) + 100000)))
 	newCode := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
 
-	var userEmail string;
-	getEmail, _ := currentDB.Query("SELECT Email FROM Users WHERE UserID = ?;", userID)
-	getEmail.scan(&userEmail)
+	var userEmail string
+	getEmail, _ := currentDB.Query("SELECT Email FROM Users WHERE UserID = ?;", currentID)
+
+	for getEmail.Next() {
+		getEmail.Scan(&userEmail)
+	}
 
 	randomNumber.Add(randomNumber, big.NewInt(100000))
-	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vL\");", userID, newCode, expireDate)
+
+	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vL\");", currentID, newCode, expireDate)
 	sendEmail(userEmail, "UF-OneClick 2FA Code", strconv.Itoa(int(randomNumber.Int64())))
 }
 
-func remove2FA(){
+func remove2FA() {
 	currentTime := time.Now()
 	currentDB.Exec("DELETE FROM Verification WHERE Type = \"vL\" AND ExpireDate < ?;", currentTime)
 }
 
-func do2FA(possibleCode string, userID int) bool {
+func do2FA(possibleCode string) bool {
 	//Remove Old 2FA Codes
 	remove2FA()
 
 	//Verify 2FA Code
 	currentTime := time.Now()
-	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vL\" AND ExpireDate > ? AND Code = ? AND UserID = ?;", currentTime, possibleCode, userID)
+	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vL\" AND ExpireDate > ? AND Code = ? AND UserID = ?;", currentTime, possibleCode, currentID)
 
 	if err != nil {
 		return false
@@ -339,15 +343,20 @@ func TwoFactorAuthentication(c *gin.Context) {
 	c.BindJSON(&user2FA)
 
 	userCode := user2FA.Username
+	//if c.Param("userCode") != "" {
+	//	userCode = c.Param("userCode")
+	//}
+
 	codeGenerator := sha256.New()
 	codeGenerator.Write([]byte(userCode))
 	userCodeEncrypted := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
 
-	didWork := do2FA(userCodeEncrypted, currentID)
+	didWork := do2FA(userCodeEncrypted)
 
-	if didWork{
+	if didWork {
+		//c.SetCookie("currentUserID", strconv.Itoa(currentID), 60*60, "/", "localhost", false, false)
 		c.JSON(http.StatusOK, gin.H{"Success": "2FA"})
-	}else{
+	} else {
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 		currentID = -1
 
@@ -412,12 +421,10 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 	} else {
-		//c.JSON(http.StatusOK, gin.H{"ID": strconv.Itoa(currentID)})
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), 60*60, "/", "localhost", false, false)
-		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 		c.JSON(http.StatusOK, gin.H{"Success": "Logged In"})
 
-		//start2FA(currentID)
+		//start2FA()
 	}
 }
 
