@@ -33,7 +33,7 @@ func main() {
 
 	//Testing:
 	//MySQL.TestBackend(db)
-	handler.SendAllReminders()
+	//handler.SendAllReminders()
 
 	//Angular Connection:
 	r := gin.Default()
