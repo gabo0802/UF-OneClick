@@ -18,8 +18,6 @@ import { LoginMessageComponent } from './login/login-message/login-message.compo
 import { AuthGuard, LogInGuard } from './auth-guard.guard';
 import { AuthService } from './auth.service';
 import { ApiService } from './api.service';
-import { MatCarouselModule } from '@magloft/material-carousel';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +38,7 @@ import { MatCarouselModule } from '@magloft/material-carousel';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatCarouselModule.forRoot(),
+   
     MaterialDesignModule
   ],
   providers: [AuthService, AuthGuard, ApiService, LogInGuard],

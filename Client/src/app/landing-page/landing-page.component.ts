@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatCarousel, MatCarouselComponent } from '@magloft/material-carousel';
+
 
 @Component({
   selector: 'app-landing-page',
@@ -10,12 +10,5 @@ import { MatCarousel, MatCarouselComponent } from '@magloft/material-carousel';
 })
 export class LandingPageComponent {
 
-  slides = [
-    {'image': 'https://gsr.dev/material2-carousel/assets/demo.png'}, 
-    {'image': 'https://gsr.dev/material2-carousel/assets/demo.png'},
-    {'image': 'https://gsr.dev/material2-carousel/assets/demo.png'}, 
-    {'image': 'https://gsr.dev/material2-carousel/assets/demo.png'}, 
-    {'image': 'https://gsr.dev/material2-carousel/assets/demo.png'}
-  ];
 }
 
