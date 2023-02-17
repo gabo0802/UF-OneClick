@@ -159,31 +159,60 @@ func CreateCommonSubscriptions(db *sql.DB) {
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Premium)\", 19.99);")
 
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime\", 14.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime (Yearly)\", 139);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime (Student)\", 7.49);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Amazon Prime (Student) (Yearly)\", 69);")
 
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Prime Video\", 8.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney+ (Basic)\", 6.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney+ (Basic)\", 7.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney+ (Premium)\", 10.99);")
 
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Hulu\", 7.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Hulu (Student)\", 1.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Hulu (No Ads)\", 14.99);")
+
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"ESPN+\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"ESPN+ (Yearly)\", 99.99);")
+
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney Bundle Duo Basic\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney Bundle Trio Basic\", 12.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Disney Bundle Trio Premium\", 19.99);")
 
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"HBO Max (With ADS)\", 9.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"HBO Max (AD-Free)\", 15.99);")
 
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Essential)\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Essential) (3 Months)\", 24.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Essential) (Yearly)\", 59.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Extra)\", 14.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Extra) (3 Months)\", 39.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Extra) (Yearly)\", 99.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Premium)\", 17.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Premium) (3 Months)\", 49.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Playstation Plus (Premium) (Yearly)\", 119.99);")
 
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Live Gold\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Live Gold (3 Months)\", 24.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Live Gold (Yearly)\", 59.99);")
+
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (PC)\", 9.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (PC)\", 9.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (Console)\", 9.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"XBOX Game Pass (Ultimate)\", 14.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Spotify Premium\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Spotify Premium (Individual)\", 9.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Spotify Premium (Duo)\", 12.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Spotify Premium (Family)\", 15.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Spotify Premium (Student)\", 4.99);")
 
-	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Apple Music\", 10.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Apple Music (Voice)\", 4.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Apple Music (Student)\", 5.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Apple Music (Individual)\", 10.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Apple Music (Family)\", 16.99);")
 
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"AMC+\", 8.99);")
+	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"AMC+ (Yearly)\", 83.88);")
 }
 
 func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
