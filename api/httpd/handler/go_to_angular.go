@@ -45,9 +45,32 @@ func SetDB(db *sql.DB) {
 	currentDB = db
 }
 
-func sendReminders(rows *sql.Rows, message string, header string) bool {
-	fmt.Println(header)
+func getReminderMessage(subName string, subPrice string, dateRenew string, dateAdded string) string {
+	var userMessage string = ""
+	const reference = "2006-01-02 15:04:05"
 
+	if !strings.Contains(subName, "Yearly") && !strings.Contains(subName, "3 Months") {
+		userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
+	} else if strings.Contains(subName, "Yearly") {
+		dateRenewTime, _ := time.Parse(reference, dateRenew)
+		dateAddedTime, _ := time.Parse(reference, dateAdded)
+
+		if int(dateRenewTime.Month()) == int(dateAddedTime.Month()) {
+			userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
+		}
+	} else if strings.Contains(subName, "3 Months") {
+		dateRenewTime, _ := time.Parse(reference, dateRenew)
+		dateAddedTime, _ := time.Parse(reference, dateAdded)
+
+		if (int(dateRenewTime.Month())-int(dateAddedTime.Month()))%3 == 0 {
+			userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
+		}
+	}
+
+	return userMessage
+}
+
+func sendReminders(rows *sql.Rows, message string, header string) bool {
 	var currentEmail string = ""
 	var userMessage string = ""
 	var emailSent bool = true
@@ -56,15 +79,18 @@ func sendReminders(rows *sql.Rows, message string, header string) bool {
 		var newEmail string
 		var subName string
 		var subPrice string
+		var dateRenew string
+		var dateAdded string
 
-		rows.Scan(&newEmail, &subName, &subPrice)
+		rows.Scan(&newEmail, &subName, &subPrice, &dateRenew, &dateAdded)
 
 		if currentEmail == "" {
 			currentEmail = newEmail
-			userMessage = message + "\n" + subName + ": $" + subPrice + "\n"
+			userMessage = message + "\n"
+			userMessage += getReminderMessage(subName, subPrice, dateRenew, dateAdded)
 
 		} else if newEmail == currentEmail {
-			userMessage += subName + ": $" + subPrice + "\n"
+			userMessage += getReminderMessage(subName, subPrice, dateRenew, dateAdded)
 
 		} else {
 			emailSent = sendEmail(currentEmail, header, userMessage)
@@ -75,7 +101,8 @@ func sendReminders(rows *sql.Rows, message string, header string) bool {
 			}
 
 			currentEmail = newEmail
-			userMessage = message + "/n" + subName + ": $" + subPrice + "\n"
+			userMessage = message + "\n"
+			userMessage += getReminderMessage(subName, subPrice, dateRenew, dateAdded)
 		}
 	}
 
@@ -152,53 +179,61 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 	}
 }
 
+func SendAllReminders() int {
+	currentTime := time.Now()
+	currentDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()-1, 11, 59, 59, 0, time.Local)
+
+	currentMonth := strconv.Itoa(int(currentDate.Month()))
+	if len(currentMonth) < 2 {
+		currentMonth = "0" + currentMonth
+	}
+	currentYear := strconv.Itoa(currentDate.Year())
+
+	nextDayDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 11, 59, 59, 0, time.Local)
+	nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+7, 11, 59, 59, 0, time.Local)
+
+	SQLStringYearMonth := currentYear + "-" + currentMonth + "-%d"
+
+	stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
+
+	rows, err := currentDB.Query("SELECT Email, Name, Price, DATE_FORMAT(DateAdded, ?), DateAdded FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email, DATE_FORMAT(DateAdded, ?), UserSubs.SubID;", SQLStringYearMonth, SQLStringYearMonth, currentDate, nextDayDate, SQLStringYearMonth)
+	if err != nil {
+		return -502
+	}
+
+	if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Day Left)") {
+		return -401
+	}
+
+	currentDate = time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 0, 0, 0, 0, time.Local)
+	rows, err = currentDB.Query("SELECT Email, Name, Price, DATE_FORMAT(DateAdded, ?), DateAdded FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email, DATE_FORMAT(DateAdded, ?), UserSubs.SubID;", SQLStringYearMonth, SQLStringYearMonth, currentDate, nextWeekDate, SQLStringYearMonth)
+	if err != nil {
+		return -502
+	}
+
+	if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Week Left)") {
+		return -401
+	}
+
+	fmt.Println("Sent Emails")
+	return 1
+}
+
 // GET and POST Functions:
 func DailyReminder(c *gin.Context) {
 	_, err := c.Cookie("didReminder")
 
 	if err != nil {
-		currentTime := time.Now()
-		currentDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day(), 0, 0, 0, 0, time.Local)
+		errorCode := SendAllReminders()
 
-		currentMonth := strconv.Itoa(int(currentDate.Month()))
-		if len(currentMonth) < 2 {
-			currentMonth = "0" + currentMonth
-		}
-		currentYear := strconv.Itoa(currentDate.Year())
-
-		nextDayDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+2, 0, 0, 0, 0, time.Local)
-		nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+8, 0, 0, 0, 0, time.Local)
-
-		SQLString := currentYear + "-" + currentMonth + "-%d"
-		stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
-
-		rows, err := currentDB.Query("SELECT Email, Name, Price FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email;", SQLString, currentDate, nextDayDate)
-		if err != nil {
+		if errorCode == -502 {
 			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
-			return
-		}
-
-		if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Day Left)") {
+		} else if errorCode == -401 {
 			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Emails Not Sent"})
-			return
+		} else {
+			c.SetCookie("didReminder", "yes", 60*60*24, "/", "localhost", false, true)
+			c.JSON(http.StatusOK, gin.H{"Success": "Emails Were Sent!"})
 		}
-
-		currentDate = currentDate.Add(time.Hour * 24)
-		rows, err = currentDB.Query("SELECT Email, Name, Price FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email;", SQLString, currentDate, nextWeekDate)
-		if err != nil {
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
-			return
-		}
-
-		if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Week Left)") {
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Emails Not Sent"})
-			return
-		}
-
-		fmt.Println("Sent Emails")
-		c.SetCookie("didReminder", "yes", 60*60*24, "/", "localhost", false, true)
-
-		c.JSON(http.StatusOK, gin.H{"Success": "Emails Were Sent!"})
 	} else {
 		//c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true) //for testing
 		fmt.Println("Emails Already Sent")
