@@ -174,8 +174,8 @@ func sendEmail(toEmail string, emailSubject string, emailMessage string) bool {
 	return true
 }
 
-func SendEmailToAllUsers(emailSubject string, emailMessage string) {
-	rows, err := currentDB.Query("SELECT Email FROM Users WHERE UserID > 1;")
+func SendEmailToAllUsers(emailSubject string, emailMessage string) bool {
+	rows, err := currentDB.Query("SELECT Email FROM Users LEFT JOIN Verification ON Users.UserID = Verification.UserID WHERE Users.UserID > 1 AND Type IS NULL;")
 	if err != nil {
 		panic(err)
 	}
@@ -188,10 +188,12 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 
 		if !emailSent {
 			fmt.Println("Email Not Sent!")
+			return false
 		}
 	}
 
 	fmt.Println("Emails Sent")
+	return true
 }
 
 func SendAllReminders() int {
