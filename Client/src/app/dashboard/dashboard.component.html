@@ -4,6 +4,9 @@
 <!--<div><img src="../assets/oneclick-logo-files/svg/logo-black.svg"/></div> -->
 
 <button type="submit" mat-raised-button color="primary" (click)="doLogout()">Logout</button>
+<button type="submit" mat-raised-button color="primary"  (click)="getUserSubscriptions()" style="opacity: {{adminButtonVisible}}" [disabled]="adminButtonVisible != 100">See Your Subscriptions</button>
+<button type="submit" mat-raised-button color="primary"  (click)="getUserData()" style="opacity: {{adminButtonVisible}}" [disabled]="adminButtonVisible != 100">Get All User Data</button>
+<button type="submit" mat-raised-button color="primary" (click)="resetAll()" style="opacity: {{adminButtonVisible}}" [disabled]="adminButtonVisible != 100">Reset All</button>
 
 <mat-card-content>
     <form [formGroup]="createSubFrom" (ngSubmit)="onSubmit()">                    

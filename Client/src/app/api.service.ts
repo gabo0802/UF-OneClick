@@ -95,6 +95,28 @@ export class ApiService {
     return this.http.post('/api/logout', null);
   }
 
+  resetall(): Observable<Object>{
+    return this.http.post('/api/reset', null);
+  }
+
+  getAllUserData(): Observable<Array<string>>{   
+    return this.http.post<{[key: string]: string, message: string}>('/api/alldata', null).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
+  }
+
   /*public getOutput() {
     if (this.output == '' || this.output == 'signupOutput=none'){
       this.output = 'Please enter the required information below!'

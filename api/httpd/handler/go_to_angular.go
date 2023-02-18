@@ -759,7 +759,8 @@ func ResetALL(c *gin.Context) {
 		MySQL.CreateCommonSubscriptions(currentDB)
 		resetCookies(c)
 
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.JSON(http.StatusOK, gin.H{"Success": "Reset Successful"})
+		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
