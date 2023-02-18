@@ -48,6 +48,45 @@ export class ApiService {
     );
   }
 
+
+  addUserSub(userData: {name: string}): Observable<Array<string>>{   
+
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
+  }
+
+  removeUserSub(userData: {name: string}): Observable<Array<string>>{   
+
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/cancelsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
+  }
+
   getSubs(): Observable<Object>{
     return this.http.post('/api/subscriptions', null);
   }
