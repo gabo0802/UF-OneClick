@@ -8,6 +8,8 @@
 <button type="submit" mat-raised-button color="primary"  (click)="getUserData()" style="opacity: {{adminButtonVisible}}" [disabled]="adminButtonVisible != 100">Get All User Data</button>
 <button type="submit" mat-raised-button color="primary" (click)="resetAll()" style="opacity: {{adminButtonVisible}}" [disabled]="adminButtonVisible != 100">Reset All</button>
 
+<div><br><br></div>
+
 <mat-card-content>
     <form [formGroup]="createSubFrom" (ngSubmit)="onSubmit()">                    
         <mat-form-field appearance="fill">
@@ -34,6 +36,17 @@
             <button type="submit" mat-raised-button color="primary" [disabled]="removeSubFrom.invalid">Cancel Subscription</button>
         </mat-card-actions>
     </form>
-</mat-card-content>        
+</mat-card-content>       
+
+
+<mat-card-content>
+    <form [formGroup]="newsLetterForm" (ngSubmit)="newsLetter()">                   
+        <textarea type="text" id="newslettermessage" name="name" rows="6" cols="50" style="opacity: {{adminButtonVisible}}">Enter Message For Newsletter</textarea>
+
+        <mat-card-actions>
+            <button type="submit" mat-raised-button color="primary" style="opacity: {{adminButtonVisible}}" [disabled]="adminButtonVisible != 100">Send Newsletter</button>
+        </mat-card-actions>
+    </form>
+</mat-card-content>   
 
 <div id="allSubs"></div>

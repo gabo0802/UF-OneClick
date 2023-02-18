@@ -99,6 +99,10 @@ export class ApiService {
     return this.http.post('/api/reset', null);
   }
 
+  sendNews(userData: {name: string}): Observable<Object>{
+    return this.http.post('/api/news', JSON.stringify(userData));
+  }
+
   getAllUserData(): Observable<Array<string>>{   
     return this.http.post<{[key: string]: string, message: string}>('/api/alldata', null).pipe(
       map( (statusMessage) => {        

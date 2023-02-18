@@ -62,7 +62,7 @@ func main() {
 
 		//Subscription Management
 		api.POST("/subscriptions", handler.GetAllUserSubscriptions())
-		api.GET("/subscriptions", handler.GetAllUserSubscriptions())
+		//api.GET("/subscriptions", handler.GetAllUserSubscriptions())
 
 		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
 
@@ -71,10 +71,12 @@ func main() {
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
 
 		//Admin Commands
-		api.GET("/reset", handler.ResetALL)
+		api.POST("/news", handler.NewsLetter)
+
+		//api.GET("/reset", handler.ResetALL)
 		api.POST("/reset", handler.ResetALL)
 
-		api.GET("/alldata", handler.GetAllUserData())
+		//api.GET("/alldata", handler.GetAllUserData())
 		api.POST("/alldata", handler.GetAllUserData())
 	}
 

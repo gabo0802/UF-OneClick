@@ -15,6 +15,7 @@ export class DashboardComponent {
     constructor(private api: ApiService, private router: Router, private authService: AuthService) {};  
     createSubFrom: FormGroup = {} as FormGroup;
     removeSubFrom: FormGroup = {} as FormGroup;
+    newsLetterForm: FormGroup = {} as FormGroup;
 
     ngOnInit(){
       if (document.cookie.includes("currentUserID=1")){
@@ -29,6 +30,10 @@ export class DashboardComponent {
 
       this.removeSubFrom = new FormGroup({
         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
+      });
+
+      this.newsLetterForm = new FormGroup({
+        'name': new FormControl(null, null),
       });
 
       this.getUserSubscriptions()
@@ -97,7 +102,7 @@ export class DashboardComponent {
 
     public doLogout(){
       this.api.logout().subscribe( (res) => {
-        alert("Logged Out...")
+        alert("Logging Out...")
         this.authService.userLogOut();
         this.router.navigate(['login']);
       })
@@ -113,30 +118,37 @@ export class DashboardComponent {
         console.log(responseMessage[1])
 
         if (responseMessage["Error"] == undefined){
-          allSubsString += "All User Data: <br>";
+          allSubsString += "All User Data:<br>";
+          var previousName = "";
 
           let index: number = 1;
           while (responseMessage[index] != null){
             if(responseMessage[index]["dateadded"] != ""){
-              console.log("UserSub", index)
-              console.log(responseMessage[index])
-              console.log(responseMessage[index]["dateadded"] + "!")
-              console.log(responseMessage[index]["dateadded"] == "")
+              if (previousName != "User Subscriptions"){
+                allSubsString += "<br> All User Subscriptions: <br>";
+                previousName = "User Subscriptions"
+              }
 
               if (responseMessage[index]["dateremoved"] == ""){
                 var dateAdded: string = responseMessage[index]["dateadded"]
-                allSubsString += "[" + responseMessage[index]["userid"] + " " + responseMessage[index]["email"] + " "+responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + "] <br>";
+                allSubsString += "[" + responseMessage[index]["email"] + " "+responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + "] <br>";
               }else{
                 var dateAdded: string = responseMessage[index]["dateadded"]
-                var dateRemoved: string = responseMessage[index]["dateadded"]
-                allSubsString += "[" + responseMessage[index]["userid"] + " " + responseMessage[index]["email"] + " "+ responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + " " + dateAdded.substring(0, dateRemoved.length) + "] <br>";
+                var dateRemoved: string = responseMessage[index]["dateremoved"]
+                allSubsString += "[" + responseMessage[index]["email"] + " "+ responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + " to " + dateRemoved.substring(0, dateRemoved.length) + "] <br>";
               }
             }else if (responseMessage[index]["price"] != ""){
-              console.log("Sub", index)
-              console.log(responseMessage[index])
+              if (previousName != "Subscriptions"){
+                allSubsString += "<br> All Subscriptions: <br>";
+                previousName = "Subscriptions"
+              }
 
               allSubsString += "[" + responseMessage[index]["subid"] + " " + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + "] <br>";
             }else{
+              if (previousName != "Users"){
+                allSubsString += "<br> All Users: <br>";
+                previousName = "Users"
+              }
               console.log("User", index)
               console.log(responseMessage[index])
 
@@ -154,6 +166,7 @@ export class DashboardComponent {
 
     public resetAll(){
       alert("Reset Starting...")
+
       this.api.resetall().subscribe( (res) => {
         alert("Reset Successful! Logging Out...")
         this.authService.userLogOut();
@@ -161,4 +174,16 @@ export class DashboardComponent {
       })
     }
     
+    newsLetter(){
+        var message:string = (document.getElementById('newslettermessage') as HTMLInputElement).value;
+
+        if(message != "Enter Message For Newsletter"){
+          this.newsLetterForm.controls['name'].setValue(message);
+          (document.getElementById('newslettermessage') as HTMLInputElement).value = "Enter Message For Newsletter";
+          
+          this.api.sendNews(this.newsLetterForm.value).subscribe( (res) => {
+              alert("Message Sent")
+          })
+        }
+    }
 }

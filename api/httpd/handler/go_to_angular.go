@@ -191,6 +191,8 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 			return
 		}
 	}
+
+	fmt.Println("Emails Sent")
 }
 
 func SendAllReminders() int {
@@ -256,6 +258,20 @@ func DailyReminder(c *gin.Context) {
 	}
 
 	//c.Redirect(http.StatusTemporaryRedirect, "/login")
+}
+
+func NewsLetter(c *gin.Context) {
+	var newsMessage userData
+	c.BindJSON(&newsMessage)
+
+	message := newsMessage.Name
+	fmt.Println(message)
+
+	currentTime := time.Now()
+	stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
+
+	SendEmailToAllUsers("UF-OneClick Newsletter "+stringDate, message)
+	c.JSON(http.StatusOK, gin.H{"Success": "Newsletter Sent!"})
 }
 
 func deleteUnverified() {
