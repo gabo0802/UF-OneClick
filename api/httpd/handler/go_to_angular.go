@@ -188,7 +188,6 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) {
 
 		if !emailSent {
 			fmt.Println("Email Not Sent!")
-			return
 		}
 	}
 
