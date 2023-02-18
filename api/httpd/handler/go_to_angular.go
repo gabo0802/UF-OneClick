@@ -552,6 +552,11 @@ func NewUser(c *gin.Context) {
 
 func GetAllUserSubscriptions() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		cookie, err := c.Cookie("currentUserID")
+		if err == nil {
+			currentID, _ = strconv.Atoi(cookie)
+		}
+
 		var usersubInfo = []userData{}
 
 		if currentID != -1 {
@@ -573,7 +578,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 			}
 
 			c.IndentedJSON(http.StatusOK, usersubInfo)
-			c.Redirect(http.StatusTemporaryRedirect, "/subscriptions") //change later
+			//c.Redirect(http.StatusTemporaryRedirect, "/subscriptions") //change later
 
 		} else {
 			c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})

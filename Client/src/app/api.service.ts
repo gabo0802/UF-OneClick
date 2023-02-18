@@ -48,6 +48,10 @@ export class ApiService {
     );
   }
 
+  getSubs(): Observable<Object>{
+    return this.http.post('/api/subscriptions', null);
+  }
+
   /*public getOutput() {
     if (this.output == '' || this.output == 'signupOutput=none'){
       this.output = 'Please enter the required information below!'
