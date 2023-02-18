@@ -52,6 +52,10 @@ export class ApiService {
     return this.http.post('/api/subscriptions', null);
   }
 
+  logout(): Observable<Object>{
+    return this.http.post('/api/logout', null);
+  }
+
   /*public getOutput() {
     if (this.output == '' || this.output == 'signupOutput=none'){
       this.output = 'Please enter the required information below!'
