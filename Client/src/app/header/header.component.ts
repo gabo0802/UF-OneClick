@@ -1,6 +1,4 @@
 import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
-//Imported these two for the header changing thing
-import { last, lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-header',
