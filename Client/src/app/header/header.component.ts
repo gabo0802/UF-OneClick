@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +18,7 @@ export class HeaderComponent {
 
   }
 
+  // Changes the header state based on whether it has been changed
   ngOnChanges(changes: SimpleChanges) {
     console.log(this.myHeaderState);  
     
