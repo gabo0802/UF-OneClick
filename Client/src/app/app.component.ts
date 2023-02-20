@@ -8,7 +8,9 @@ import { AuthService } from './auth.service';
   styleUrls: ['app.component.css']
 })
 export class AppComponent {
+
   title = 'UF-OneClick';
+  myHeaderState: HeaderState = 1;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -18,4 +20,34 @@ export class AppComponent {
       this.router.navigate(['users']);
     }
   }
+
+  setHeader() {
+    let path = this.router.url.split('/')[1];
+
+    switch(path) {
+      case "":
+        this.myHeaderState = 1;
+        break;
+      case "signup":
+        this.myHeaderState = 2;
+      break;
+      case "login":
+        this.myHeaderState = 2;
+      break;
+      case "users":
+        this.myHeaderState = 3;
+      break;
+      default:
+        this.myHeaderState = 1;
+        console.log("An error occurred and you were sent to the main page!");
+    }
+    
+  }
+
+}
+
+enum HeaderState {
+  LandingPage = 1,
+  SignOrLogInPage = 2,
+  UserPage = 3
 }
