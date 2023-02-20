@@ -28,7 +28,7 @@ export class DashboardComponent {
 
       this.createSubServiceForm = new FormGroup({
         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
-        'price': new FormControl(null, [Validators.required, Validators.pattern('^[$]{0,1}[0-9]+.{0,1}[0-9]{2}$')]),
+        'price': new FormControl(null, [Validators.required, Validators.pattern('^[$]{0,1}[0-9]+.99$')]),
       });
 
       this.createSubFrom = new FormGroup({
