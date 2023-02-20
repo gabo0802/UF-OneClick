@@ -11,6 +11,26 @@
 <div><br><br></div>
 
 <mat-card-content>
+    <form [formGroup]="createSubServiceForm" (ngSubmit)="onSubmit4()">                    
+        <mat-form-field appearance="fill">
+            <mat-label>New Subscription Name</mat-label>            
+            <input matInput formControlName="name">
+            <mat-error *ngIf="createSubServiceForm.get('name')?.getError">Please enter a valid name</mat-error>                        
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>New Subscription Price</mat-label>            
+            <input matInput formControlName="price">
+            <mat-error *ngIf="createSubServiceForm.get('price')?.getError">Please enter a valid price</mat-error>                        
+        </mat-form-field>
+
+        <mat-card-actions>
+            <button type="submit" mat-raised-button color="primary" [disabled]="createSubServiceForm.invalid">Create Custom Subscription</button>
+        </mat-card-actions>
+    </form>
+</mat-card-content>  
+
+<mat-card-content>
     <form [formGroup]="createSubFrom" (ngSubmit)="onSubmit()">                    
         <mat-form-field appearance="fill">
             <mat-label>Subscription Name</mat-label>            
@@ -19,10 +39,36 @@
         </mat-form-field>
 
         <mat-card-actions>
-            <button type="submit" mat-raised-button color="primary" [disabled]="createSubFrom.invalid">Add Subscription</button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="createSubFrom.invalid">Add Subscription (Now)</button>
         </mat-card-actions>
     </form>
 </mat-card-content>        
+
+<mat-card-content>
+    <form [formGroup]="createCustomSubFrom" (ngSubmit)="onSubmit3()">                    
+        <mat-form-field appearance="fill">
+            <mat-label>Subscription Name</mat-label>            
+            <input matInput formControlName="name">
+            <mat-error *ngIf="createSubFrom.get('name')?.getError">Please enter a valid Subscription Service</mat-error>                        
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Date Added</mat-label>            
+            <input matInput formControlName="dateadded">
+            <mat-error *ngIf="createSubFrom.get('dateadded')?.getError">Please enter a valid date</mat-error>                        
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Date Removed</mat-label>            
+            <input matInput formControlName="dateremoved">
+            <mat-error *ngIf="createSubFrom.get('dateremoved')?.getError">Please enter a valid date or no date</mat-error>                        
+        </mat-form-field>
+
+        <mat-card-actions>
+            <button type="submit" mat-raised-button color="primary" [disabled]="createCustomSubFrom.invalid">Add Subscription</button>
+        </mat-card-actions>
+    </form>
+</mat-card-content>   
 
 <mat-card-content>
     <form [formGroup]="removeSubFrom" (ngSubmit)="onSubmit2()">                    
@@ -38,6 +84,7 @@
     </form>
 </mat-card-content>       
 
+ 
 
 <mat-card-content>
     <form [formGroup]="newsLetterForm" (ngSubmit)="newsLetter()">                   

@@ -16,6 +16,8 @@ export class DashboardComponent {
     createSubFrom: FormGroup = {} as FormGroup;
     removeSubFrom: FormGroup = {} as FormGroup;
     newsLetterForm: FormGroup = {} as FormGroup;
+    createCustomSubFrom: FormGroup = {} as FormGroup;
+    createSubServiceForm: FormGroup = {} as FormGroup;
 
     ngOnInit(){
       if (document.cookie.includes("currentUserID=1")){
@@ -23,6 +25,11 @@ export class DashboardComponent {
       }else{
         this.adminButtonVisible = 0
       }
+
+      this.createSubServiceForm = new FormGroup({
+        'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
+        'price': new FormControl(null, [Validators.required, Validators.pattern('^[$]{0,1}[0-9]{1,4}.[0-9][0-9]+$')]),
+      });
 
       this.createSubFrom = new FormGroup({
         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
@@ -34,6 +41,12 @@ export class DashboardComponent {
 
       this.newsLetterForm = new FormGroup({
         'name': new FormControl(null, null),
+      });
+
+      this.createCustomSubFrom = new FormGroup({
+        'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),        
+        'dateadded': new FormControl(null, [Validators.required, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')]),
+        'dateremoved': new FormControl(null, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')),
       });
 
       this.getUserSubscriptions()
@@ -93,8 +106,24 @@ export class DashboardComponent {
       })
     }
 
+    onSubmit4(){
+      this.api.createSub(this.createSubServiceForm.value).subscribe( (resultMessage: string[]) => {
+        location.reload();
+        alert(resultMessage[0] + ": " + resultMessage[1])
+      })
+    }
+
     onSubmit2(){
       this.api.removeUserSub(this.removeSubFrom.value).subscribe( (resultMessage: string[]) => {
+        location.reload();
+        alert(resultMessage[0] + ": " + resultMessage[1])
+      })
+    }
+
+    onSubmit3(){
+      //Prime Video
+      //2023-01-02 15:04:05
+      this.api.addOldUserSub(this.createCustomSubFrom.value).subscribe( (resultMessage: string[]) => {
         location.reload();
         alert(resultMessage[0] + ": " + resultMessage[1])
       })

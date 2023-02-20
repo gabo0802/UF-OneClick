@@ -265,7 +265,7 @@ func CreateNewSub(db *sql.DB, name string, price string) int {
 	return int(numRows)
 }
 
-func CanAddUserSub(db *sql.DB, userID int, subID int) int {
+func canAddUserSub(db *sql.DB, userID int, subID int) int {
 	rows, err := db.Query("SELECT DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? ORDER BY DateRemoved;", userID, subID)
 
 	if err != nil {
@@ -318,7 +318,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	}
 
 	//Checks to see if sub was already added to user before creating a new table value
-	var isRenewed int = CanAddUserSub(db, userID, CurrentSubID)
+	var isRenewed int = canAddUserSub(db, userID, CurrentSubID)
 	if isRenewed < 0 {
 		fmt.Println("Subscription already added to User's Profile!")
 		return -223
@@ -339,17 +339,17 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	return int(numRows) + isRenewed
 }
 
-func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanceledDate string) int {
+func canAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanceledDate string) int {
 	rows, err := db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded > ?;", userID, subID, oldDate) //sub in future already exists (need to have old sub be canceled)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if rows.Next() && oldCanceledDate == "" {
+	if rows.Next() && (oldCanceledDate == "0001-01-01 00:00:00 +0000 UTC" || oldCanceledDate == "") {
 		fmt.Println("Error: Can't Have Old Subscription and New Subscription At The Same Time")
 		return -401
 	}
 
-	rows, err = db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded <= ? AND DateRemoved >= ?;", userID, subID, oldDate, oldDate)
+	rows, err = db.Query("SELECT DateAdded, DateRemoved FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded < ? AND DateRemoved > ?;", userID, subID, oldDate, oldDate)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -367,7 +367,7 @@ func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 		return -401
 	}
 
-	if oldCanceledDate != "" {
+	if !(oldCanceledDate == "0001-01-01 00:00:00 +0000 UTC" || oldCanceledDate == "") {
 		rows, err = db.Query("SELECT DateAdded FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded < ? AND DateAdded > ?;", userID, subID, oldCanceledDate, oldDate)
 
 		if err != nil {
@@ -403,15 +403,18 @@ func CanAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 
 // Allows pre-existing subscriptions with dates other than the current time to be added
 func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded string, dateCanceled string) int {
-	_, err := time.Parse("2006-01-02 15:04:01", dateAdded)
+	const reference = "2006-01-02 15:04:05"
+	var dateCanceledTime time.Time
+
+	dateAddedTime, err := time.Parse(reference, dateAdded)
 	if err != nil {
-		fmt.Println("Error: Date Added Not Formatted Properly")
 		log.Fatal(err)
+		fmt.Println("Error: Date Added Not Formatted Properly")
 		return (-415 - 2)
 	}
 
 	if dateCanceled != "" {
-		_, err = time.Parse("2006-01-02 15:04:01", dateCanceled)
+		dateCanceledTime, err = time.Parse(reference, dateCanceled)
 		if err != nil {
 			log.Fatal(err)
 			fmt.Println("Error: Date Canceled Not Formatted Properly")
@@ -419,7 +422,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		}
 	}
 
-	if dateCanceled != "" && dateCanceled < dateAdded {
+	if !dateCanceledTime.IsZero() && dateCanceledTime.Before(dateAddedTime) {
 		fmt.Println("Error: Can't Cancel Subscription Before Adding It")
 		return -401
 	}
@@ -450,7 +453,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	}
 
 	//Checks to see if sub was already added to user before creating a new table value (night be irrelevent, future issue)
-	var isRenewed int = CanAddOldUserSub(db, userID, CurrentSubID, dateAdded, dateCanceled)
+	var isRenewed int = canAddOldUserSub(db, userID, CurrentSubID, dateAddedTime.String(), dateCanceledTime.String())
 	if isRenewed < 0 {
 		fmt.Println("Subscription already added to User's Profile!")
 		fmt.Println(dateAdded + ", " + dateCanceled)
@@ -459,10 +462,10 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 
 	//Create New UserSub Data
 	var result sql.Result
-	if dateCanceled != "" {
-		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", userID, CurrentSubID, dateAdded, dateCanceled)
+	if !dateCanceledTime.IsZero() {
+		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", userID, CurrentSubID, dateAddedTime, dateCanceledTime)
 	} else {
-		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, dateAdded)
+		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, dateAddedTime)
 	}
 
 	//Tests to see if function worked (can remove later)

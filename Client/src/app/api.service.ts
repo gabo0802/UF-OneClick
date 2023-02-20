@@ -87,6 +87,46 @@ export class ApiService {
     );
   }
 
+  addOldUserSub(userData: {name: string}): Observable<Array<string>>{   
+
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addoldsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
+  }
+
+  createSub(userData: {name: string, price: string}): Observable<Array<string>>{   
+    userData.price = userData.price.replaceAll("$", "")
+    console.log("test")
+
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/createsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
+  }
+
   getSubs(): Observable<Object>{
     return this.http.post('/api/subscriptions', null);
   }

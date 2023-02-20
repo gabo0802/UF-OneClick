@@ -658,6 +658,62 @@ func NewUserSubscription(c *gin.Context) {
 	}
 }
 
+func NewPreviousUserSubscription(c *gin.Context) {
+	if currentID != -1 {
+		var userSubscriptionData userData
+		c.BindJSON(&userSubscriptionData)
+
+		subscriptionName := userSubscriptionData.Name
+		subscriptionDateAdded := userSubscriptionData.DateAdded
+		subscriptionDateRemoved := userSubscriptionData.DateRemoved
+		//subscriptionID := userSubscriptionData.ID
+		userSubscriptionData = userData{}
+
+		fmt.Println(subscriptionName, " ", subscriptionDateAdded, " ", subscriptionDateRemoved)
+
+		rowsAffected := MySQL.AddOldUserSub(currentDB, currentID, subscriptionName, subscriptionDateAdded, subscriptionDateRemoved)
+
+		if rowsAffected == -223 {
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Already Active!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
+
+		} else if rowsAffected == -404 {
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
+
+		} else if rowsAffected == (-415 - 2) {
+			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Date Added Not Formated Properly"})
+
+		} else if rowsAffected == (-415 - 3) {
+			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Date Canceled Not Formated Properly"})
+
+		} else if rowsAffected == -502 {
+			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+
+		} else if rowsAffected == -204 {
+			//c.SetCookie("newusersubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+
+		} else if rowsAffected == 223 {
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Renewed!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
+
+		} else {
+			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
+			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Added"})
+
+		}
+
+	} else {
+		//c.SetCookie("newusersubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
+		//c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
+	}
+}
+
 func NewSubscriptionService(c *gin.Context) {
 	if currentID != -1 {
 		var subscriptionData userData
@@ -705,7 +761,7 @@ func CancelSubscriptionService(c *gin.Context) {
 
 		rowsAffected := MySQL.CancelUserSub(currentDB, currentID, subscriptionName)
 
-		if rowsAffected == -404 {
+		if rowsAffected == -404 || rowsAffected == 0 {
 			//c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 

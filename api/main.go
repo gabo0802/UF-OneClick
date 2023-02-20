@@ -68,10 +68,12 @@ func main() {
 
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 
+		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
+
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
 
 		//Admin Commands
-		api.POST("/news", handler.NewsLetter)
+		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)
 
 		//api.GET("/reset", handler.ResetALL)
 		api.POST("/reset", handler.ResetALL)
