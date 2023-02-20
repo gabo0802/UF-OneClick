@@ -101,6 +101,7 @@ func ResetAllTables(db *sql.DB) {
 
 func CreateNewUser(db *sql.DB, username string, password string, email string) int {
 	//Create New User
+
 	if username == "" || password == "" || email == "" {
 		return -204 //no content
 	}
@@ -236,6 +237,7 @@ func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword stri
 
 func CreateNewSub(db *sql.DB, name string, price string) int {
 	//Create New Subscription
+	name = strings.Trim(name, " ")
 	if name == "" || price == "" {
 		return -204
 	}
@@ -288,6 +290,7 @@ func canAddUserSub(db *sql.DB, userID int, subID int) int {
 
 // Adds based on the current time
 func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
+	subscriptionName = strings.Trim(subscriptionName, " ")
 	if subscriptionName == "" {
 		return -204
 	}

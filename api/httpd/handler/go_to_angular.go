@@ -508,6 +508,7 @@ func NewUser(c *gin.Context) {
 	c.BindJSON(&login)
 
 	username := login.Username
+	username = strings.Trim(username, " ")
 	if username == "" {
 		//c.SetCookie("signupOutput", "Error: No Username Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Username Entered"})
@@ -515,6 +516,7 @@ func NewUser(c *gin.Context) {
 	}
 
 	password := login.Password
+	password = strings.Trim(password, " ")
 	if password == "" {
 		//c.SetCookie("signupOutput", "Error: No Password Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Password Entered"})
@@ -522,6 +524,7 @@ func NewUser(c *gin.Context) {
 	}
 
 	email := login.Email
+	email = strings.Trim(email, " ")
 	if email == "" {
 		//c.SetCookie("signupOutput", "Error: No Email Entered!", 60, "/", "localhost", false, false)
 		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Email Entered"})
@@ -669,7 +672,7 @@ func NewPreviousUserSubscription(c *gin.Context) {
 		//subscriptionID := userSubscriptionData.ID
 		userSubscriptionData = userData{}
 
-		fmt.Println(subscriptionName, " ", subscriptionDateAdded, " ", subscriptionDateRemoved)
+		//fmt.Println(subscriptionName, " ", subscriptionDateAdded, " ", subscriptionDateRemoved)
 
 		rowsAffected := MySQL.AddOldUserSub(currentDB, currentID, subscriptionName, subscriptionDateAdded, subscriptionDateRemoved)
 
