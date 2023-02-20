@@ -594,6 +594,29 @@ func Login(db *sql.DB, username string, password string) int {
 	}
 }
 
+func GetPriceForMonth(db *sql.DB, currentID int, monthNumber int, yearNumber int) string {
+	var stringPrice string = "0.00"
+
+	var currentMonth string = strconv.Itoa(monthNumber)
+	if len(currentMonth) < 2 {
+		currentMonth = "0" + currentMonth
+	}
+
+	SQLStringYearMonth := strconv.Itoa(yearNumber) + "-" + currentMonth + "-%d 00:00:00"
+
+	rows, err := db.Query("SELECT ROUND(SUM(TotalPrice),2) AS FinalTotalPrice FROM(SELECT ROUND(SUM(Price),2) AS TotalPrice FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ? AND Name NOT LIKE \"%3 Month%\" AND Name NOT LIKE \"%Yearly%\" AND EXTRACT(Year FROM DateAdded) <= ? AND (DATE_FORMAT(DateAdded, ?) < DateRemoved OR DateRemoved IS NULL) UNION ALL SELECT ROUND(SUM(Price),2) AS TotalPrice FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ? AND Name LIKE \"%3 Month%\" AND MOD(Extract(Month FROM DateAdded) - ?, 3) = 0 AND EXTRACT(Year FROM DateAdded) <= ? AND (DATE_FORMAT(DateAdded, ?) < DateRemoved OR DateRemoved IS NULL) UNION ALL SELECT ROUND(SUM(Price),2) AS TotalPrice FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ? AND Name LIKE \"%Yearly%\" AND Extract(Month FROM DateAdded) = ? AND EXTRACT(Year FROM DateAdded) <= ? AND (DATE_FORMAT(DateAdded, ?) < DateRemoved OR DateRemoved IS NULL)) t1;", currentID, yearNumber, SQLStringYearMonth, currentID, monthNumber, yearNumber, SQLStringYearMonth, currentID, monthNumber, yearNumber, SQLStringYearMonth)
+
+	if err != nil {
+		panic(err)
+	}
+
+	for rows.Next() {
+		rows.Scan(&stringPrice)
+	}
+
+	return stringPrice
+}
+
 // UserID and dateAdded will normally be taken automatically from the database
 // instead of specifying it directly, unlike in this test
 func TestBackend(db *sql.DB) {
