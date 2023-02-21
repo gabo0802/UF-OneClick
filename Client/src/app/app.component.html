@@ -1,2 +1,2 @@
-<app-header></app-header>
-<router-outlet></router-outlet>
+<app-header [myHeaderState]="myHeaderState"></app-header>
+<router-outlet (activate)="setHeader()"></router-outlet>

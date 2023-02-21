@@ -38,8 +38,16 @@
     
   }
 }
-.description {
+.description::before {
   border-top: solid rgba(141, 59, 34, 0.041) 10px;
+  background: var(--texture6);
+  background-color: var(--themeBlue);
+  opacity: 0.5;
+}
+.description {
+  border-top: solid var(--themeOrange) 10px;
+  background: var(--texture4);
+  background-color: var(--themeBlue);
   height: 50vh;
   display: flex;
   justify-content: center;
@@ -55,6 +63,8 @@
   color: black;
   flex: 5;
   width: 50%;
+  max-width: 400px;
+  max-height: 70%;
   max-height: fit-content;
   padding: 30px 2px;
   margin-bottom: 25px;

@@ -6,6 +6,9 @@
     box-sizing: border-box;
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+[hidden] {
+  display: none !important;
+}
 html, body { 
   height: 100%; 
   scroll-behavior: smooth;
@@ -21,20 +24,37 @@ body {
 :root {
   --UF-Orange: #fa4616;
   --UF-Blue: #0021a5;
+  --themeBlue: #1565c0;
+  --themeOrange: #ef6c00;
   --UF-BottleBrush: #D32737;
+  
   /* Credit to Cottonbro studios in pexels.com */
   --background-image: url(https://images.pexels.com/photos/4009409/pexels-photo-4009409.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  
   /* Credit to Lisa Fotios in pexels.com */
   --background-image2: url(https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  
   /* Credit to Andrea Piacquadio in pexels.com */
   --background-image3: url(https://images.pexels.com/photos/3811867/pexels-photo-3811867.jpeg?auto=compress&cs=tinysrgb&w=1600);
+  
   /* Credit to Karolina Grabowska in pexels.com*/
   --background-image4: url(https://images.pexels.com/photos/5202917/pexels-photo-5202917.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+ 
   /* Credit to John-Mark Smith in pexels.com*/
   --background-image5: url(https://images.pexels.com/photos/2726370/pexels-photo-2726370.jpeg?auto=compress&cs=tinysrgb&w=1200);
-   /* Credit to cottonbro studio in pexels.com*/
+   
+  /* Credit to cottonbro studio in pexels.com*/
    --background-image6: url(https://images.pexels.com/photos/5081423/pexels-photo-5081423.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
-}
+ 
+   /* CSS Textures, credit to: https://codepen.io/bitmap/pen/AzowBq */
+  --texture1: repeating-linear-gradient(-26deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 2px, transparent 3px, transparent 7px);
+  --texture2: repeating-linear-gradient(-45deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 1px, transparent 1px, transparent 6px);
+  --texture3: repeating-linear-gradient(-26deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 2px, transparent 3px, transparent 7px);
+  --texture4:repeating-linear-gradient(0deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 1px, transparent 1px, transparent 7px);
+  --texture5: repeating-linear-gradient(90deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 1px, transparent 1px, transparent 7px);
+  --texture6: repeating-linear-gradient(-319deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 1px, transparent 3px, transparent 15px);
+
+  }
 
 /* For phones */
 @media (min-width: 576px) {
