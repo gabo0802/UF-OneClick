@@ -47,7 +47,7 @@
       Also add a user profile button (it has a profile picture)
     -->
    <span [hidden]="logoutButton" class="buttons">
-      <a href="/api/logout/yes"><button class="header-button" mat-raised-button color="accent">
+      <a ><button class="header-button" mat-raised-button color="accent" (click)="logOut()">
         Logout
       </button></a>
     </span>

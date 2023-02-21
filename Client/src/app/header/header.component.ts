@@ -1,4 +1,6 @@
 import { Component, Input, SimpleChanges} from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-header',
@@ -18,6 +20,8 @@ export class HeaderComponent {
   public HeaderComponent() {
 
   }
+
+  constructor(private authService: AuthService, private router: Router) { }
 
   // Changes the header state based on whether it has been changed
   ngOnChanges(changes: SimpleChanges) {
@@ -44,6 +48,17 @@ export class HeaderComponent {
         this.myNavBar = true;
         this.mainButtons = true;
         this.logoutButton = true;
+    }
+  }
+
+  logOut(): void {
+
+    //calls log out
+    this.authService.userLogOut();
+
+    //if user is logged out, then redirects to login
+    if(!this.authService.isLoggedIn()){
+      this.router.navigate(['login']);
     }
   }
 
