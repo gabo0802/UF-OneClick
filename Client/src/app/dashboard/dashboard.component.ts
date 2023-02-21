@@ -11,19 +11,19 @@ import { AuthService } from '../auth.service';
 })
 export class DashboardComponent {
     public message: string = ""
-    public adminButtonVisible: number = 0;
+    adminButtonVisible: boolean = true;
     constructor(private api: ApiService, private router: Router, private authService: AuthService) {};  
-    createSubFrom: FormGroup = {} as FormGroup;
-    removeSubFrom: FormGroup = {} as FormGroup;
+    createUserSubForm: FormGroup = {} as FormGroup;
+    removeUserSubForm: FormGroup = {} as FormGroup;
     newsLetterForm: FormGroup = {} as FormGroup;
-    createCustomSubFrom: FormGroup = {} as FormGroup;
+    createCustomUserSubForm: FormGroup = {} as FormGroup;
     createSubServiceForm: FormGroup = {} as FormGroup;
 
     ngOnInit(){
       if (document.cookie.includes("currentUserID=1")){
-        this.adminButtonVisible = 100
+        this.adminButtonVisible = false
       }else{
-        this.adminButtonVisible = 0
+        this.adminButtonVisible = true
       }
 
       this.createSubServiceForm = new FormGroup({
@@ -31,11 +31,11 @@ export class DashboardComponent {
         'price': new FormControl(null, [Validators.required, Validators.pattern('^[$]{0,1}[0-9]+.99$')]),
       });
 
-      this.createSubFrom = new FormGroup({
+      this.createUserSubForm = new FormGroup({
         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
       });
 
-      this.removeSubFrom = new FormGroup({
+      this.removeUserSubForm = new FormGroup({
         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
       });
 
@@ -43,7 +43,7 @@ export class DashboardComponent {
         'name': new FormControl(null, null),
       });
 
-      this.createCustomSubFrom = new FormGroup({
+      this.createCustomUserSubForm = new FormGroup({
         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),        
         'dateadded': new FormControl(null, [Validators.required, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')]),
         'dateremoved': new FormControl(null, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')),
@@ -99,31 +99,29 @@ export class DashboardComponent {
       });
     }
 
-    onSubmit(){
-      this.api.addUserSub(this.createSubFrom.value).subscribe( (resultMessage: string[]) => {
+    newUserSubscription(){
+      this.api.addUserSub(this.createUserSubForm.value).subscribe( (resultMessage: string[]) => {
         location.reload();
         alert(resultMessage[0] + ": " + resultMessage[1])
       })
     }
 
-    onSubmit4(){
+    newSubscription(){
       this.api.createSub(this.createSubServiceForm.value).subscribe( (resultMessage: string[]) => {
         location.reload();
         alert(resultMessage[0] + ": " + resultMessage[1])
       })
     }
 
-    onSubmit2(){
-      this.api.removeUserSub(this.removeSubFrom.value).subscribe( (resultMessage: string[]) => {
+    removeUserSubscription(){
+      this.api.removeUserSub(this.removeUserSubForm.value).subscribe( (resultMessage: string[]) => {
         location.reload();
         alert(resultMessage[0] + ": " + resultMessage[1])
       })
     }
 
-    onSubmit3(){
-      //Prime Video
-      //2023-01-02 15:04:05
-      this.api.addOldUserSub(this.createCustomSubFrom.value).subscribe( (resultMessage: string[]) => {
+    customUserSubscription(){
+      this.api.addOldUserSub(this.createCustomUserSubForm.value).subscribe( (resultMessage: string[]) => {
         location.reload();
         alert(resultMessage[0] + ": " + resultMessage[1])
       })
