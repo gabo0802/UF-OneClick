@@ -613,7 +613,13 @@ func Logout(message string) gin.HandlerFunc {
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 
 		//c.SetCookie("logoutOutput", "Logged Out!"+message, 60, "/", "localhost", false, false)
-		c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
+		//c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
+
+		if c.Param("valid") != "" { //Test if GET Request or Not
+			c.Redirect(http.StatusTemporaryRedirect, "/login")
+		} else {
+			c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
+		}
 	}
 }
 

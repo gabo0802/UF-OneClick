@@ -55,7 +55,7 @@ func main() {
 
 		//api.POST("/changepassword", handler.ChangeUserPassword) //need to agree on how to get user input (maybe name could be old password)
 
-		api.GET("/logout", handler.Logout(""))
+		api.GET("/logout/:valid", handler.Logout(""))
 		api.POST("/logout", handler.Logout(""))
 
 		api.GET("/verify/:code", handler.VerifyEmail)
