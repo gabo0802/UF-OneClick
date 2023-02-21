@@ -7,7 +7,7 @@
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
             <mat-icon>list</mat-icon>
           </button>
-          <mat-menu #menu="matMenu">
+          <mat-menu #menu>
             <button mat-menu-item>
               <mat-icon>sentiment_satisfied</mat-icon>
               <span><a href="#intro-part">Intro</a></span>
@@ -35,12 +35,12 @@
       </nav>
     </span>
     <span [hidden]="mainButtons" class="buttons">
-       <a routerLink="/login"><button class="header-button" mat-raised-button color="accent">
-        Login
-        </button></a>
-        <a routerLink="/signup"><button class="header-button"  mat-raised-button color="accent">
-            Sign Up
-        </button></a> 
+       <a routerLink="/login">
+        <button class="header-button" mat-raised-button color="accent">Login</button>
+      </a>
+      <a routerLink="/signup">
+        <button class="header-button"  mat-raised-button color="accent">Sign Up</button>
+      </a> 
     </span>
     <!--
       Add a button here that logs out when we are logged in
