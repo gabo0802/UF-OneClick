@@ -26,6 +26,11 @@ export class AuthService {
 
   userLogOut(): void {
 
+    if(this.userLoggedIn && document.cookie.includes("currentUserID=")){
+      
+      document.cookie = "currentUserID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    }
+
     this.userLoggedIn = false;
   }
 }
