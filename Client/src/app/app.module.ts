@@ -16,6 +16,8 @@ import { LoginMessageComponent } from './login/login-message/login-message.compo
 import { AuthGuard, LogInGuard } from './auth-guard.guard';
 import { AuthService } from './auth.service';
 import { ApiService } from './api.service';
+import { UsersComponent } from './dashboard/users/users.component';
+import { AdminComponent } from './dashboard/admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { ApiService } from './api.service';
     SignupComponent,
     DashboardComponent,
     SignupMessageComponent,
-    LoginMessageComponent
+    LoginMessageComponent,
+    UsersComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
