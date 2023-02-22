@@ -11,13 +11,12 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { SubscriptionListComponent } from './dashboard/subscription-list/subscription-list.component';
-import { SubscriptionDetailComponent } from './dashboard/subscription-list/subscription-detail/subscription-detail.component';
 import { SignupMessageComponent } from './signup/signup-message/signup-message.component';
 import { LoginMessageComponent } from './login/login-message/login-message.component';
 import { AuthGuard, LogInGuard } from './auth-guard.guard';
 import { AuthService } from './auth.service';
 import { ApiService } from './api.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,8 +25,6 @@ import { ApiService } from './api.service';
     LoginComponent,
     SignupComponent,
     DashboardComponent,
-    SubscriptionListComponent,
-    SubscriptionDetailComponent,
     SignupMessageComponent,
     LoginMessageComponent
   ],
