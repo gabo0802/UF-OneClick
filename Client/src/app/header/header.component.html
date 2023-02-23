@@ -23,7 +23,7 @@
           </mat-menu>
     </span>
     <span class="logo-containter">
-        <a routerLink="/"><img class="logo" src="../../assets/oneclick-logo-files/png/oneclick-high-resolution-logo-black-on-transparent-background.png"></a>
+        <a [routerLink]="changeRoute()"><img class="logo" src="../../assets/oneclick-logo-files/png/oneclick-high-resolution-logo-black-on-transparent-background.png"></a>
     </span>
     <span [hidden]="myNavBar" class="navigation nav-a">
       <nav id="navbar" class="nav">
@@ -47,9 +47,10 @@
       Also add a user profile button (it has a profile picture)
     -->
    <span [hidden]="logoutButton" class="buttons">
-      <a ><button class="header-button" mat-raised-button color="accent" (click)="logOut()">
+    <a [routerLink]="['users', 'profile']">Temp Profile Link here!</a>
+      <button class="header-button" mat-raised-button color="accent" (click)="logOut()">
         Logout
-      </button></a>
+      </button>
     </span>
 
 </mat-toolbar>

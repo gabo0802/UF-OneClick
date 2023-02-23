@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
 import { ApiService } from './api.service';
 import { UsersComponent } from './dashboard/users/users.component';
 import { AdminComponent } from './dashboard/admin/admin.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { AdminComponent } from './dashboard/admin/admin.component';
     SignupMessageComponent,
     LoginMessageComponent,
     UsersComponent,
-    AdminComponent
+    AdminComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
