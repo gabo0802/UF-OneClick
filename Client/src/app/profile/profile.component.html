@@ -6,7 +6,7 @@
             </mat-card-header>
             <mat-card-content>
                 <div class="field">
-                    <span><label class="label">Username:</label></span>  
+                    <label class="label">Username:</label>
                     <form [formGroup]="usernameForm">                                           
                         <mat-form-field appearance="fill">
                               
@@ -16,10 +16,10 @@
                             <!-- <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                         -->
                         </mat-form-field>
                     </form>
-                    <span class="buttons"><button mat-raised-button color="primary">Edit</button></span>
+                    <button mat-raised-button color="primary">Edit</button>
                 </div>
                 <div class="field">
-                    <span><label class="label">Email:</label></span>  
+                    <label class="label">Email:</label>
                     <form [formGroup]="emailForm">
                                            
                         <mat-form-field appearance="fill">
@@ -33,7 +33,7 @@
                     <button mat-raised-button color="primary">Edit</button>
                 </div>
                 <div class="field">
-                    <span><label class="label">Password:</label></span>
+                    <label class="label">Password:</label>
                     <form [formGroup]="passwordForm">                                            
                         <mat-form-field appearance="fill">                              
                             <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" readonly="passwordForm">
