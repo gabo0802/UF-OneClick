@@ -21,3 +21,20 @@ mat-card-header {
 mat-card {    
     padding: 15px;
 }
+
+.field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label {
+    color:#1565c0;   
+    width: 100px;
+}
+
+.buttons {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}

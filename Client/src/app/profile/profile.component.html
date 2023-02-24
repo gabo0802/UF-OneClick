@@ -5,15 +5,45 @@
                 <mat-card-title><h3>Profile Information</h3></mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <div>
-                    <span>Username:</span><span>Username Here</span>
+                <div class="field">
+                    <span><label class="label">Username:</label></span>  
+                    <form [formGroup]="usernameForm">                                           
+                        <mat-form-field appearance="fill">
+                              
+                            <!-- <mat-label>Username</mat-label> -->
+                                     
+                            <input matInput formControlName="username" readonly="usernameForm">
+                            <!-- <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                         -->
+                        </mat-form-field>
+                    </form>
+                    <span class="buttons"><button mat-raised-button color="primary">Edit</button></span>
                 </div>
-                <div>
-                    <span>Email:</span><span>Username Here</span>
+                <div class="field">
+                    <span><label class="label">Email:</label></span>  
+                    <form [formGroup]="emailForm">
+                                           
+                        <mat-form-field appearance="fill">
+                              
+                            <!-- <mat-label>Username</mat-label> -->
+                                     
+                            <input matInput formControlName="email">
+                            <!-- <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                         -->
+                        </mat-form-field>
+                    </form>
+                    <button mat-raised-button color="primary">Edit</button>
                 </div>
-                <div>
-                    <span>Password:</span><span>************</span>
-                </div>                 
+                <div class="field">
+                    <span><label class="label">Password:</label></span>
+                    <form [formGroup]="passwordForm">                                            
+                        <mat-form-field appearance="fill">                              
+                            <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" readonly="passwordForm">
+                            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" disabled="hide">
+                          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
+                        </button>
+                        </mat-form-field>
+                    </form>
+                    <button mat-raised-button color="primary">Edit</button>
+                </div>                
             </mat-card-content>
         </mat-card>
     </div>
