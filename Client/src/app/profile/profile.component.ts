@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { update } from 'cypress/types/lodash';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -8,6 +8,8 @@ import { update } from 'cypress/types/lodash';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
+
+  constructor(private router: Router) {}
 
   hide: boolean = true;
   passwordCharacterLength: number = 3;
@@ -45,5 +47,10 @@ export class ProfileComponent {
 
   editPassword(): void {
     
+  }
+
+  back(): void {
+
+    this.router.navigate(['users']);
   }
 }
