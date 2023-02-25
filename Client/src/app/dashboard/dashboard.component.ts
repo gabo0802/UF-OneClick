@@ -185,7 +185,7 @@ export class DashboardComponent {
               console.log("User", index)
               console.log(responseMessage[index])
 
-              allSubsString += "[" + responseMessage[index]["userid"] + " "+ responseMessage[index]["email"] + "] <br>";
+              allSubsString += "[" + responseMessage[index]["userid"] + " "+ responseMessage[index]["username"] + " "+ responseMessage[index]["email"] + "] <br>";
             }
             
             index += 2
