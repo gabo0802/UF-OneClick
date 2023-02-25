@@ -12,11 +12,13 @@
                               
                             <!-- <mat-label>Username</mat-label> -->
                                      
-                            <input matInput formControlName="username" readonly="usernameForm">
+                            <input *ngIf="!usernameEdit" matInput formControlName="username" readonly="usernameForm">
+                            <input *ngIf="usernameEdit" matInput formControlName="username">                             
                             <!-- <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                         -->
                         </mat-form-field>
-                    </form>
-                    <button mat-raised-button color="primary">Edit</button>
+                    </form>                    
+                    <button *ngIf="!usernameEdit" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
+                    <button *ngIf="usernameEdit" mat-raised-button color="accent" (click)="editUsername()">Save</button>
                 </div>
                 <div class="field">
                     <label class="label">Email:</label>

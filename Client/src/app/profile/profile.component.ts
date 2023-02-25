@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -10,6 +10,12 @@ export class ProfileComponent {
 
   hide: boolean = true;
   passwordCharacterLength: number = 3;
+
+  usernameEdit: boolean = false;
+  emailEdit: boolean = false;
+  passwordEdit: boolean = false;
+  
+  
 
   username: string = 'johnny';
   password: string = '************';
@@ -26,5 +32,13 @@ export class ProfileComponent {
   passwordForm = new FormGroup({
     'password': new FormControl(this.password, [Validators.minLength(this.passwordCharacterLength)]),
   });
+
+
+  editUsername(): void {
+
+    this.usernameEdit = !this.usernameEdit;
+    
+  }
+
 
 }
