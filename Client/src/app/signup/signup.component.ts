@@ -44,7 +44,8 @@ export class SignupComponent implements OnInit{
       password: this.signUpForm.value.password,
     }
 
-    this.api.createUser(newUser).subscribe(( resultMessage: string[]) => {
+    this.api.post_request__with_data(this.signUpForm.value, "/api/accountcreation").subscribe(( resultMessage: string[]) => {
+    //this.api.createUser(newUser).subscribe(( resultMessage: string[]) => {
       this.callDialog(resultMessage[0], resultMessage[1]);
     });
     

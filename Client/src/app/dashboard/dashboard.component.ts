@@ -76,7 +76,7 @@ export class DashboardComponent {
     }*/
 
     getUserSubscriptions(){
-      this.api.getSubs().subscribe( (res: Object) => {
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: ""}, "/api/subscriptions").subscribe( (res: Object) => {
         var allSubsString:string = ""
         const response: string = JSON.stringify(res);
         const responseMessage = JSON.parse(response);
@@ -100,7 +100,7 @@ export class DashboardComponent {
     }
 
     newUserSubscription(){
-      this.api.addUserSub(this.createUserSubForm.value).subscribe( (resultMessage: string[]) => {
+      this.api.post_request__with_data(this.createUserSubForm.value, "/api/subscriptions/addsubscription").subscribe( (resultMessage: string[]) => {
         alert(resultMessage[0] + ": " + resultMessage[1])
         location.reload();
         //alert(resultMessage[0] + ": " + resultMessage[1])
@@ -108,7 +108,9 @@ export class DashboardComponent {
     }
 
     newSubscription(){
-      this.api.createSub(this.createSubServiceForm.value).subscribe( (resultMessage: string[]) => {
+      this.createSubServiceForm.controls['price'].setValue( this.createSubServiceForm.controls['price'].value.replaceAll("$", ""));
+
+      this.api.post_request__with_data(this.createSubServiceForm.value, "/api/subscriptions/createsubscription").subscribe( (resultMessage: string[]) => {
         alert(resultMessage[0] + ": " + resultMessage[1])
         location.reload();
         //alert(resultMessage[0] + ": " + resultMessage[1])
@@ -116,7 +118,7 @@ export class DashboardComponent {
     }
 
     removeUserSubscription(){
-      this.api.removeUserSub(this.removeUserSubForm.value).subscribe( (resultMessage: string[]) => {
+      this.api.post_request__with_data(this.removeUserSubForm.value, "/api/subscriptions/cancelsubscription").subscribe( (resultMessage: string[]) => {
         alert(resultMessage[0] + ": " + resultMessage[1])
         location.reload();
         //alert(resultMessage[0] + ": " + resultMessage[1])
@@ -124,7 +126,7 @@ export class DashboardComponent {
     }
 
     customUserSubscription(){
-      this.api.addOldUserSub(this.createCustomUserSubForm.value).subscribe( (resultMessage: string[]) => {
+      this.api.post_request__with_data(this.createCustomUserSubForm.value, "/api/subscriptions/addoldsubscription").subscribe( (resultMessage: string[]) => {
         alert(resultMessage[0] + ": " + resultMessage[1])
         location.reload();
         //alert(resultMessage[0] + ": " + resultMessage[1])
@@ -132,7 +134,7 @@ export class DashboardComponent {
     }
 
     public doLogout(){
-      this.api.logout().subscribe( (res) => {
+      this.api.post_request({name: ""}, "/api/logout").subscribe((res) => {
         alert("Logging Out...")
         this.authService.userLogOut();
         this.router.navigate(['login']);
@@ -140,7 +142,7 @@ export class DashboardComponent {
     }
 
     public getUserData(){
-      this.api.getAllUserData().subscribe( (res) => {
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: ""}, "/api/alldata").subscribe( (res) => {
         var allSubsString:string = ""
         const response: string = JSON.stringify(res);
         const responseMessage = JSON.parse(response);
@@ -198,7 +200,7 @@ export class DashboardComponent {
     public resetAll(){
       alert("Reset Starting...")
 
-      this.api.resetall().subscribe( (res) => {
+      this.api.post_request({name: ""}, "/api/reset").subscribe( (res) => {
         alert("Reset Successful! Logging Out...")
         this.authService.userLogOut();
         this.router.navigate(['login']);
@@ -212,7 +214,7 @@ export class DashboardComponent {
           this.newsLetterForm.controls['name'].setValue(message);
           (document.getElementById('newslettermessage') as HTMLInputElement).value = "Enter Message For Newsletter";
           
-          this.api.sendNews(this.newsLetterForm.value).subscribe( (res) => {
+          this.api.post_request(this.newsLetterForm.value, "/api/news").subscribe( (res) => {
               alert("Message Sent")
           })
         }
