@@ -75,75 +75,75 @@ export class DashboardComponent {
     //   });
     // }*/
 
-    // getUserSubscriptions(){
-    //   this.api.getSubs().subscribe( (res: Object) => {
-    //     var allSubsString:string = ""
-    //     const response: string = JSON.stringify(res);
-    //     const responseMessage = JSON.parse(response);
+    getUserSubscriptions(){
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: ""}, "/api/subscriptions").subscribe( (res: Object) => {
+        var allSubsString:string = ""
+        const response: string = JSON.stringify(res);
+        const responseMessage = JSON.parse(response);
         
-    //     if (responseMessage["Error"] == undefined){
-    //       allSubsString += "All Active Subscriptions <br>"
+        if (responseMessage["Error"] == undefined){
+          allSubsString += "All Active Subscriptions <br>"
 
-    //       let index: number = 0;
-    //       while (responseMessage[index] != null){
-    //         if (responseMessage[index]["dateremoved"] == ""){
-    //           var dateAdded: string = responseMessage[index]["dateadded"]
-    //           allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length - 9) + "] <br>";
-    //         }
+          let index: number = 0;
+          while (responseMessage[index] != null){
+            if (responseMessage[index]["dateremoved"] == ""){
+              var dateAdded: string = responseMessage[index]["dateadded"]
+              allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length - 9) + "] <br>";
+            }
 
-    //         index += 1;
-    //       }
+            index += 1;
+          }
 
-    //       document.getElementById("allSubs")!.innerHTML = allSubsString;
-    //     }
-    //   });
-    // }
+          document.getElementById("allSubs")!.innerHTML = allSubsString;
+        }
+      });
+    }
 
-    // newUserSubscription(){
-    //   this.api.addUserSub(this.createUserSubForm.value).subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+    newUserSubscription(){
+      this.api.addUserSub(this.createUserSubForm.value).subscribe( (resultMessage: string[]) => {
+        alert(resultMessage[0] + ": " + resultMessage[1])
+        location.reload();
+        //alert(resultMessage[0] + ": " + resultMessage[1])
+      })
+    }
 
-    // newSubscription(){
-    //   this.api.createSub(this.createSubServiceForm.value).subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+    newSubscription(){
+      this.api.createSub(this.createSubServiceForm.value).subscribe( (resultMessage: string[]) => {
+        alert(resultMessage[0] + ": " + resultMessage[1])
+        location.reload();
+        //alert(resultMessage[0] + ": " + resultMessage[1])
+      })
+    }
 
-    // removeUserSubscription(){
-    //   this.api.removeUserSub(this.removeUserSubForm.value).subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+    removeUserSubscription(){
+      this.api.post_request__with_data(this.removeUserSubForm.value, "/api/subscriptions/cancelsubscription").subscribe( (resultMessage: string[]) => {
+        alert(resultMessage[0] + ": " + resultMessage[1])
+        location.reload();
+        //alert(resultMessage[0] + ": " + resultMessage[1])
+      })
+    }
 
-    // customUserSubscription(){
-    //   this.api.addOldUserSub(this.createCustomUserSubForm.value).subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+    customUserSubscription(){
+      this.api.post_request__with_data(this.createCustomUserSubForm.value, "/api/subscriptions/addoldsubscription").subscribe( (resultMessage: string[]) => {
+        alert(resultMessage[0] + ": " + resultMessage[1])
+        location.reload();
+        //alert(resultMessage[0] + ": " + resultMessage[1])
+      })
+    }
 
-    // public doLogout(){
-    //   this.api.logout().subscribe( (res) => {
-    //     alert("Logging Out...")
-    //     this.authService.userLogOut();
-    //     this.router.navigate(['login']);
-    //   })
-    // }
+    public doLogout(){
+      this.api.post_request({name: ""}, "/api/logout").subscribe((res) => {
+        alert("Logging Out...")
+        this.authService.userLogOut();
+        this.router.navigate(['login']);
+      })
+    }
 
-    // public getUserData(){
-    //   this.api.getAllUserData().subscribe( (res) => {
-    //     var allSubsString:string = ""
-    //     const response: string = JSON.stringify(res);
-    //     const responseMessage = JSON.parse(response);
+    public getUserData(){
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: ""}, "/api/alldata").subscribe( (res) => {
+        var allSubsString:string = ""
+        const response: string = JSON.stringify(res);
+        const responseMessage = JSON.parse(response);
 
     //     console.log(responseMessage)
     //     console.log(responseMessage[1])
@@ -198,12 +198,12 @@ export class DashboardComponent {
     // public resetAll(){
     //   alert("Reset Starting...")
 
-    //   this.api.resetall().subscribe( (res) => {
-    //     alert("Reset Successful! Logging Out...")
-    //     this.authService.userLogOut();
-    //     this.router.navigate(['login']);
-    //   })
-    // }
+      this.api.post_request({name: ""}, "/api/reset").subscribe( (res) => {
+        alert("Reset Successful! Logging Out...")
+        this.authService.userLogOut();
+        this.router.navigate(['login']);
+      })
+    }
     
     // newsLetter(){
     //     var message:string = (document.getElementById('newslettermessage') as HTMLInputElement).value;
@@ -212,9 +212,9 @@ export class DashboardComponent {
     //       this.newsLetterForm.controls['name'].setValue(message);
     //       (document.getElementById('newslettermessage') as HTMLInputElement).value = "Enter Message For Newsletter";
           
-    //       this.api.sendNews(this.newsLetterForm.value).subscribe( (res) => {
-    //           alert("Message Sent")
-    //       })
-    //     }
-    // }
+          this.api.post_request(this.newsLetterForm.value, "/api/news").subscribe( (res) => {
+              alert("Message Sent")
+          })
+        }
+    }
 }

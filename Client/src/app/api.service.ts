@@ -10,6 +10,50 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+  // post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string}, url:string): Observable<Array<string>>{
+  //    return this.http.post<{[key: string]: string, message: string}>(url, JSON.stringify(userData)).pipe(
+  //       map( (statusMessage) => {        
+
+  //         const resultMessage: string[] = [];
+          
+  //         for(const key in statusMessage){
+
+  //           resultMessage.push(key);
+  //           resultMessage.push(statusMessage[key]);
+
+  //         }       
+
+  //         return resultMessage;
+  //       })
+  //     );
+  // }
+
+  // post_request(userData: {name: string}, url:string): Observable<Object>{
+  //       return this.http.post(url, JSON.stringify(userData));
+  // }
+
+  // post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string}, url:string): Observable<Array<string>>{
+  //    return this.http.post<{[key: string]: string, message: string}>(url, JSON.stringify(userData)).pipe(
+  //       map( (statusMessage) => {        
+
+  //         const resultMessage: string[] = [];
+          
+  //         for(const key in statusMessage){
+
+  //           resultMessage.push(key);
+  //           resultMessage.push(statusMessage[key]);
+
+  //         }       
+
+  //         return resultMessage;
+  //       })
+  //     );
+  // }
+
+  // post_request(userData: {name: string}, url:string): Observable<Object>{
+  //       return this.http.post(url, JSON.stringify(userData));
+  // }
+
   login(userData: {password: string, username: string}): Observable<Array<string>>{
 
     return this.http.post<{[key: string]: string, message: string}>('/api/login', JSON.stringify(userData)).pipe(
@@ -49,117 +93,117 @@ export class ApiService {
   }
 
 
-  // addUserSub(userData: {name: string}): Observable<Array<string>>{   
+  addUserSub(userData: {name: string}): Observable<Array<string>>{   
 
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
 
-  //       const resultMessage: string[] = [];
+        const resultMessage: string[] = [];
         
-  //       for(const key in statusMessage){
+        for(const key in statusMessage){
 
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
 
-  //       }       
+        }       
 
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
+        return resultMessage;
+      })
+    );
+  }
 
-  // removeUserSub(userData: {name: string}): Observable<Array<string>>{   
+  removeUserSub(userData: {name: string}): Observable<Array<string>>{   
 
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/cancelsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/cancelsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
 
-  //       const resultMessage: string[] = [];
+        const resultMessage: string[] = [];
         
-  //       for(const key in statusMessage){
+        for(const key in statusMessage){
 
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
 
-  //       }       
+        }       
 
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
+        return resultMessage;
+      })
+    );
+  }
 
-  // addOldUserSub(userData: {name: string}): Observable<Array<string>>{   
+  addOldUserSub(userData: {name: string}): Observable<Array<string>>{   
 
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addoldsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addoldsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
 
-  //       const resultMessage: string[] = [];
+        const resultMessage: string[] = [];
         
-  //       for(const key in statusMessage){
+        for(const key in statusMessage){
 
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
 
-  //       }       
+        }       
 
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
+        return resultMessage;
+      })
+    );
+  }
 
-  // createSub(userData: {name: string, price: string}): Observable<Array<string>>{   
-  //   userData.price = userData.price.replaceAll("$", "")
-  //   console.log("test")
+  createSub(userData: {name: string, price: string}): Observable<Array<string>>{   
+    userData.price = userData.price.replaceAll("$", "")
+    console.log("test")
 
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/createsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
+    return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/createsubscription', JSON.stringify(userData)).pipe(
+      map( (statusMessage) => {        
 
-  //       const resultMessage: string[] = [];
+        const resultMessage: string[] = [];
         
-  //       for(const key in statusMessage){
+        for(const key in statusMessage){
 
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
 
-  //       }       
+        }       
 
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
+        return resultMessage;
+      })
+    );
+  }
 
-  // getSubs(): Observable<Object>{
-  //   return this.http.post('/api/subscriptions', null);
-  // }
+  getSubs(): Observable<Object>{
+    return this.http.post('/api/subscriptions', null);
+  }
 
-  // logout(): Observable<Object>{
-  //   return this.http.post('/api/logout', null);
-  // }
+  logout(): Observable<Object>{
+    return this.http.post('/api/logout', null);
+  }
 
-  // resetall(): Observable<Object>{
-  //   return this.http.post('/api/reset', null);
-  // }
+  resetall(): Observable<Object>{
+    return this.http.post('/api/reset', null);
+  }
 
-  // sendNews(userData: {name: string}): Observable<Object>{
-  //   return this.http.post('/api/news', JSON.stringify(userData));
-  // }
+  sendNews(userData: {name: string}): Observable<Object>{
+    return this.http.post('/api/news', JSON.stringify(userData));
+  }
 
-  // getAllUserData(): Observable<Array<string>>{   
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/alldata', null).pipe(
-  //     map( (statusMessage) => {        
+  getAllUserData(): Observable<Array<string>>{   
+    return this.http.post<{[key: string]: string, message: string}>('/api/alldata', null).pipe(
+      map( (statusMessage) => {        
 
-  //       const resultMessage: string[] = [];
+        const resultMessage: string[] = [];
         
-  //       for(const key in statusMessage){
+        for(const key in statusMessage){
 
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
 
-  //       }       
+        }       
 
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
+        return resultMessage;
+      })
+    );
+  }
 
   /*public getOutput() {
     if (this.output == '' || this.output == 'signupOutput=none'){
