@@ -76,7 +76,7 @@ export class DashboardComponent {
     }*/
 
     getUserSubscriptions(){
-      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: ""}, "/api/subscriptions").subscribe( (res: Object) => {
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/subscriptions").subscribe( (res: Object) => {
         var allSubsString:string = ""
         const response: string = JSON.stringify(res);
         const responseMessage = JSON.parse(response);
@@ -142,7 +142,7 @@ export class DashboardComponent {
     }
 
     public getUserData(){
-      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: ""}, "/api/alldata").subscribe( (res) => {
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/alldata").subscribe( (res) => {
         var allSubsString:string = ""
         const response: string = JSON.stringify(res);
         const responseMessage = JSON.parse(response);

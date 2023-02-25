@@ -10,7 +10,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string}, url:string): Observable<Array<string>>{
+  post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string, dateadded: string, dateremoved: ""}, url:string): Observable<Array<string>>{
      return this.http.post<{[key: string]: string, message: string}>(url, JSON.stringify(userData)).pipe(
         map( (statusMessage) => {        
 
