@@ -137,7 +137,8 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 }
 
 func CreateAdminUser(db *sql.DB) {
-	result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"SBNJTRN-FjG7owHVrKtue7eqdM4RhdRWVl71HXN2d7I=\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", companyemail)
+	//result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"SBNJTRN-FjG7owHVrKtue7eqdM4RhdRWVl71HXN2d7I=\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", companyemail)
+	result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"root\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", companyemail)
 	//maybe change password to something more secure?
 
 	if err != nil {

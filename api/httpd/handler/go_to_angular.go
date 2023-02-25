@@ -460,11 +460,11 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 	login = userData{}
 
 	//Encrypt Username and Password
-	stringEncrypter := sha256.New()
+	/*stringEncrypter := sha256.New()
 	stringEncrypter.Write([]byte(username))
-	username = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+	username = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))*/
 
-	stringEncrypter = sha256.New()
+	stringEncrypter := sha256.New()
 	stringEncrypter.Write([]byte(password))
 	password = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
 
@@ -533,16 +533,16 @@ func NewUser(c *gin.Context) {
 	login = userData{}
 
 	//Encrypt Username and Password
-	stringEncrypter := sha256.New()
+	/*stringEncrypter := sha256.New()
 	stringEncrypter.Write([]byte(username))
-	encryptedusername := base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
+	encryptedusername := base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))*/
 
-	stringEncrypter = sha256.New()
+	stringEncrypter := sha256.New()
 	stringEncrypter.Write([]byte(password))
 	password = base64.URLEncoding.EncodeToString(stringEncrypter.Sum(nil))
 
 	//Try Create New User
-	rowsAffected := MySQL.CreateNewUser(currentDB, encryptedusername, password, email)
+	rowsAffected := MySQL.CreateNewUser(currentDB, username, password, email)
 
 	if rowsAffected == (-223 - 0) { //already exists
 		//c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
@@ -563,10 +563,10 @@ func NewUser(c *gin.Context) {
 	} else {
 		//c.SetCookie("signupOutput", "New User "+username+" Has Been Created!", 60, "/", "localhost", false, false) //maybe add " Enter Username and Password!"
 		c.JSON(http.StatusOK, gin.H{"Success": "New User " + username + " Has Been Created"}) //maybe add " Enter Username and Password!"
-		username = ""
 
 		//User Verification
-		startVerifyCheck(encryptedusername, email)
+		startVerifyCheck(username, email)
+		username = ""
 	}
 }
 
