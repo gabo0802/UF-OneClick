@@ -5,6 +5,7 @@
                 <mat-card-title><h3>Profile Information</h3></mat-card-title>
             </mat-card-header>
             <mat-card-content>
+                <!-- Username Begin-->
                 <div class="field">
                     <label class="label">Username:</label>
                     <form [formGroup]="usernameForm">                                           
@@ -13,13 +14,14 @@
                             <!-- <mat-label>Username</mat-label> -->
                                      
                             <input *ngIf="!usernameEdit" matInput formControlName="username" readonly="usernameForm">
-                            <input *ngIf="usernameEdit" matInput formControlName="username">                             
-                            <!-- <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                         -->
+                            <input *ngIf="usernameEdit" matInput formControlName="username">
+                            
                         </mat-form-field>
                     </form>                    
                     <button *ngIf="!usernameEdit" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
                     <button *ngIf="usernameEdit" mat-raised-button color="accent" (click)="editUsername()">Save</button>
                 </div>
+                <!-- Email Begin-->
                 <div class="field">
                     <label class="label">Email:</label>
                     <form [formGroup]="emailForm">
@@ -28,23 +30,27 @@
                               
                             <!-- <mat-label>Username</mat-label> -->
                                      
-                            <input matInput formControlName="email">
-                            <!-- <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                         -->
+                            <input *ngIf="!emailEdit" matInput formControlName="email" readonly="emailForm">
+                            <input *ngIf="emailEdit" matInput formControlName="email">
+                                                   
                         </mat-form-field>
                     </form>
-                    <button mat-raised-button color="primary">Edit</button>
+                    <button *ngIf="!emailEdit" mat-raised-button color="primary" (click)="editEmail()">Edit</button>
+                    <button *ngIf="emailEdit" mat-raised-button color="accent" (click)="editEmail()">Save</button>
                 </div>
+                <!-- Password Begin-->
                 <div class="field">
                     <label class="label">Password:</label>
-                    <form [formGroup]="passwordForm">                                            
+                    <form [formGroup]="passwordForm">   
+
                         <mat-form-field appearance="fill">                              
-                            <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" readonly="passwordForm">
-                            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" disabled="hide">
-                          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
-                        </button>
+                            <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" readonly="passwordForm">                            
+                            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" disabled="hide">  
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
+                        </button>                            
                         </mat-form-field>
                     </form>
-                    <button mat-raised-button color="primary">Edit</button>
+                    <button mat-raised-button color="primary" (click)="editPassword()">Edit</button>                    
                 </div>                
             </mat-card-content>
         </mat-card>

@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { update } from 'cypress/types/lodash';
 
 @Component({
   selector: 'app-profile',
@@ -12,10 +13,7 @@ export class ProfileComponent {
   passwordCharacterLength: number = 3;
 
   usernameEdit: boolean = false;
-  emailEdit: boolean = false;
-  passwordEdit: boolean = false;
-  
-  
+  emailEdit: boolean = false;  
 
   username: string = 'johnny';
   password: string = '************';
@@ -40,5 +38,12 @@ export class ProfileComponent {
     
   }
 
+  editEmail(): void {
 
+    this.emailEdit = !this.emailEdit;
+  }
+
+  editPassword(): void {
+    
+  }
 }

@@ -25,6 +25,7 @@ mat-card {
 .field {
     display: flex;    
     align-items: center;
+    padding: 5px;
 }
 
 .label {
