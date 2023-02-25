@@ -1,1 +1,36 @@
 // https://material.angular.io/components/tabs/overview
+
+.visual {
+  
+}
+.tab-group {
+  margin: auto;
+  height: 80%;
+  width: 90%;
+  display: block;
+  text-align: center;
+  align-items: center;
+  background: var(--themeOrange);
+  border-radius: 7px;
+}
+
+.tab-label {
+  
+}
+
+.my-tab-label {
+  font-weight: 800;
+  color: white;
+}
+
+.my-tab-content {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+.test-image {
+  padding: 2%;
+  max-height:  75%;
+  max-width: 60%;
+  margin: auto;
+}

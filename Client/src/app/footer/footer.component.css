@@ -1,0 +1,28 @@
+footer {
+  height: 5%;
+  background-color: var(--themeOrange);
+}
+
+.footer-stuff {
+  display: flex;
+  justify-content: space-evenly;
+  position: relative;
+  padding-top: 15px;
+  width: 100%;
+  font-size: 1.5em;
+}
+
+.footer-stuff a {
+  text-decoration: none;
+  color: black;
+}
+.footer-stuff > .socials > a {
+  margin: 3.5px;
+  font-size: 1.3em;
+}
+.footer-stuff > .links > a {
+  margin: 8px;
+}
+.footer-stuff > .links > a:hover {
+  text-decoration: underline;
+}

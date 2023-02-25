@@ -19,6 +19,7 @@ import { ApiService } from './api.service';
 import { UsersComponent } from './dashboard/users/users.component';
 import { AdminComponent } from './dashboard/admin/admin.component';
 import { ProfileComponent } from './profile/profile.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ProfileComponent } from './profile/profile.component';
     LoginMessageComponent,
     UsersComponent,
     AdminComponent,
-    ProfileComponent
+    ProfileComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

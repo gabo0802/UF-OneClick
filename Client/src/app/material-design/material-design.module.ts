@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [],
@@ -29,6 +30,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatMenuModule,
     MatDialogModule,
     ScrollingModule,
+    MatTabsModule
   ]
 })
 export class MaterialDesignModule { }

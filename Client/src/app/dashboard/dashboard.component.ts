@@ -101,29 +101,33 @@ export class DashboardComponent {
 
     // newUserSubscription(){
     //   this.api.addUserSub(this.createUserSubForm.value).subscribe( (resultMessage: string[]) => {
-    //     location.reload();
     //     alert(resultMessage[0] + ": " + resultMessage[1])
+    //     location.reload();
+    //     //alert(resultMessage[0] + ": " + resultMessage[1])
     //   })
     // }
 
     // newSubscription(){
     //   this.api.createSub(this.createSubServiceForm.value).subscribe( (resultMessage: string[]) => {
-    //     location.reload();
     //     alert(resultMessage[0] + ": " + resultMessage[1])
+    //     location.reload();
+    //     //alert(resultMessage[0] + ": " + resultMessage[1])
     //   })
     // }
 
     // removeUserSubscription(){
     //   this.api.removeUserSub(this.removeUserSubForm.value).subscribe( (resultMessage: string[]) => {
-    //     location.reload();
     //     alert(resultMessage[0] + ": " + resultMessage[1])
+    //     location.reload();
+    //     //alert(resultMessage[0] + ": " + resultMessage[1])
     //   })
     // }
 
     // customUserSubscription(){
     //   this.api.addOldUserSub(this.createCustomUserSubForm.value).subscribe( (resultMessage: string[]) => {
-    //     location.reload();
     //     alert(resultMessage[0] + ": " + resultMessage[1])
+    //     location.reload();
+    //     //alert(resultMessage[0] + ": " + resultMessage[1])
     //   })
     // }
 

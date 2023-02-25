@@ -179,9 +179,38 @@
 
 <mat-toolbar id="visual" class="app-visual" color="primary">
     
+  <mat-tab-group class="tab-group">
+    <mat-tab class="tab-label" label="First"> 
+      <ng-template mat-tab-label>
+        <span class="my-tab-label">First</span>
+      </ng-template>
+      <ng-template [matTabContent]="tab-content">
+        <img class="test-image" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Best_Nature_Picture_of_the_day.jpg">
+      </ng-template>
+    </mat-tab>
+    <mat-tab class="tab-label" label="Second">
+      <ng-template mat-tab-label>
+        <span class="my-tab-label">Second</span>
+      </ng-template>
+      <ng-template [matTabContent]="tab-content">
+        <img class="test-image" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Best_Nature_Picture_of_the_day.jpg">
+      </ng-template>
+    </mat-tab>
+    <mat-tab class="tab-label" label="Third"> 
+      <ng-template mat-tab-label>
+        <span class="my-tab-label">Third</span>
+      </ng-template>
+      <ng-template [matTabContent]="tab-content">
+        <img class="test-image" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Best_Nature_Picture_of_the_day.jpg">
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+  
   
 </mat-toolbar>
 
+<!--
 <div id="new-features" class="potential-list">
 
 </div>
+-->
