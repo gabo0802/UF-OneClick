@@ -92,6 +92,11 @@ export class ApiService {
     return this.http.post('updatedUserPasswordspath', passwords);
   }
 
+  deleteUserAccount(): Observable<Object> {
+
+    return this.http.delete('deletePath');
+  }
+
 
   // addUserSub(userData: {name: string}): Observable<Array<string>>{   
 
