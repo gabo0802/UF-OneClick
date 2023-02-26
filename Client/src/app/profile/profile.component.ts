@@ -1,6 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PasswordResetComponent } from './password-reset/password-reset.component'
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
@@ -9,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private dialog: MatDialog) {}
 
   hide: boolean = true;
   passwordCharacterLength: number = 3;
@@ -46,11 +48,21 @@ export class ProfileComponent {
   }
 
   editPassword(): void {
+
+    this.callDialog();
     
   }
 
   back(): void {
 
     this.router.navigate(['users']);
+  }
+
+  callDialog(): void {
+
+    this.dialog.open( PasswordResetComponent, { 
+      height: '335px',
+      width: '500px',
+    });    
   }
 }

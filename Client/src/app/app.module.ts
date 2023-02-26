@@ -20,6 +20,7 @@ import { UsersComponent } from './dashboard/users/users.component';
 import { AdminComponent } from './dashboard/admin/admin.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FooterComponent } from './footer/footer.component';
+import { PasswordResetComponent } from './profile/password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { FooterComponent } from './footer/footer.component';
     UsersComponent,
     AdminComponent,
     ProfileComponent,
-    FooterComponent
+    FooterComponent,
+    PasswordResetComponent
   ],
   imports: [
     BrowserModule,
