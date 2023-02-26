@@ -70,6 +70,23 @@ export class ApiService {
     );
   }
 
+  updateUsername(username: string): Observable<Object> {
+
+    return this.http.post('usernameupdatedPath', username);
+  }
+
+  updateUserEmail(userEmail: string): Observable<Object> {
+
+    return this.http.post('useremailupdatedPath', userEmail);
+  }
+
+  updateUserPassword(userOldPassword: string, userNewPassword: string): Observable<Object> {
+
+    const passwords= {old: userOldPassword, userNewPassword};
+
+    return this.http.post('updatedUserPasswordspath', passwords);
+  }
+
 
   // addUserSub(userData: {name: string}): Observable<Array<string>>{   
 
