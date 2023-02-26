@@ -794,11 +794,11 @@ func CancelSubscriptionService(c *gin.Context) {
 }
 
 /*func ChangeUserPassword(c *gin.Context) {
-	if currentID != -1{
+	if currentID != -1 {
 		var userInfo userData
 		c.BindJSON(&userInfo)
 
-		oldPassword	:= userInfo.Username
+		oldPassword := userInfo.Username
 		newPassword := userInfo.Password
 		userInfo = userData{}
 
@@ -823,7 +823,7 @@ func CancelSubscriptionService(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"Success": "Password Changed"})
 			//c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 		}
-	}else{
+	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
 }*/

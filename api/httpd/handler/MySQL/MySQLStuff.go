@@ -236,6 +236,44 @@ func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword stri
 	return int(numRows)
 }
 
+func ChangeEmail(db *sql.DB, userID int, newEmail string) int {
+	result, err := db.Exec("UPDATE Users SET Email = ? WHERE userID = ?;", newEmail, userID)
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			return -223
+		} else {
+			return -502
+		}
+	}
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		return -502
+	}
+
+	return int(numRows)
+}
+
+func ChangeUsername(db *sql.DB, userID int, newUsername string) int {
+	result, err := db.Exec("UPDATE Users SET Username = ? WHERE userID = ?;", newUsername, userID)
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			return -223
+		} else {
+			return -502
+		}
+	}
+
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		return -502
+	}
+
+	return int(numRows)
+}
+
 func CreateNewSub(db *sql.DB, name string, price string) int {
 	//Create New Subscription
 	name = strings.Trim(name, " ")
