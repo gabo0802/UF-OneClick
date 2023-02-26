@@ -35,6 +35,13 @@ type userData struct {
 const (
 	emailHost = "smtp.gmail.com"
 	emailPort = "587"
+
+	/*oneYearInSeconds   = (365 * 24 * 60 * 60)
+	oneMonthInSeconds  = 2629746
+	oneWeekInSeconds    = (7 * 24 * 60 * 60)
+	oneDayInSeconds    = (24 * 60 * 60)
+	oneHourInSeconds   = (60 * 60)
+	oneMinuteInSeconds = 60*/
 )
 
 // Global Variables:

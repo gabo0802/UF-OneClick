@@ -671,6 +671,22 @@ func Login(db *sql.DB, username string, password string) int {
 	}
 }
 
+func GetMostUsedSubscription(db *sql.DB, currentID int) (string, int) {
+	rows, err := db.Query("SELECT * FROM (SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, DateRemoved) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NOT NULL UNION ALL SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, NOW()) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NULL) AS t1 GROUP BY TotalUsageTimeSeconds, NAME ORDER BY TotalUsageTimeSeconds DESC LIMIT 1;", currentID, currentID)
+	if err != nil {
+		panic(err)
+	}
+
+	var subName string = "none"
+	var subTimeUsedInSeconds int = 0
+
+	for rows.Next() {
+		rows.Scan(&subName, &subTimeUsedInSeconds)
+	}
+
+	return subName, subTimeUsedInSeconds
+}
+
 func GetPriceForMonth(db *sql.DB, currentID int, monthNumber int, yearNumber int) string {
 	var stringPrice string = "0.00"
 
