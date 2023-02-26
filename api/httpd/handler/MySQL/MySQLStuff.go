@@ -274,6 +274,44 @@ func ChangeUsername(db *sql.DB, userID int, newUsername string) int {
 	return int(numRows)
 }
 
+func GetUsername(db *sql.DB, userID int) string {
+	rows, err := db.Query("SELECT Username FROM Users WHERE userID = ?;", userID)
+	var username string = "none"
+
+	if err != nil {
+		return "Error Code: -502"
+	}
+
+	for rows.Next() {
+		rows.Scan(&username)
+	}
+
+	if err != nil {
+		return "Error Code: -502"
+	}
+
+	return username
+}
+
+func GetEmail(db *sql.DB, userID int) string {
+	rows, err := db.Query("SELECT Email FROM Users WHERE userID = ?;", userID)
+	var email string = "none"
+
+	if err != nil {
+		return "Error Code: -502"
+	}
+
+	for rows.Next() {
+		rows.Scan(&email)
+	}
+
+	if err != nil {
+		return "Error Code: -502"
+	}
+
+	return email
+}
+
 func CreateNewSub(db *sql.DB, name string, price string) int {
 	//Create New Subscription
 	name = strings.Trim(name, " ")
