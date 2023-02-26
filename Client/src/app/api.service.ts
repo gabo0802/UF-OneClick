@@ -70,6 +70,11 @@ export class ApiService {
     );
   }
 
+  getEmailandUsername(username: string): Observable<Object> {
+
+    return this.http.get('usernameEmailPath');
+  }
+
   updateUsername(username: string): Observable<Object> {
 
     return this.http.post('usernameupdatedPath', username);
