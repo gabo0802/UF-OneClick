@@ -77,19 +77,19 @@ export class ApiService {
 
   updateUsername(username: string): Observable<Object> {
 
-    return this.http.post('usernameupdatedPath', username);
+    return this.http.put('usernameupdatedPath', username);
   }
 
   updateUserEmail(userEmail: string): Observable<Object> {
 
-    return this.http.post('useremailupdatedPath', userEmail);
+    return this.http.put('useremailupdatedPath', userEmail);
   }
 
   updateUserPassword(userOldPassword: string, userNewPassword: string): Observable<Object> {
 
     const passwords= {old: userOldPassword, userNewPassword};
 
-    return this.http.post('updatedUserPasswordspath', passwords);
+    return this.http.put('updatedUserPasswordspath', passwords);
   }
 
   deleteUserAccount(): Observable<Object> {
