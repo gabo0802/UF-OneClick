@@ -123,6 +123,7 @@ export class ProfileComponent {
     if (confirm("Are you sure you want to delete user " + this.username + "?") && this.username != "root"){
       this.api.deleteUserAccount().subscribe((res) => {
         alert("User " + this.username + " has been deleted! Logging Out...")
+        this.authService.userLogOut()
         this.router.navigate(['login']);
       })
     }
