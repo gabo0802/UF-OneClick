@@ -847,7 +847,7 @@ func ChangeUserPassword(c *gin.Context) {
 			//c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 		}
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
 }
 
@@ -864,7 +864,7 @@ func GetUserInfo(c *gin.Context) {
 		email := MySQL.GetEmail(currentDB, currentID)
 		c.JSON(http.StatusOK, gin.H{username: email})
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
+		c.Redirect(http.StatusTemporaryRedirect, "/login")
 
 	}
 
