@@ -10,23 +10,23 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }  
 
-  // post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string, dateadded: string, dateremoved: ""}, url:string): Observable<Array<string>>{
-  //    return this.http.post<{[key: string]: string, message: string}>(url, JSON.stringify(userData)).pipe(
-  //       map( (statusMessage) => {        
+   post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string, dateadded: string, dateremoved: ""}, url:string): Observable<Array<string>>{
+      return this.http.post<{[key: string]: string, message: string}>(url, JSON.stringify(userData)).pipe(
+         map( (statusMessage) => {        
 
-  //         const resultMessage: string[] = [];
+           const resultMessage: string[] = [];
           
-  //         for(const key in statusMessage){
+           for(const key in statusMessage){
 
-  //           resultMessage.push(key);
-  //           resultMessage.push(statusMessage[key]);
+             resultMessage.push(key);
+             resultMessage.push(statusMessage[key]);
 
-  //         }       
+           }       
 
-  //         return resultMessage;
-  //       })
-  //     );
-  // }
+           return resultMessage;
+         })
+       );
+   }
 
   // post_request(userData: {name: string}, url:string): Observable<Object>{
   //       return this.http.post(url, JSON.stringify(userData));
@@ -70,31 +70,41 @@ export class ApiService {
     );
   }
 
-  getEmailandUsername(username: string): Observable<Object> {
+  getEmailandUsername(): Observable<Array<string>> {
+    return this.http.get<{[key: string]: string, message: string}>('api/userinfo').pipe(
+      map( (statusMessage) => {        
 
-    return this.http.get('usernameEmailPath');
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
   }
 
-  updateUsername(username: string): Observable<Object> {
-
-    return this.http.put('usernameupdatedPath', username);
+  updateUsername(newUsername: string): Observable<Object> {
+    const newUserUsername = {username: newUsername};
+    return this.http.put('api/changeusername', newUserUsername);
   }
 
   updateUserEmail(userEmail: string): Observable<Object> {
-
-    return this.http.put('useremailupdatedPath', userEmail);
+    const newUserEmail = {email: userEmail};
+    return this.http.put('api/changeemail', newUserEmail);
   }
 
   updateUserPassword(userOldPassword: string, userNewPassword: string): Observable<Object> {
-
-    const passwords= {old: userOldPassword, userNewPassword};
-
-    return this.http.put('updatedUserPasswordspath', passwords);
+    const passwords= {oldPassword: userOldPassword, newPassword: userNewPassword};
+    return this.http.put('api/changepassword', passwords);
   }
 
   deleteUserAccount(): Observable<Object> {
-
-    return this.http.delete('deletePath');
+    return this.http.delete('api/deleteuser');
   }
 
 

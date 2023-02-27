@@ -307,12 +307,15 @@ func deleteUnverified() {
 	}
 }
 
-func startVerifyCheck(username string, email string) {
-	var ID int
-	row, _ := currentDB.Query("SELECT UserID FROM Users WHERE Username = ?;", username)
+func startVerifyCheck(username string, userID int, email string) {
+	var ID int = userID
 
-	for row.Next() {
-		row.Scan(&ID)
+	if ID == -1 {
+		row, _ := currentDB.Query("SELECT UserID FROM Users WHERE Username = ?;", username)
+
+		for row.Next() {
+			row.Scan(&ID)
+		}
 	}
 
 	codeGenerator := sha256.New()
@@ -580,7 +583,7 @@ func NewUser(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Success": "New User " + username + " Has Been Created"}) //maybe add " Enter Username and Password!"
 
 		//User Verification
-		startVerifyCheck(username, email)
+		startVerifyCheck(username, -1, email)
 		username = ""
 	}
 }
@@ -851,6 +854,24 @@ func ChangeUserPassword(c *gin.Context) {
 	}
 }
 
+func ChangeUserUsername(c *gin.Context) {
+	var changeInfo userData
+	c.BindJSON(&changeInfo)
+
+	MySQL.ChangeUsername(currentDB, currentID, changeInfo.Username)
+	changeInfo = userData{}
+}
+
+func ChangeUserEmail(c *gin.Context) {
+	var changeInfo userData
+	c.BindJSON(&changeInfo)
+
+	MySQL.ChangeEmail(currentDB, currentID, changeInfo.Email)
+
+	startVerifyCheck("", currentID, changeInfo.Email)
+	changeInfo = userData{}
+}
+
 func GetUserInfo(c *gin.Context) {
 	cookie, err := c.Cookie("currentUserID")
 	if err == nil {
@@ -865,9 +886,7 @@ func GetUserInfo(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{username: email})
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
-
 	}
-
 }
 
 func resetCookies(c *gin.Context) {

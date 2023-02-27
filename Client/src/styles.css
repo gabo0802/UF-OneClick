@@ -28,24 +28,30 @@ body {
   --themeOrange: #ef6c00;
   --UF-BottleBrush: #D32737;
   
-  /* Credit to Cottonbro studios in pexels.com */
+  /* Credit to Cottonbro studios in pexels.com */ /*Couple? and Netflix*/
   --background-image: url(https://images.pexels.com/photos/4009409/pexels-photo-4009409.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
   
-  /* Credit to Lisa Fotios in pexels.com */
+  /* Credit to Lisa Fotios in pexels.com */ /*Cozy Room with Netflix*/
   --background-image2: url(https://images.pexels.com/photos/1444416/pexels-photo-1444416.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
   
-  /* Credit to Andrea Piacquadio in pexels.com */
+  /* Credit to Andrea Piacquadio in pexels.com */ /*Person with Glasses and Popcorn*/
   --background-image3: url(https://images.pexels.com/photos/3811867/pexels-photo-3811867.jpeg?auto=compress&cs=tinysrgb&w=1600);
   
-  /* Credit to Karolina Grabowska in pexels.com*/
+  /* Credit to Karolina Grabowska in pexels.com*/ /*Netflix on TV (arm)*/
   --background-image4: url(https://images.pexels.com/photos/5202917/pexels-photo-5202917.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
  
-  /* Credit to John-Mark Smith in pexels.com*/
+  /* Credit to John-Mark Smith in pexels.com*/ /*Mug and Netflix*/
   --background-image5: url(https://images.pexels.com/photos/2726370/pexels-photo-2726370.jpeg?auto=compress&cs=tinysrgb&w=1200);
    
-  /* Credit to cottonbro studio in pexels.com*/
-   --background-image6: url(https://images.pexels.com/photos/5081423/pexels-photo-5081423.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
+  /* Credit to cottonbro studio in pexels.com*/ /*Phone with Netflix*/
+  --background-image6: url(https://images.pexels.com/photos/5081423/pexels-photo-5081423.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
+
+  /* Credit to Roberto Nickson in pexels.com*/ /*Dog in Room with Netflix*/
+  --background-image7: url(https://images.pexels.com/photos/2659629/pexels-photo-2659629.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
  
+  /* Credit to Roberto Nickson in pexels.com*/ /*Dog in Room with Netflix*/
+  --background-image8: url(https://images.pexels.com/photos/2659629/pexels-photo-2659629.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+
    /* CSS Textures, credit to: https://codepen.io/bitmap/pen/AzowBq */
   --texture1: repeating-linear-gradient(-26deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 2px, transparent 3px, transparent 7px);
   --texture2: repeating-linear-gradient(-45deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 1px, transparent 1px, transparent 6px);

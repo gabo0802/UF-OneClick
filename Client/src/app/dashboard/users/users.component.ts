@@ -10,49 +10,58 @@ import { AuthService } from 'src/app/auth.service';
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent {
+//Multi-Line Comments Exist Just Do /* */
 
   // public message: string = ""
   //   adminButtonVisible: boolean = true;
-  //   constructor(private api: ApiService, private router: Router, private authService: AuthService) {};  
-  //   createUserSubForm: FormGroup = {} as FormGroup;
-  //   removeUserSubForm: FormGroup = {} as FormGroup;
-  //   newsLetterForm: FormGroup = {} as FormGroup;
-  //   createCustomUserSubForm: FormGroup = {} as FormGroup;
-  //   createSubServiceForm: FormGroup = {} as FormGroup;
 
-  //   ngOnInit(){
-  //     if (document.cookie.includes("currentUserID=1")){
+    public currentUsername: string = ""
+    constructor(private api: ApiService, private router: Router, private authService: AuthService) {};  
+    createUserSubForm: FormGroup = {} as FormGroup;
+    removeUserSubForm: FormGroup = {} as FormGroup;
+    //newsLetterForm: FormGroup = {} as FormGroup;
+    createCustomUserSubForm: FormGroup = {} as FormGroup;
+    createSubServiceForm: FormGroup = {} as FormGroup;
+
+     ngOnInit(){
+  //    if (document.cookie.includes("currentUserID=1")){
   //       this.adminButtonVisible = false
   //     }else{
   //       this.adminButtonVisible = true
   //     }
 
-  //     this.createSubServiceForm = new FormGroup({
-  //       'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
-  //       'price': new FormControl(null, [Validators.required, Validators.pattern('^[$]{0,1}[0-9]+.99$')]),
-  //     });
+      this.currentUsername
 
-  //     this.createUserSubForm = new FormGroup({
-  //       'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
-  //     });
+      this.api.getEmailandUsername().subscribe((resultMessage: string[]) => {
+        this.currentUsername  = resultMessage[0]; 
+      });
 
-  //     this.removeUserSubForm = new FormGroup({
-  //       'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
-  //     });
+       this.createSubServiceForm = new FormGroup({
+         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
+         'price': new FormControl(null, [Validators.required, Validators.pattern('^[$]{0,1}[0-9]+.99$')]),
+       });
+
+       this.createUserSubForm = new FormGroup({
+         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
+       });
+
+       this.removeUserSubForm = new FormGroup({
+         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
+       });
 
   //     this.newsLetterForm = new FormGroup({
   //       'name': new FormControl(null, null),
   //     });
 
-  //     this.createCustomUserSubForm = new FormGroup({
-  //       'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),        
-  //       'dateadded': new FormControl(null, [Validators.required, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')]),
-  //       'dateremoved': new FormControl(null, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')),
-  //     });
+       this.createCustomUserSubForm = new FormGroup({
+         'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),        
+         'dateadded': new FormControl(null, [Validators.required, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')]),
+         'dateremoved': new FormControl(null, Validators.pattern('^[0-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-5][0-9]:[0-5][0-9]$')),
+       });
 
-  //     this.getUserSubscriptions()
+       this.getUserSubscriptions()
   //     //this.userID = int(document.cookie);
-  //   }
+     }
 
     /*getDefaultSubscriptions(){
       this.api.getSubs().subscribe( (res: Object) => {
@@ -76,63 +85,63 @@ export class UsersComponent {
       });
     }*/
 
-    // getUserSubscriptions(){
-    //   this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/subscriptions").subscribe( (res: Object) => {
-    //     var allSubsString:string = ""
-    //     const response: string = JSON.stringify(res);
-    //     const responseMessage = JSON.parse(response);
+     getUserSubscriptions(){
+        this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/subscriptions").subscribe( (res: Object) => {
+          var allSubsString:string = ""
+          const response: string = JSON.stringify(res);
+          const responseMessage = JSON.parse(response);
         
-    //     if (responseMessage["Error"] == undefined){
-    //       allSubsString += "All Active Subscriptions <br>"
+         if (responseMessage["Error"] == undefined){
+           allSubsString += "All Active Subscriptions <br>"
 
-    //       let index: number = 0;
-    //       while (responseMessage[index] != null){
-    //         if (responseMessage[index]["dateremoved"] == ""){
-    //           var dateAdded: string = responseMessage[index]["dateadded"]
-    //           allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length - 9) + "] <br>";
-    //         }
+           let index: number = 0;
+           while (responseMessage[index] != null){
+             if (responseMessage[index]["dateremoved"] == ""){
+               var dateAdded: string = responseMessage[index]["dateadded"]
+               allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length - 9) + "] <br>";
+           }
 
-    //         index += 1;
-    //       }
+             index += 1;
+           }
 
-    //       document.getElementById("allSubs")!.innerHTML = allSubsString;
-    //     }
-    //   });
-    // }
+           document.getElementById("allSubs")!.innerHTML = allSubsString;
+         }
+       });
+     }
 
-    // newUserSubscription(){
-    //   this.api.post_request__with_data(this.createUserSubForm.value, "/api/subscriptions/addsubscription").subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+     newUserSubscription(){
+       this.api.post_request__with_data(this.createUserSubForm.value, "/api/subscriptions/addsubscription").subscribe( (resultMessage: string[]) => {
+         alert(resultMessage[0] + ": " + resultMessage[1])
+         location.reload();
+         //alert(resultMessage[0] + ": " + resultMessage[1])
+       })
+     }
 
-    // newSubscription(){
-    //   this.createSubServiceForm.controls['price'].setValue( this.createSubServiceForm.controls['price'].value.replaceAll("$", ""));
+     newSubscription(){
+       this.createSubServiceForm.controls['price'].setValue( this.createSubServiceForm.controls['price'].value.replaceAll("$", ""));
 
-    //   this.api.post_request__with_data(this.createSubServiceForm.value, "/api/subscriptions/createsubscription").subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+       this.api.post_request__with_data(this.createSubServiceForm.value, "/api/subscriptions/createsubscription").subscribe( (resultMessage: string[]) => {
+         alert(resultMessage[0] + ": " + resultMessage[1])
+         location.reload();
+         //alert(resultMessage[0] + ": " + resultMessage[1])
+       })
+     }
 
-    // removeUserSubscription(){
-    //   this.api.post_request__with_data(this.removeUserSubForm.value, "/api/subscriptions/cancelsubscription").subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+     removeUserSubscription(){
+       this.api.post_request__with_data(this.removeUserSubForm.value, "/api/subscriptions/cancelsubscription").subscribe( (resultMessage: string[]) => {
+         alert(resultMessage[0] + ": " + resultMessage[1])
+         location.reload();
+         //alert(resultMessage[0] + ": " + resultMessage[1])
+       })
+     }
 
-    // customUserSubscription(){
-    //   this.api.post_request__with_data(this.createCustomUserSubForm.value, "/api/subscriptions/addoldsubscription").subscribe( (resultMessage: string[]) => {
-    //     alert(resultMessage[0] + ": " + resultMessage[1])
-    //     location.reload();
-    //     //alert(resultMessage[0] + ": " + resultMessage[1])
-    //   })
-    // }
+     customUserSubscription(){
+       this.api.post_request__with_data(this.createCustomUserSubForm.value, "/api/subscriptions/addoldsubscription").subscribe( (resultMessage: string[]) => {
+         alert(resultMessage[0] + ": " + resultMessage[1])
+         location.reload();
+         //alert(resultMessage[0] + ": " + resultMessage[1])
+       })
+     }
 
     // public doLogout(){
     //   this.api.post_request({name: ""}, "/api/logout").subscribe((res) => {

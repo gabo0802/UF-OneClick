@@ -47,43 +47,29 @@ func main() {
 		//Account Management
 		api.GET("/userinfo", handler.GetUserInfo)
 		api.POST("/login", handler.TryLogin)
-
 		//api.GET("/2FA")
 		//api.GET("/2FA/:userCode", handler.TwoFactorAuthentication) //testing
 		//api.POST("/2FA", handler.TwoFactorAuthentication()) //need to agree on how to send POST request
-
 		api.POST("/accountcreation", handler.NewUser)
-
-		api.POST("/changepassword", handler.ChangeUserPassword)
 		api.PUT("/changepassword", handler.ChangeUserPassword)
-
+		api.PUT("/changeusername", handler.ChangeUserUsername)
+		api.PUT("/changeemail", handler.ChangeUserEmail)
 		api.POST("/deleteuser", handler.DeleteUser)
 		api.DELETE("/deleteuser", handler.DeleteUser)
-
-		api.GET("/logout/:valid", handler.Logout(""))
-		api.POST("/logout", handler.Logout(""))
-
+		//api.GET("/logout/:valid", handler.Logout(""))
+		//api.POST("/logout", handler.Logout(""))
 		api.GET("/verify/:code", handler.VerifyEmail)
 
 		//Subscription Management
 		api.POST("/subscriptions", handler.GetAllUserSubscriptions())
-		//api.GET("/subscriptions", handler.GetAllUserSubscriptions())
-
 		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
-
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
-
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
-
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
 
 		//Admin Commands
 		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)
-
-		//api.GET("/reset", handler.ResetALL)
 		api.POST("/reset", handler.ResetALL)
-
-		//api.GET("/alldata", handler.GetAllUserData())
 		api.POST("/alldata", handler.GetAllUserData())
 	}
 
