@@ -27,7 +27,7 @@ export class LoginComponent {
 
   onSubmit(){
 
-    this.api.post_request__with_data(this.loginForm.value, "/api/login").subscribe( (resultMessage: string[]) => {
+    this.api.login(this.loginForm.value).subscribe( (resultMessage: string[]) => {
 
       if(resultMessage[0] === "Success"){
         

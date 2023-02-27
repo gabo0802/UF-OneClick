@@ -15,18 +15,12 @@ export class HeaderComponent {
   @Input() myHeaderState = 1;
   myNavBar: boolean= false;
   mainButtons: boolean= false;
-  public logoutButton: boolean= false;
-
-  public HeaderComponent() {
-
-  }
+  logoutButton: boolean= false;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   // Changes the header state based on whether it has been changed
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.myHeaderState);  
-    console.log(this.logoutButton);  
 
     switch(this.myHeaderState) {
       case 1:
@@ -48,6 +42,16 @@ export class HeaderComponent {
         this.myNavBar = true;
         this.mainButtons = true;
         this.logoutButton = true;
+    }
+  }
+
+  changeRoute(): Array<string> {
+    
+    if(this.authService.isLoggedIn()){
+      return ['users'];
+    }
+    else{
+      return ['/'];
     }
   }
 

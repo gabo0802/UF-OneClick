@@ -23,7 +23,7 @@
           </mat-menu>
     </span>
     <span class="logo-containter">
-        <a routerLink="/"><img class="logo" src="../../assets/oneclick-logo-files/png/oneclick-high-resolution-logo-black-on-transparent-background.png"></a>
+        <a [routerLink]="changeRoute()"><img class="logo" src="../../assets/oneclick-logo-files/png/oneclick-high-resolution-logo-black-on-transparent-background.png"></a>
     </span>
     <span [hidden]="myNavBar" class="navigation nav-a">
       <nav id="navbar" class="nav">
@@ -46,10 +46,11 @@
       Add a button here that logs out when we are logged in
       Also add a user profile button (it has a profile picture)
     -->
-   <span [hidden]="logoutButton" class="buttons">
-      <a ><button class="header-button" mat-raised-button color="accent" (click)="logOut()">
+   <div [hidden]="logoutButton" class="buttons">
+    <a [routerLink]="['users', 'profile']"><span class="material-symbols-outlined profile-icon">account_circle</span></a>
+      <button class="header-button" mat-raised-button color="accent" (click)="logOut()">
         Logout
-      </button></a>
-    </span>
+      </button>
+    </div>
 
 </mat-toolbar>

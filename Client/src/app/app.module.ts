@@ -18,7 +18,9 @@ import { AuthService } from './auth.service';
 import { ApiService } from './api.service';
 import { UsersComponent } from './dashboard/users/users.component';
 import { AdminComponent } from './dashboard/admin/admin.component';
+import { ProfileComponent } from './profile/profile.component';
 import { FooterComponent } from './footer/footer.component';
+import { PasswordResetComponent } from './profile/password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { FooterComponent } from './footer/footer.component';
     LoginMessageComponent,
     UsersComponent,
     AdminComponent,
-    FooterComponent
+    ProfileComponent,
+    FooterComponent,
+    PasswordResetComponent
   ],
   imports: [
     BrowserModule,
