@@ -9,7 +9,48 @@
 *
 
 ## Back-End API
-*
+### MySQL
+* MySQLConnect()
+* GetTableSize()
+* SetUpTables()
+* ResetTable()
+* ResetAllTables()
+* CreateNewUser()
+* CreateAdminUser()
+* CreateCommonSubscriptions()
+* ChangePassword()
+* ChangeEmail()
+* ChangeUsername()
+* GetUsername()
+* GetEmail()
+* CreateNewSub()
+* CreateNewUserSub()
+* AddOldUserSub()
+* CancelUserSub()
+* DeleteUser()
+* Login()
+* GetMostUsedSubscription()
+* GetPriceForMonth()
+* TestBackend()
+* ShowDatabaseTables()
+* GetColumnData() 
+<br>
+
+### Handler
+* DailyReminder()
+* NewsLetter()
+* VerifyEmail()
+* TryLogin()
+* NewUser()
+* GetAllUserSubscriptions()
+* Logout()
+* DeleteUser()
+* NewUserSubscription()
+* CancelSubscriptionService()
+* ChangeUserPassword()
+* ResetALL()
+* GetAllUserData()
+<br>
 
 ## Video
 *
