@@ -45,6 +45,7 @@ func main() {
 		api.POST("/remind", handler.DailyReminder)
 
 		//Account Management
+		api.GET("/userinfo", handler.GetUserInfo)
 		api.POST("/login", handler.TryLogin)
 
 		//api.GET("/2FA")

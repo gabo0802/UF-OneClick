@@ -590,6 +590,8 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 		cookie, err := c.Cookie("currentUserID")
 		if err == nil {
 			currentID, _ = strconv.Atoi(cookie)
+		} else {
+			fmt.Println("No currentUserID Cookie!")
 		}
 
 		var usersubInfo = []userData{}
@@ -849,6 +851,25 @@ func ChangeUserPassword(c *gin.Context) {
 	}
 }
 
+func GetUserInfo(c *gin.Context) {
+	cookie, err := c.Cookie("currentUserID")
+	if err == nil {
+		currentID, _ = strconv.Atoi(cookie)
+	} else {
+		fmt.Println("No currentUserID Cookie!")
+	}
+
+	if currentID != -1 {
+		username := MySQL.GetUsername(currentDB, currentID)
+		email := MySQL.GetEmail(currentDB, currentID)
+		c.JSON(http.StatusOK, gin.H{username: email})
+	} else {
+		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
+
+	}
+
+}
+
 func resetCookies(c *gin.Context) {
 	c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
 	c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
@@ -871,6 +892,7 @@ func ResetALL(c *gin.Context) {
 }
 
 func GetAllUserData() gin.HandlerFunc {
+
 	return func(c *gin.Context) {
 		if currentID == 1 {
 			var allUserData = []userData{}
