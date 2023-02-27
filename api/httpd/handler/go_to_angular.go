@@ -31,6 +31,14 @@ type userData struct {
 	DateAdded   string `json:"dateadded"`
 	DateRemoved string `json:"dateremoved"`
 }
+type passwordChange struct {
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
+}
+
+type newsLetterInfo struct {
+	Message string `json:"message"`
+}
 
 const (
 	emailHost = "smtp.gmail.com"
@@ -269,10 +277,10 @@ func DailyReminder(c *gin.Context) {
 }
 
 func NewsLetter(c *gin.Context) {
-	var newsMessage userData
+	var newsMessage newsLetterInfo
 	c.BindJSON(&newsMessage)
 
-	message := newsMessage.Name
+	message := newsMessage.Message
 	fmt.Println(message)
 
 	currentTime := time.Now()
@@ -630,6 +638,12 @@ func Logout(message string) gin.HandlerFunc {
 	}
 }
 
+func DeleteUser(c *gin.Context) {
+	MySQL.DeleteUser(currentDB, currentID)
+	c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
+	currentID = -1
+}
+
 func NewUserSubscription(c *gin.Context) {
 	if currentID != -1 {
 		var userSubscriptionData userData
@@ -800,14 +814,14 @@ func CancelSubscriptionService(c *gin.Context) {
 	}
 }
 
-/*func ChangeUserPassword(c *gin.Context) {
+func ChangeUserPassword(c *gin.Context) {
 	if currentID != -1 {
-		var userInfo userData
-		c.BindJSON(&userInfo)
+		var passwordInfo passwordChange
+		c.BindJSON(&passwordInfo)
 
-		oldPassword := userInfo.Username
-		newPassword := userInfo.Password
-		userInfo = userData{}
+		oldPassword := passwordInfo.OldPassword
+		newPassword := passwordInfo.NewPassword
+		passwordInfo = passwordChange{}
 
 		stringEncrypter := sha256.New()
 		stringEncrypter.Write([]byte(oldPassword))
@@ -833,7 +847,7 @@ func CancelSubscriptionService(c *gin.Context) {
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/api/login")
 	}
-}*/
+}
 
 func resetCookies(c *gin.Context) {
 	c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)

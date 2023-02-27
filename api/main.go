@@ -53,7 +53,11 @@ func main() {
 
 		api.POST("/accountcreation", handler.NewUser)
 
-		//api.POST("/changepassword", handler.ChangeUserPassword) //need to agree on how to get user input (maybe name could be old password)
+		api.POST("/changepassword", handler.ChangeUserPassword)
+		api.PUT("/changepassword", handler.ChangeUserPassword)
+
+		api.POST("/deleteuser", handler.DeleteUser)
+		api.DELETE("/deleteuser", handler.DeleteUser)
 
 		api.GET("/logout/:valid", handler.Logout(""))
 		api.POST("/logout", handler.Logout(""))
