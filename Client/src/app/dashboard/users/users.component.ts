@@ -15,7 +15,7 @@ export class UsersComponent {
   // public message: string = ""
   //   adminButtonVisible: boolean = true;
 
-    public currentUsername: string = ""
+    public currentUsername: string = "Loading..."
     constructor(private api: ApiService, private router: Router, private authService: AuthService) {};  
     createUserSubForm: FormGroup = {} as FormGroup;
     removeUserSubForm: FormGroup = {} as FormGroup;
