@@ -627,88 +627,90 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 	}
 }
 
-func GetMostUsedUserSubscription(c *gin.Context) {
-	if currentID != -1 {
-		subName, usageTimeSeconds := MySQL.GetMostUsedSubscription(currentDB, currentID)
-		stringYears, stringMonths, stringWeeks, stringDays, stringHours, stringMinutes, stringSeconds := "", "", "", "", "", "", ""
-		seconds := usageTimeSeconds
+func GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if currentID != -1 {
+			subName, usageTimeSeconds := MySQL.GetMostUsedSubscription(currentDB, currentID, isContinuous, isActive)
+			stringYears, stringMonths, stringWeeks, stringDays, stringHours, stringMinutes, stringSeconds := "", "", "", "", "", "", ""
+			seconds := usageTimeSeconds
 
-		years := seconds / oneYearInSeconds
-		if years == 1 {
-			stringYears = strconv.Itoa(years) + " year "
-		} else if years > 1 {
-			stringYears = strconv.Itoa(years) + " years "
-		}
-		seconds -= years * oneYearInSeconds
-		if seconds < 0 {
-			seconds = 0
-		}
+			years := seconds / oneYearInSeconds
+			if years == 1 {
+				stringYears = strconv.Itoa(years) + " year "
+			} else if years > 1 {
+				stringYears = strconv.Itoa(years) + " years "
+			}
+			seconds -= years * oneYearInSeconds
+			if seconds < 0 {
+				seconds = 0
+			}
 
-		months := seconds / oneMonthInSeconds
-		if months == 1 {
-			stringMonths = strconv.Itoa(months) + " month "
-		} else if months > 1 || stringYears != "" {
-			stringMonths = strconv.Itoa(months) + " months "
-		}
-		seconds -= months * oneMonthInSeconds
-		if seconds < 0 {
-			seconds = 0
-		}
+			months := seconds / oneMonthInSeconds
+			if months == 1 {
+				stringMonths = strconv.Itoa(months) + " month "
+			} else if months > 1 || stringYears != "" {
+				stringMonths = strconv.Itoa(months) + " months "
+			}
+			seconds -= months * oneMonthInSeconds
+			if seconds < 0 {
+				seconds = 0
+			}
 
-		weeks := seconds / oneWeekInSeconds
-		if weeks == 1 {
-			stringWeeks = strconv.Itoa(weeks) + " week "
-		} else if weeks > 1 || stringMonths != "" {
-			stringWeeks = strconv.Itoa(weeks) + " weeks "
-		}
-		seconds -= weeks * oneWeekInSeconds
-		if seconds < 0 {
-			seconds = 0
-		}
+			weeks := seconds / oneWeekInSeconds
+			if weeks == 1 {
+				stringWeeks = strconv.Itoa(weeks) + " week "
+			} else if weeks > 1 || stringMonths != "" {
+				stringWeeks = strconv.Itoa(weeks) + " weeks "
+			}
+			seconds -= weeks * oneWeekInSeconds
+			if seconds < 0 {
+				seconds = 0
+			}
 
-		days := seconds / oneDayInSeconds
-		if days == 1 {
-			stringDays = strconv.Itoa(days) + " day "
-		} else if days > 1 || stringWeeks != "" {
-			stringDays = strconv.Itoa(days) + " days "
-		}
-		seconds -= days * oneDayInSeconds
-		if seconds < 0 {
-			seconds = 0
-		}
+			days := seconds / oneDayInSeconds
+			if days == 1 {
+				stringDays = strconv.Itoa(days) + " day "
+			} else if days > 1 || stringWeeks != "" {
+				stringDays = strconv.Itoa(days) + " days "
+			}
+			seconds -= days * oneDayInSeconds
+			if seconds < 0 {
+				seconds = 0
+			}
 
-		hours := seconds / oneHourInSeconds
-		if hours == 1 {
-			stringHours = strconv.Itoa(hours) + " hour "
-		} else if hours > 1 || stringDays != "" {
-			stringHours = strconv.Itoa(hours) + " hours "
-		}
-		seconds -= hours * oneHourInSeconds
-		if seconds < 0 {
-			seconds = 0
-		}
+			hours := seconds / oneHourInSeconds
+			if hours == 1 {
+				stringHours = strconv.Itoa(hours) + " hour "
+			} else if hours > 1 || stringDays != "" {
+				stringHours = strconv.Itoa(hours) + " hours "
+			}
+			seconds -= hours * oneHourInSeconds
+			if seconds < 0 {
+				seconds = 0
+			}
 
-		minutes := seconds / oneMinuteInSeconds
-		if minutes == 1 {
-			stringMinutes = strconv.Itoa(minutes) + " minute "
-		} else if minutes > 1 || stringHours != "" {
-			stringMinutes = strconv.Itoa(minutes) + " minutes "
-		}
-		seconds -= minutes * oneMinuteInSeconds
-		if seconds < 0 {
-			seconds = 0
-		}
+			minutes := seconds / oneMinuteInSeconds
+			if minutes == 1 {
+				stringMinutes = strconv.Itoa(minutes) + " minute "
+			} else if minutes > 1 || stringHours != "" {
+				stringMinutes = strconv.Itoa(minutes) + " minutes "
+			}
+			seconds -= minutes * oneMinuteInSeconds
+			if seconds < 0 {
+				seconds = 0
+			}
 
-		if seconds == 1 {
-			stringSeconds = strconv.Itoa(seconds) + " second "
+			if seconds == 1 {
+				stringSeconds = strconv.Itoa(seconds) + " second "
+			} else {
+				stringSeconds = strconv.Itoa(seconds) + " seconds "
+			}
+
+			message := "Active For: " + stringYears + stringMonths + stringWeeks + stringDays + stringHours + stringMinutes + stringSeconds
+			c.JSON(http.StatusOK, gin.H{subName: message})
 		} else {
-			stringSeconds = strconv.Itoa(seconds) + " seconds "
+			c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
 		}
-
-		message := "Active For: " + stringYears + stringMonths + stringWeeks + stringDays + stringHours + stringMinutes + stringSeconds
-		c.JSON(http.StatusOK, gin.H{"Longest Active Subscription: " + subName: message})
-	} else {
-		c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
 	}
 }
 

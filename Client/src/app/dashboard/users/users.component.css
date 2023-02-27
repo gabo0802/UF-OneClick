@@ -13,3 +13,7 @@
     color: white
 }
 
+.mat-card-content{
+    align-items: center;
+    justify-content: left;
+}

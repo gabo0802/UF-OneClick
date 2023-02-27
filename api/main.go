@@ -46,7 +46,9 @@ func main() {
 
 		//Account Management
 		api.POST("/userinfo", handler.GetUserInfo)
-		api.POST("/longestsub", handler.GetMostUsedUserSubscription)
+		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
+		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
+		api.POST("/longestactivesub", handler.GetMostUsedUserSubscription(false, true))
 		api.POST("/login", handler.TryLogin)
 		//api.GET("/2FA")
 		//api.GET("/2FA/:userCode", handler.TwoFactorAuthentication) //testing

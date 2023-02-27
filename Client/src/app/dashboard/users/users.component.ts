@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/api.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
+import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-users',
@@ -17,6 +18,7 @@ export class UsersComponent {
 
     public currentUsername: string = "Loading..."
     constructor(private api: ApiService, private router: Router, private authService: AuthService) {};  
+    public currentMode = 1;
     createUserSubForm: FormGroup = {} as FormGroup;
     removeUserSubForm: FormGroup = {} as FormGroup;
     //newsLetterForm: FormGroup = {} as FormGroup;
@@ -109,18 +111,58 @@ export class UsersComponent {
      }
 
      getLongestUserSubscription(){
-      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/longestsub").subscribe( (res: Object) => {
-        var allSubsString:string = ""
+      var currentURL: string = "/api/longestsub";
+      var allSubsString:string = "<br>"
+
+      switch(this.currentMode) {
+        case 1:
+          currentURL = "/api/longestsub";
+          allSubsString += "Longest Subscription: "
+          break;
+        case 2:
+          currentURL = "/api/longestcontinoussub";
+          allSubsString += "Longest Continuous Subscription: "
+          break;
+        case 3:
+          currentURL = "/api/longestactivesub";
+          allSubsString += "Longest Currently Active Subscription: "
+          break;
+        default:
+          currentURL = "/api/longestsub";
+          allSubsString += "Longest Subscription: "
+      }
+
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, currentURL).subscribe( (res: Object) => {
         const response: string = JSON.stringify(res);
         const responseMessage = JSON.parse(response);
       
         if (responseMessage["Error"] == undefined){
-            allSubsString = "<br>" + responseMessage[0] + "<br>" + responseMessage[1];
+            allSubsString += responseMessage[0] + "<br>" + responseMessage[1];
          }
 
          document.getElementById("longestSub")!.innerHTML = allSubsString;
      });
    }
+
+   public left(){
+    if (this.currentMode == 1){
+      this.currentMode = 3;
+    }else{
+      this.currentMode--;
+    }
+    //console.log(this.currentMode)
+    this.getLongestUserSubscription()
+  }
+
+   public right(){
+    if (this.currentMode == 3){
+      this.currentMode = 1;
+    }else{
+      this.currentMode++;
+    }
+    //console.log(this.currentMode)
+    this.getLongestUserSubscription()
+  }
 
      newUserSubscription(){
        this.api.post_request__with_data(this.createUserSubForm.value, "/api/subscriptions/addsubscription").subscribe( (resultMessage: string[]) => {
