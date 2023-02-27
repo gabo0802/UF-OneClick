@@ -30,8 +30,6 @@ export class UsersComponent {
   //       this.adminButtonVisible = true
   //     }
 
-      this.currentUsername
-
       this.api.getEmailandUsername().subscribe((resultMessage: string[]) => {
         this.currentUsername  = resultMessage[0]; 
       });
@@ -60,6 +58,7 @@ export class UsersComponent {
        });
 
        this.getUserSubscriptions()
+       this.getLongestUserSubscription()
   //     //this.userID = int(document.cookie);
      }
 
@@ -108,6 +107,20 @@ export class UsersComponent {
          }
        });
      }
+
+     getLongestUserSubscription(){
+      this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/longestsub").subscribe( (res: Object) => {
+        var allSubsString:string = ""
+        const response: string = JSON.stringify(res);
+        const responseMessage = JSON.parse(response);
+      
+        if (responseMessage["Error"] == undefined){
+            allSubsString = "<br>" + responseMessage[0] + "<br>" + responseMessage[1];
+         }
+
+         document.getElementById("longestSub")!.innerHTML = allSubsString;
+     });
+   }
 
      newUserSubscription(){
        this.api.post_request__with_data(this.createUserSubForm.value, "/api/subscriptions/addsubscription").subscribe( (resultMessage: string[]) => {

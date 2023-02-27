@@ -71,7 +71,7 @@ export class ApiService {
   }
 
   getEmailandUsername(): Observable<Array<string>> {
-    return this.http.get<{[key: string]: string, message: string}>('api/userinfo').pipe(
+    return this.http.post<{[key: string]: string, message: string}>('api/userinfo', null).pipe(
       map( (statusMessage) => {        
 
         const resultMessage: string[] = [];
