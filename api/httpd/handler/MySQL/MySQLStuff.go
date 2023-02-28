@@ -55,6 +55,14 @@ func MySQLConnect() *sql.DB {
 	return db
 }
 
+func GetDatabaseSize(db *sql.DB) int {
+	var tableCount int
+	err := db.QueryRow("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'userdb'").Scan(&tableCount)
+	checkError(err)
+
+	return tableCount
+}
+
 func SetUpTables(db *sql.DB) {
 	//Users
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Email varchar(255) NOT NULL, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), UNIQUE(Email), PRIMARY KEY(UserID));")
