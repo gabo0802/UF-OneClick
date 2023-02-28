@@ -25,16 +25,19 @@ func checkError(err error) {
 	}
 }
 
+func openPasswordFile() string {
+	code, missing := os.ReadFile("MySQLPassword.txt")
+	checkError(missing)
+	mySQLPass := string(code)
+	mySQLPass = strings.ReplaceAll(mySQLPass, "\n", "")
+	return mySQLPass
+}
+
 func MySQLConnect() *sql.DB {
 	var db *sql.DB
 
 	//Get Password From .txt file
-	code, missing := os.ReadFile("MySQLPassword.txt")
-	if missing != nil {
-		panic(missing)
-	}
-	mySQLPass := string(code)
-	mySQLPass = strings.ReplaceAll(mySQLPass, "\n", "")
+	mySQLPass := openPasswordFile()
 
 	//Connect to remote server using Microsoft Azure
 	// Initialize connection string
@@ -52,24 +55,6 @@ func MySQLConnect() *sql.DB {
 	return db
 }
 
-func GetTableSize(db *sql.DB, tableName string) int {
-	sqlCode := "SELECT * FROM " + tableName + ";"
-
-	rows, err := db.Query(sqlCode)
-	size := 0
-
-	if err != nil {
-		fmt.Printf("Error: Table \"%v\" Does Not Exist!\n", tableName)
-		return -404
-	}
-
-	for rows.Next() {
-		size += 1
-	}
-
-	return size
-}
-
 func SetUpTables(db *sql.DB) {
 	//Users
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Email varchar(255) NOT NULL, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), UNIQUE(Email), PRIMARY KEY(UserID));")
@@ -82,6 +67,24 @@ func SetUpTables(db *sql.DB) {
 
 	//Email Verification
 	db.Exec("CREATE TABLE IF NOT EXISTS Verification (UserID int NOT NULL, ExpireDate DATETIME NOT NULL, Code varchar(255) NOT NULL, Type varchar(255) NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID))")
+}
+
+func GetTableSize(db *sql.DB, tableName string) int {
+	sqlCode := "SELECT * FROM " + tableName + ";"
+
+	rows, err := db.Query(sqlCode)
+	size := 0
+
+	if err != nil {
+		//Table does not exist
+		return -404
+	}
+
+	for rows.Next() {
+		size += 1
+	}
+
+	return size
 }
 
 func ResetTable(db *sql.DB, tableName string) {
