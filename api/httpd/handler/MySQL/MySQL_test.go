@@ -68,15 +68,41 @@ func TestGetTableSize(t *testing.T) {
 	if actual != expected {
 		t.Errorf("Expected %d, got %d", expected, actual)
 	}
+}
 
+func TestResetTable(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+
+	ResetTable(db, "Verification")
+
+	expected := 3
+	actual := GetDatabaseSize(db)
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestResetAllTables(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+
+	ResetAllTables(db)
+
+	expected := 0
+	actual := GetDatabaseSize(db)
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
 }
 
 func TestCreateNewUser(t *testing.T) {
 	db := MySQLConnect()
-
-	//ResetAllTables(db)
-	//SetUpTables(db)
-	//CreateAdminUser(db)
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
 
 	username := ""
 	password := ""
@@ -105,6 +131,29 @@ func TestCreateNewUser(t *testing.T) {
 	errorCode = CreateNewUser(db, username, password, email)
 	if errorCode != -225 {
 		t.Errorf("Expected an error code -225, but got %d", errorCode)
+	}
+
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+	CreateNewUser(db, "testUser", "password", "example@gmail.com")
+	expected := 2
+	actual := GetTableSize(db, "users")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestCreateAdminUser(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+
+	expected := 1
+	actual := GetTableSize(db, "users")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
 	}
 }
 
