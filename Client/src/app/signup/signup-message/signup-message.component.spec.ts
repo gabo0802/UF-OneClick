@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MaterialDesignModule } from 'src/app/material-design/material-design.module';
 
 import { SignupMessageComponent } from './signup-message.component';
@@ -16,10 +16,11 @@ describe('SignupMessageComponent', () => {
        ],
        imports: [
         MaterialDesignModule,
-        HttpClientModule,                       
+        HttpClientModule,
+        MatDialogModule                       
        ],
        providers: [
-        MatDialog        
+        { provide: MAT_DIALOG_DATA, useValue: {title: null, message: null}}       
        ]
     })
     .compileComponents();
