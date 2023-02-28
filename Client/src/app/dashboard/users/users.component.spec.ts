@@ -1,4 +1,8 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialDesignModule } from 'src/app/material-design/material-design.module';
 
 import { UsersComponent } from './users.component';
 
@@ -8,7 +12,16 @@ describe('UsersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UsersComponent ]
+      declarations: [ 
+        UsersComponent
+       ],
+       imports: [
+        HttpClientModule, 
+        MaterialDesignModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule
+       ]
     })
     .compileComponents();
 
