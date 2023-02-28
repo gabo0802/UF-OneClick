@@ -40,9 +40,15 @@ type newsLetterInfo struct {
 	Message string `json:"message"`
 }
 
+type timezoneInfo struct {
+	TimezoneDifference string `json:"timezonedifference"`
+}
+
 const (
 	emailHost = "smtp.gmail.com"
 	emailPort = "587"
+
+	reference = "2006-01-02 15:04:05"
 
 	oneYearInSeconds   = (365 * 24 * 60 * 60)
 	oneMonthInSeconds  = 2629746
@@ -55,14 +61,29 @@ const (
 // Global Variables:
 var currentDB *sql.DB
 var currentID = -1
+var currentTimezone = -5
 
 func SetDB(db *sql.DB) {
 	currentDB = db
 }
 
+func convert_timezone(timeString string, toUTC bool) (string, time.Time) {
+	var reverse int
+
+	if !toUTC {
+		reverse = 1
+	} else {
+		reverse = -1
+	}
+
+	inputTime, _ := time.Parse(reference, timeString)
+	convertedTime := time.Date(inputTime.Year(), inputTime.Month(), inputTime.Day(), inputTime.Hour()+(currentTimezone*reverse), inputTime.Minute(), inputTime.Second(), 0, time.Local)
+
+	return string(convertedTime.String()[0 : len(convertedTime.String())-10]), convertedTime
+}
+
 func getReminderMessage(subName string, subPrice string, dateRenew string, dateAdded string) string {
 	var userMessage string = ""
-	const reference = "2006-01-02 15:04:05"
 
 	if !strings.Contains(subName, "Yearly") && !strings.Contains(subName, "3 Months") {
 		//fmt.Println("Monthly ", subName)
@@ -369,6 +390,13 @@ func VerifyEmail(c *gin.Context) {
 	c.Redirect(http.StatusTemporaryRedirect, "/login")
 }
 
+func ChangeTimezone(c *gin.Context) {
+	var newTimezone timezoneInfo
+	c.BindJSON(&newTimezone)
+
+	currentTimezone, _ = strconv.Atoi(newTimezone.TimezoneDifference)
+}
+
 /*func start2FA() {
 	//Verify 2FA Code
 	currentTime := time.Now()
@@ -611,6 +639,12 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 			for rows.Next() {
 				var newUserSub userData
 				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
+
+				newUserSub.DateAdded, _ = convert_timezone(newUserSub.DateAdded, false)
+				if newUserSub.DateRemoved != "" {
+					newUserSub.DateRemoved, _ = convert_timezone(newUserSub.DateRemoved, false)
+				}
+
 				usersubInfo = append(usersubInfo, newUserSub)
 
 				//c.SetCookie("subscriptionsOutput"+strconv.Itoa(currentID)+"-"+strconv.Itoa(index), newUserSub.Name+" "+newUserSub.Price+" "+newUserSub.DateAdded+" "+newUserSub.DateRemoved, 60*5, "/", "localhost", false, false)
@@ -786,8 +820,12 @@ func NewPreviousUserSubscription(c *gin.Context) {
 		c.BindJSON(&userSubscriptionData)
 
 		subscriptionName := userSubscriptionData.Name
-		subscriptionDateAdded := userSubscriptionData.DateAdded
+		subscriptionDateAdded, _ := convert_timezone(userSubscriptionData.DateAdded, true)
+
 		subscriptionDateRemoved := userSubscriptionData.DateRemoved
+		if subscriptionDateRemoved != "" {
+			subscriptionDateRemoved, _ = convert_timezone(subscriptionDateRemoved, true)
+		}
 		//subscriptionID := userSubscriptionData.ID
 		userSubscriptionData = userData{}
 
@@ -796,32 +834,40 @@ func NewPreviousUserSubscription(c *gin.Context) {
 		rowsAffected := MySQL.AddOldUserSub(currentDB, currentID, subscriptionName, subscriptionDateAdded, subscriptionDateRemoved)
 
 		if rowsAffected == -223 {
-			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Already Active!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
 
 		} else if rowsAffected == -404 {
-			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == (-415 - 2) {
-			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Date Added Not Formated Properly"})
 
 		} else if rowsAffected == (-415 - 3) {
-			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Date Canceled Not Formated Properly"})
 
 		} else if rowsAffected == -502 {
-			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
-			//c.SetCookie("newusersubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else if rowsAffected == 223 {
-			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Renewed!", 60, "/", "localhost", false, false)
 			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
+
+		} else if rowsAffected == -401 {
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Cancel Subscription Before Adding It"})
+
+		} else if rowsAffected == (-223 - 1) {
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have Two of the Same Subscription At The Same Time"})
+
+		} else if rowsAffected == (-223 - 2) {
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Same Subscription In The Middle Of That Same Subscription"})
+
+		} else if rowsAffected == (-223 - 3) {
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Same Subscription Be On the Same Exact Time"})
+
+		} else if rowsAffected == (-223 - 4) {
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Same Subscription Be In The Middle Of That Same Subscription"})
 
 		} else {
 			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
@@ -1047,6 +1093,10 @@ func GetAllUserData() gin.HandlerFunc {
 
 				newData.UserID = strconv.Itoa(id)
 				newData.SubID = strconv.Itoa(subid)
+				newData.DateAdded, _ = convert_timezone(newData.DateAdded, false)
+				if newData.DateRemoved != "" {
+					newData.DateRemoved, _ = convert_timezone(newData.DateRemoved, false)
+				}
 
 				allUserData = append(allUserData, newData)
 			}

@@ -99,7 +99,7 @@ export class UsersComponent {
            while (responseMessage[index] != null){
              if (responseMessage[index]["dateremoved"] == ""){
                var dateAdded: string = responseMessage[index]["dateadded"]
-               allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length - 9) + "] <br>";
+               allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + "] <br>";
            }
 
              index += 1;

@@ -46,9 +46,6 @@ func main() {
 
 		//Account Management
 		api.POST("/userinfo", handler.GetUserInfo)
-		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
-		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
-		api.POST("/longestactivesub", handler.GetMostUsedUserSubscription(false, true))
 		api.POST("/login", handler.TryLogin)
 		//api.GET("/2FA")
 		//api.GET("/2FA/:userCode", handler.TwoFactorAuthentication) //testing
@@ -62,6 +59,7 @@ func main() {
 		//api.GET("/logout/:valid", handler.Logout(""))
 		//api.POST("/logout", handler.Logout(""))
 		api.GET("/verify/:code", handler.VerifyEmail)
+		api.PUT("/changetimezone", handler.ChangeTimezone)
 
 		//Subscription Management
 		api.POST("/subscriptions", handler.GetAllUserSubscriptions())
@@ -69,6 +67,9 @@ func main() {
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
+		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
+		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
+		api.POST("/longestactivesub", handler.GetMostUsedUserSubscription(false, true))
 
 		//Admin Commands
 		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)
