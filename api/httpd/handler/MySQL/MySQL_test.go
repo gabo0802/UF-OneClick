@@ -1,10 +1,13 @@
 package MySQL
 
-import "testing"
+import (
+	"testing"
+)
 
 //TODO: Check if server connection errors work as intended (-502)
+//Clear tables and add tables as needed to check for duplicates
 
-// Tests if server error is caught properly once here and omitted in the rest of tests
+// Tests if server error is caught properly
 // Change the MySQLPassword.txt name to test this
 func TestMySQLConnect(t *testing.T) {
 	defer func() {
@@ -19,9 +22,36 @@ func TestMySQLConnect(t *testing.T) {
 	MySQLConnect()
 }
 
-// Tests if error calls work as intended
+func TestGetDatabaseSize(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+
+	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Email varchar(255) NOT NULL, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), UNIQUE(Email), PRIMARY KEY(UserID));")
+	expected := 1
+	actual := GetDatabaseSize(db)
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestSetUpTables(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+
+	expected := 4
+	actual := GetDatabaseSize(db)
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
 func TestGetTableSize(t *testing.T) {
 	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+
+	// Tests if error calls work as intended
 	tableName := "userss"
 	// Call the function expecting to return -404 if there is an error
 	errorCode := GetTableSize(db, tableName)
@@ -30,6 +60,15 @@ func TestGetTableSize(t *testing.T) {
 	if errorCode != -404 {
 		t.Errorf("Expected an error code -404, but got %d", errorCode)
 	}
+
+	CreateAdminUser(db)
+
+	expected := 1
+	actual := GetTableSize(db, "users")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+
 }
 
 func TestCreateNewUser(t *testing.T) {
@@ -100,6 +139,38 @@ func TestChangeEmail(t *testing.T) {
 	newEmail := "valekseev2003@gmail.com"
 
 	errorCode := ChangeEmail(db, userID, newEmail)
+	if errorCode != -223 {
+		t.Errorf("Expected an error code -223, but got %d", errorCode)
+	}
+}
+
+func TestChangeUsername(t *testing.T) {
+	db := MySQLConnect()
+	userID := 1
+	//Takes from a user that is not the admin's username, so to pass this test
+	//this, the username must already be in the database
+	newUsername := "valek"
+
+	errorCode := ChangeUsername(db, userID, newUsername)
+	if errorCode != -223 {
+		t.Errorf("Expected an error code -223, but got %d", errorCode)
+	}
+}
+
+func TestCreateNewSub(t *testing.T) {
+	db := MySQLConnect()
+	name := ""
+	price := ""
+
+	errorCode := CreateNewSub(db, name, price)
+	if errorCode != -204 {
+		t.Errorf("Expected an error code -204, but got %d", errorCode)
+	}
+
+	//The name of "test" must already be in the database
+	name = "test"
+	price = "0"
+	errorCode = CreateNewSub(db, name, price)
 	if errorCode != -223 {
 		t.Errorf("Expected an error code -223, but got %d", errorCode)
 	}
