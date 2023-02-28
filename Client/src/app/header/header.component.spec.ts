@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MaterialDesignModule } from '../material-design/material-design.module';
-
+import { AuthService } from '../auth.service';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -14,7 +14,11 @@ describe('HeaderComponent', () => {
         HeaderComponent
        ],
        imports: [
-        MaterialDesignModule, RouterTestingModule
+        MaterialDesignModule, 
+        RouterTestingModule
+       ],
+       providers: [
+        AuthService
        ]
     })
     .compileComponents();
@@ -27,4 +31,9 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('if user is not logged in, redirected on header image click to "/" ', () => {    
+
+    expect(component.changeRoute()).toEqual(['/'])
+  })
 });

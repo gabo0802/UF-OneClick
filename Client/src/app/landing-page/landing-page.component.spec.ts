@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTabContent } from '@angular/material/tabs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from '../material-design/material-design.module';
 
 import { LandingPageComponent } from './landing-page.component';
@@ -11,11 +12,11 @@ describe('LandingPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ 
-        LandingPageComponent,
-        MatTabContent
+        LandingPageComponent,        
        ],
        imports: [
-        MaterialDesignModule,        
+        MaterialDesignModule,
+        BrowserAnimationsModule,        
        ]
     })
     .compileComponents();
