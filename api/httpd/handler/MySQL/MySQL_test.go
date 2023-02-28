@@ -34,6 +34,11 @@ func TestGetTableSize(t *testing.T) {
 
 func TestCreateNewUser(t *testing.T) {
 	db := MySQLConnect()
+
+	//ResetAllTables(db)
+	//SetUpTables(db)
+	//CreateAdminUser(db)
+
 	username := ""
 	password := ""
 	email := ""
@@ -66,6 +71,11 @@ func TestCreateNewUser(t *testing.T) {
 
 func TestChangePassword(t *testing.T) {
 	db := MySQLConnect()
+
+	//ResetAllTables(db)
+	//SetUpTables(db)
+	//CreateAdminUser(db)
+
 	userID := 1
 	oldPassword := ""
 	newPassword := ""
@@ -78,6 +88,12 @@ func TestChangePassword(t *testing.T) {
 
 func TestChangeEmail(t *testing.T) {
 	db := MySQLConnect()
+
+	//ResetAllTables(db)
+	//SetUpTables(db)
+	//CreateAdminUser(db)
+	//CreateNewUser(db, "test", "doesn't matter", "valekseev2003@gmail.com")
+
 	userID := 1
 	//Takes from a user that is not the admin's email, so to pass this test
 	//this, the email must already be in the database
@@ -86,5 +102,37 @@ func TestChangeEmail(t *testing.T) {
 	errorCode := ChangeEmail(db, userID, newEmail)
 	if errorCode != -223 {
 		t.Errorf("Expected an error code -223, but got %d", errorCode)
+	}
+}
+
+func TestDeleteUser(t *testing.T) {
+	db := MySQLConnect()
+	//ResetAllTables(db)
+	//SetUpTables(db)
+	//CreateAdminUser(db)
+
+	defer func() {
+		//checks for panic()
+		//example would be when password txt file is not found
+		if r := recover(); r != nil {
+			t.Errorf("An error occurred: %v", r)
+		}
+	}()
+
+	// Function under test:
+	originalTableSize := GetTableSize(db, "Users")
+	DeleteUser(db, 3)
+	finalTableSize := GetTableSize(db, "Users")
+
+	if originalTableSize != finalTableSize {
+		t.Errorf("Expected to not delete user, but user was deleted")
+	}
+
+	originalTableSize = GetTableSize(db, "Users")
+	DeleteUser(db, 1)
+	finalTableSize = GetTableSize(db, "Users")
+
+	if originalTableSize == finalTableSize {
+		t.Errorf("Expected to delete user, but user was not deleted")
 	}
 }
