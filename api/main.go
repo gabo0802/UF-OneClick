@@ -46,6 +46,7 @@ func main() {
 
 		//Account Management
 		api.POST("/userinfo", handler.GetUserInfo)
+		api.POST("/currenttimezone", handler.GetTimezone)
 		api.POST("/login", handler.TryLogin)
 		//api.GET("/2FA")
 		//api.GET("/2FA/:userCode", handler.TwoFactorAuthentication) //testing

@@ -17,7 +17,7 @@
                         </mat-form-field>
                     </form>                    
                     <button *ngIf="!usernameEdit" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
-                    <button *ngIf="usernameEdit" mat-raised-button color="accent" (click)="editUsername()">Save</button>
+                    <button *ngIf="usernameEdit" mat-raised-button color="accent" [disabled]="usernameForm.invalid" (click)="editUsername()">Save</button>
                 </div>
                 <!-- Email Begin-->
                 <div class="field">
@@ -32,7 +32,7 @@
                         </mat-form-field>
                     </form>
                     <button *ngIf="!emailEdit" mat-raised-button color="primary" (click)="editEmail()">Edit</button>
-                    <button *ngIf="emailEdit" mat-raised-button color="accent" (click)="editEmail()">Save</button>
+                    <button *ngIf="emailEdit" mat-raised-button color="accent" [disabled]="emailForm.invalid" (click)="editEmail()">Save</button>
                 </div>
                 <!-- Password Begin-->
                 <div class="field">
@@ -47,7 +47,22 @@
                         </mat-form-field>
                     </form>
                     <button mat-raised-button color="primary" (click)="editPassword()">Edit</button>                    
-                </div>                
+                </div> 
+                <!-- Timezone Begin--> 
+                <div class="field">
+                    <label class="label">Timezone:</label>
+                    <form [formGroup]="timezoneForm">
+                                           
+                        <mat-form-field appearance="fill">                           
+                                     
+                            <input *ngIf="!timezoneEdit" matInput formControlName="timezonedifference" readonly="timezoneForm">
+                            <input *ngIf="timezoneEdit" matInput formControlName="timezonedifference">
+                                                   
+                        </mat-form-field>
+                    </form>
+                    <button *ngIf="!timezoneEdit" mat-raised-button color="primary" (click)="editTimezone()">Edit</button>
+                    <button *ngIf="timezoneEdit" mat-raised-button color="accent" [disabled]="timezoneForm.invalid" (click)="editTimezone()">Save</button>                  
+                </div>               
             </mat-card-content>
             <mat-card-actions>
                 <div class="buttons">                    

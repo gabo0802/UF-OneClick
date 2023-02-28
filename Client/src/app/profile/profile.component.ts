@@ -18,12 +18,14 @@ export class ProfileComponent {
   hide: boolean = true;
   passwordCharacterLength: number = 3;
 
+  timezoneEdit: boolean = false;
   usernameEdit: boolean = false;
   emailEdit: boolean = false;  
 
   username: string = 'Loading...';
   password: string = '************';
   email: string = 'Loading...';
+  timezone: string = 'Loading...';
 
   usernameForm = new FormGroup({
     'username': new FormControl(this.username, [Validators.pattern('^[A-z0-9]+$')]),
@@ -31,6 +33,10 @@ export class ProfileComponent {
 
   emailForm = new FormGroup({
     'email': new FormControl(this.email, [Validators.email]),
+  });
+
+  timezoneForm = new FormGroup({
+    'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
   });
 
   passwordForm = new FormGroup({
@@ -50,6 +56,40 @@ export class ProfileComponent {
           'email': new FormControl(this.email, [Validators.email]),
         });
       });
+
+      this.api.getTimezone().subscribe((resultMessage: string[]) => {
+        this.timezone = resultMessage[1] + "UTC";
+
+        this.timezoneForm = new FormGroup({
+          'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
+        });
+      
+      });
+  }
+
+
+  editTimezone(): void{
+    this.timezoneEdit = !this.timezoneEdit;
+
+    if (this.timezoneEdit == false){
+      var oldTimezone: string = this.timezone
+      this.timezone = this.timezoneForm.controls['timezonedifference'].value || this.timezone
+
+      if (this.timezone != oldTimezone ){
+        if (confirm("Are you sure you want to change your time from " + oldTimezone + " to " + this.timezone + "?")){
+          var actualtimezone: string = this.timezone.replaceAll("UTC", "")
+          actualtimezone  = actualtimezone.replaceAll("+", "")
+
+          this.api.updateTimezone(actualtimezone).subscribe((res) => {
+            alert("Timezone Changed!")
+          })
+        }
+      }
+    }
+
+    this.timezoneForm = new FormGroup({
+      'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
+    });
   }
 
   editUsername(): void {
@@ -75,6 +115,10 @@ export class ProfileComponent {
         }  
       }
     }else{
+      if (this.username == "root"){
+          alert("Cannot Change root!")
+      }
+
       this.usernameForm = new FormGroup({
         'username': new FormControl(this.username, [Validators.pattern('^[A-z0-9]+$')]),
       });
@@ -105,6 +149,10 @@ export class ProfileComponent {
         }
       } 
     }else{
+      if (this.username == "root"){
+        alert("Cannot Change root!")
+      }
+
       this.emailForm = new FormGroup({
         'email': new FormControl(this.email, [Validators.email]),
       });

@@ -88,6 +88,24 @@ export class ApiService {
     );
   }
 
+  getTimezone():Observable<Array<string>> {
+    return this.http.post<{[key: string]: string, message: string}>('api/currenttimezone', null).pipe(
+      map( (statusMessage) => {        
+
+        const resultMessage: string[] = [];
+        
+        for(const key in statusMessage){
+
+          resultMessage.push(key);
+          resultMessage.push(statusMessage[key]);
+
+        }       
+
+        return resultMessage;
+      })
+    );
+  }
+
   updateUsername(newUsername: string): Observable<Object> {
     const newUserUsername = {username: newUsername};
     return this.http.put('api/changeusername', newUserUsername);
@@ -102,6 +120,12 @@ export class ApiService {
     const passwords= {oldPassword: userOldPassword, newPassword: userNewPassword};
     return this.http.put('api/changepassword', passwords);
   }
+
+  updateTimezone(newTimezone: string): Observable<Object> {
+    const timezone = {timezonedifference: newTimezone};
+    return this.http.put('api/changetimezone', timezone);
+  }
+
 
   deleteUserAccount(): Observable<Object> {
     return this.http.delete('api/deleteuser');
