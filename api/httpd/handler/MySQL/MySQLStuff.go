@@ -255,27 +255,27 @@ func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword stri
 	return int(numRows)
 }
 
-func ChangeEmail(db *sql.DB, userID int, newEmail string) int {
-	result, err := db.Exec("UPDATE Users SET Email = ? WHERE userID = ?;", newEmail, userID)
-	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate entry") {
-			return -223
-		} else {
-			return -502
-		}
-	}
-
-	numRows, err := result.RowsAffected()
+func GetEmail(db *sql.DB, userID int) string {
+	rows, err := db.Query("SELECT Email FROM Users WHERE userID = ?;", userID)
+	var email string = "none"
 
 	if err != nil {
-		return -502
+		return "Error Code: -502"
 	}
 
-	return int(numRows)
+	for rows.Next() {
+		rows.Scan(&email)
+	}
+
+	if err != nil {
+		return "Error Code: -502"
+	}
+
+	return email
 }
 
-func ChangeUsername(db *sql.DB, userID int, newUsername string) int {
-	result, err := db.Exec("UPDATE Users SET Username = ? WHERE userID = ?;", newUsername, userID)
+func ChangeEmail(db *sql.DB, userID int, newEmail string) int {
+	result, err := db.Exec("UPDATE Users SET Email = ? WHERE userID = ?;", newEmail, userID)
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
 			return -223
@@ -312,23 +312,23 @@ func GetUsername(db *sql.DB, userID int) string {
 	return username
 }
 
-func GetEmail(db *sql.DB, userID int) string {
-	rows, err := db.Query("SELECT Email FROM Users WHERE userID = ?;", userID)
-	var email string = "none"
+func ChangeUsername(db *sql.DB, userID int, newUsername string) int {
+	result, err := db.Exec("UPDATE Users SET Username = ? WHERE userID = ?;", newUsername, userID)
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			return -223
+		} else {
+			return -502
+		}
+	}
+
+	numRows, err := result.RowsAffected()
 
 	if err != nil {
-		return "Error Code: -502"
+		return -502
 	}
 
-	for rows.Next() {
-		rows.Scan(&email)
-	}
-
-	if err != nil {
-		return "Error Code: -502"
-	}
-
-	return email
+	return int(numRows)
 }
 
 func CreateNewSub(db *sql.DB, name string, price string) int {

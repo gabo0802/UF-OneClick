@@ -2,10 +2,10 @@ package MySQL
 
 import (
 	"testing"
+	"time"
 )
 
-//TODO: Check if server connection errors work as intended (-502)
-//Clear tables and add tables as needed to check for duplicates
+//Tests all non-Helper functions in MySQL package for main functionality
 
 // Tests if server error is caught properly
 // Change the MySQLPassword.txt name to test this
@@ -137,6 +137,7 @@ func TestCreateNewUser(t *testing.T) {
 	SetUpTables(db)
 	CreateAdminUser(db)
 	CreateNewUser(db, "testUser", "password", "example@gmail.com")
+
 	expected := 2
 	actual := GetTableSize(db, "users")
 	if actual != expected {
@@ -199,18 +200,38 @@ func TestChangePassword(t *testing.T) {
 	}
 
 	//Checks if password changed
-	//var oldPassword string
+	oldPassword = GetPassword(db, 1)
+	newPassword = "newPassw0rd"
 
-	//expected := db.
+	ChangePassword(db, 1, oldPassword, newPassword)
+
+	expected := "newPassw0rd"
+	actual := GetPassword(db, 1)
+
+	if actual != expected {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
+}
+
+func TestGetEmail(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+
+	expected := "vanbestindustries@gmail.com"
+	actual := GetEmail(db, 1)
+	if actual != expected {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
 }
 
 func TestChangeEmail(t *testing.T) {
 	db := MySQLConnect()
-
-	//ResetAllTables(db)
-	//SetUpTables(db)
-	//CreateAdminUser(db)
-	//CreateNewUser(db, "test", "doesn't matter", "valekseev2003@gmail.com")
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+	CreateNewUser(db, "test", "doesn't matter", "valekseev2003@gmail.com")
 
 	userID := 1
 	//Takes from a user that is not the admin's email, so to pass this test
@@ -221,10 +242,39 @@ func TestChangeEmail(t *testing.T) {
 	if errorCode != -223 {
 		t.Errorf("Expected an error code -223, but got %d", errorCode)
 	}
+
+	newEmail = "test@gmail.com"
+	ChangeEmail(db, 1, newEmail)
+
+	//Checks if email changed
+	expected := newEmail
+	actual := GetEmail(db, userID)
+
+	if actual != expected {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
+}
+
+func TestGetUsername(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+
+	expected := "root"
+	actual := GetUsername(db, 1)
+	if actual != expected {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
 }
 
 func TestChangeUsername(t *testing.T) {
 	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+	CreateNewUser(db, "valek", "doesn't matter", "valekseev2003@gmail.com")
+
 	userID := 1
 	//Takes from a user that is not the admin's username, so to pass this test
 	//this, the username must already be in the database
@@ -234,25 +284,84 @@ func TestChangeUsername(t *testing.T) {
 	if errorCode != -223 {
 		t.Errorf("Expected an error code -223, but got %d", errorCode)
 	}
+
+	newUsername = "userExample"
+	ChangeUsername(db, 1, newUsername)
+
+	//Checks if email changed
+	expected := newUsername
+	actual := GetUsername(db, 1)
+
+	if actual != expected {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
 }
 
 func TestCreateNewSub(t *testing.T) {
 	db := MySQLConnect()
-	name := ""
-	price := ""
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateNewSub(db, "HBO Max", "9.99")
 
-	errorCode := CreateNewSub(db, name, price)
-	if errorCode != -204 {
-		t.Errorf("Expected an error code -204, but got %d", errorCode)
+	expected := 1
+	actual := GetTableSize(db, "subscriptions")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestCreateNewUserSub(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+	CreateNewSub(db, "HBO Max", "9.99")
+	CreateNewUserSub(db, 1, "HBO Max")
+
+	expected := 1
+	actual := GetTableSize(db, "usersubs")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestAddOldUserSub(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+	CreateNewSub(db, "HBO Max", "9.99")
+	AddOldUserSub(db, 1, "HBO Max", "2022-01-01 02:30:20", "2022-04-05 04:30:20")
+
+	expected := 1
+	actual := GetTableSize(db, "usersubs")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestCancelUserSub(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+	CreateNewSub(db, "HBO Max", "9.99")
+	CreateNewUserSub(db, 1, "HBO Max")
+	CancelUserSub(db, 1, "HBO Max")
+
+	var cancelledDate string
+	db.QueryRow("SELECT DateRemoved FROM UserSubs WHERE UserId = ?", 1).Scan(&cancelledDate)
+
+	//Times are stored in Universal Time, so current time must be converted to test it
+	loc, _ := time.LoadLocation("UTC")
+	currentTime := time.Now().In(loc)
+
+	expected := currentTime.Format("2006-01-02 15:04:05")
+	actual := cancelledDate
+	if actual != expected {
+		t.Errorf("Expected %s, got %s", expected, actual)
 	}
 
-	//The name of "test" must already be in the database
-	name = "test"
-	price = "0"
-	errorCode = CreateNewSub(db, name, price)
-	if errorCode != -223 {
-		t.Errorf("Expected an error code -223, but got %d", errorCode)
-	}
 }
 
 func TestDeleteUser(t *testing.T) {
