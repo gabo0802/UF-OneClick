@@ -2,7 +2,10 @@ package MySQL
 
 import "testing"
 
-// Test by looking for specific errors returned
+//TODO: Check if server connection errors work as intended (-502)
+
+// Tests if server error is caught properly once here and omitted in the rest of tests
+// Change the MySQLPassword.txt name to test this
 func TestMySQLConnect(t *testing.T) {
 	defer func() {
 		//checks for panic()
@@ -16,14 +19,72 @@ func TestMySQLConnect(t *testing.T) {
 	MySQLConnect()
 }
 
+// Tests if error calls work as intended
 func TestGetTableSize(t *testing.T) {
 	db := MySQLConnect()
 	tableName := "userss"
-	// Call the function that is expected to not return -404
+	// Call the function expecting to return -404 if there is an error
 	errorCode := GetTableSize(db, tableName)
 
-	// Check the error code and error message
-	if errorCode == -404 {
-		t.Errorf("Error: Table \"%v\" Does Not Exist!\n", tableName)
+	// Checks if the error code is working as intended (shows up when the table does not exist)
+	if errorCode != -404 {
+		t.Errorf("Expected an error code -404, but got %d", errorCode)
+	}
+}
+
+func TestCreateNewUser(t *testing.T) {
+	db := MySQLConnect()
+	username := ""
+	password := ""
+	email := ""
+
+	errorCode := CreateNewUser(db, username, password, email)
+	if errorCode != -204 {
+		t.Errorf("Expected an error code -204, but got %d", errorCode)
+	}
+
+	//Will always have admin credentials, so tests using them
+	//testing duplicate username
+	username = "root"
+	password = "test"
+	email = "unique@gmail.com"
+
+	errorCode = CreateNewUser(db, username, password, email)
+	if errorCode != -223 {
+		t.Errorf("Expected an error code -223, but got %d", errorCode)
+	}
+
+	//testing duplicate email
+	username = "unique"
+	email = "vanbestindustries@gmail.com"
+
+	errorCode = CreateNewUser(db, username, password, email)
+	if errorCode != -225 {
+		t.Errorf("Expected an error code -225, but got %d", errorCode)
+	}
+}
+
+func TestChangePassword(t *testing.T) {
+	db := MySQLConnect()
+	userID := 1
+	oldPassword := ""
+	newPassword := ""
+
+	errorCode := ChangePassword(db, userID, oldPassword, newPassword)
+	if errorCode != -204 {
+		t.Errorf("Expected an error code -204, but got %d", errorCode)
+	}
+}
+
+func TestChangeEmail(t *testing.T) {
+	db := MySQLConnect()
+	userID := 1
+	//Takes from a user that is not the admin's email, so to pass this test
+	//this, the email must already be in the database
+	newEmail := "valekseev2003@gmail.com"
+
+	errorCode := ChangeEmail(db, userID, newEmail)
+	if errorCode != -223 {
+		t.Errorf("Expected an error code -223, but got %d", errorCode)
 	}
 }

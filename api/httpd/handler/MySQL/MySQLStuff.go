@@ -76,7 +76,7 @@ func GetTableSize(db *sql.DB, tableName string) int {
 	size := 0
 
 	if err != nil {
-		//Table does not exist
+		fmt.Printf("Error: Table \"%v\" Does Not Exist!\n", tableName)
 		return -404
 	}
 
@@ -134,7 +134,7 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 	}
 
 	fmt.Println("Rows Affected:", numRows)
-	//Test If User Creation Worked (can remove later)
+	//Test If User Creation Worked
 
 	return int(numRows)
 }
