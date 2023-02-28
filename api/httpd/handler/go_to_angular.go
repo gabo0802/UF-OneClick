@@ -1045,6 +1045,8 @@ func GetTimezone(c *gin.Context) {
 		for len(timezoneString) < 4 {
 			timezoneString = "0" + timezoneString
 		}
+
+		timezoneString = "+" + timezoneString
 	}
 
 	c.JSON(http.StatusOK, gin.H{"CurrentTimezone": timezoneString})

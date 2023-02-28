@@ -36,7 +36,7 @@ export class ProfileComponent {
   });
 
   timezoneForm = new FormGroup({
-    'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
+    'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
   });
 
   passwordForm = new FormGroup({
@@ -61,7 +61,7 @@ export class ProfileComponent {
         this.timezone = resultMessage[1] + "UTC";
 
         this.timezoneForm = new FormGroup({
-          'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
+          'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
         });
       
       });
@@ -78,6 +78,7 @@ export class ProfileComponent {
       if (this.timezone != oldTimezone ){
         if (confirm("Are you sure you want to change your time from " + oldTimezone + " to " + this.timezone + "?")){
           var actualtimezone: string = this.timezone.replaceAll("UTC", "")
+          actualtimezone  = actualtimezone.replaceAll("+", "")
 
           this.api.updateTimezone(actualtimezone).subscribe((res) => {
             alert("Timezone Changed!")
@@ -87,7 +88,7 @@ export class ProfileComponent {
     }
 
     this.timezoneForm = new FormGroup({
-      'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
+      'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
     });
   }
 
