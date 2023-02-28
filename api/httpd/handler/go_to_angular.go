@@ -61,7 +61,7 @@ const (
 // Global Variables:
 var currentDB *sql.DB
 var currentID = -1
-var currentTimezone = -5
+var currentTimezone int = -500
 
 func SetDB(db *sql.DB) {
 	currentDB = db
@@ -76,8 +76,16 @@ func convert_timezone(timeString string, toUTC bool) (string, time.Time) {
 		reverse = -1
 	}
 
+	timezoneMinutes := currentTimezone
+	timezoneHours := currentTimezone / 100
+
+	timezoneMinutes -= timezoneHours * 100
+	if timezoneMinutes < 0 {
+		timezoneMinutes = 0
+	}
+
 	inputTime, _ := time.Parse(reference, timeString)
-	convertedTime := time.Date(inputTime.Year(), inputTime.Month(), inputTime.Day(), inputTime.Hour()+(currentTimezone*reverse), inputTime.Minute(), inputTime.Second(), 0, time.Local)
+	convertedTime := time.Date(inputTime.Year(), inputTime.Month(), inputTime.Day(), inputTime.Hour()+(timezoneHours*reverse), inputTime.Minute()+(timezoneMinutes*reverse), inputTime.Second(), 0, time.Local)
 
 	return string(convertedTime.String()[0 : len(convertedTime.String())-10]), convertedTime
 }
@@ -1020,6 +1028,27 @@ func GetUserInfo(c *gin.Context) {
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
+}
+
+func GetTimezone(c *gin.Context) {
+	//c.JSON(http.StatusOK, gin.H{"CurrentTimezone": currentTimezone})
+	fmt.Println(currentTimezone)
+	timezoneString := strconv.Itoa(currentTimezone)
+
+	if currentTimezone < 0 {
+		timezoneString = strings.ReplaceAll(timezoneString, "-", "")
+		for len(timezoneString) < 4 {
+			timezoneString = "0" + timezoneString
+		}
+		timezoneString = "-" + timezoneString
+	} else {
+		for len(timezoneString) < 4 {
+			timezoneString = "0" + timezoneString
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"CurrentTimezone": timezoneString})
+
 }
 
 func resetCookies(c *gin.Context) {
