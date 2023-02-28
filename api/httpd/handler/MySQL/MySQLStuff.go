@@ -665,8 +665,8 @@ func DeleteUser(db *sql.DB, ID int) {
 }
 
 // Selects entry from database "Users" based on username and password
-// Returns UserID or -1 when current user does not exist
-// Returns -2 if there is an error with database connection
+// Returns UserID or -401 when current user does not exist
+// Returns -502 if there is an error with database connection
 func Login(db *sql.DB, username string, password string) int {
 	//Try To Login
 	rows, err := db.Query("SELECT UserID FROM Users WHERE Username = ? AND Password = ?;", username, password)
@@ -746,7 +746,7 @@ func GetPriceForMonth(db *sql.DB, currentID int, monthNumber int, yearNumber int
 
 // UserID and dateAdded will normally be taken automatically from the database
 // instead of specifying it directly, unlike in this test
-func TestBackend(db *sql.DB) {
+func ManuallyTestBackend(db *sql.DB) {
 	fmt.Println("Type -1 to quit the test.")
 	var choice int
 	for choice != -1 {
@@ -812,33 +812,5 @@ func TestBackend(db *sql.DB) {
 			fmt.Scanln(&a, &b, &c)
 			ChangePassword(db, a, b, c)
 		}
-	}
-}
-
-// Can use for unit testing later on
-// Outputs database data onto the terminal
-func ShowDatabaseTables(db *sql.DB, databaseName string) {
-	db.Exec("USE " + databaseName + ";")
-	res, _ := db.Query("SHOW TABLES;")
-
-	var table string
-
-	for res.Next() {
-		res.Scan(&table)
-		fmt.Println(table)
-	}
-}
-
-func GetColumnData(db *sql.DB, databaseName string, tableName string, columnName string) {
-	db.Exec("USE " + databaseName + ";")
-	sqlCode := "SELECT " + columnName + " FROM " + tableName + ";"
-
-	rows, _ := db.Query(sqlCode)
-
-	var singleRow string
-
-	for rows.Next() {
-		rows.Scan(&singleRow)
-		fmt.Println(singleRow)
 	}
 }

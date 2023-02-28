@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-//Tests all non-Helper functions in MySQL package for main functionality
+//Tests all non-helper functions in MySQL package for basic functionality
+//Except for "func ManuallyTestBackend"
 
 // Tests if server error is caught properly
 // Change the MySQLPassword.txt name to test this
@@ -366,32 +367,64 @@ func TestCancelUserSub(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 	db := MySQLConnect()
-	//ResetAllTables(db)
-	//SetUpTables(db)
-	//CreateAdminUser(db)
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
 
-	defer func() {
-		//checks for panic()
-		//example would be when password txt file is not found
-		if r := recover(); r != nil {
-			t.Errorf("An error occurred: %v", r)
-		}
-	}()
-
-	// Function under test:
-	originalTableSize := GetTableSize(db, "Users")
-	DeleteUser(db, 3)
-	finalTableSize := GetTableSize(db, "Users")
-
-	if originalTableSize != finalTableSize {
-		t.Errorf("Expected to not delete user, but user was deleted")
-	}
-
-	originalTableSize = GetTableSize(db, "Users")
 	DeleteUser(db, 1)
-	finalTableSize = GetTableSize(db, "Users")
 
-	if originalTableSize == finalTableSize {
-		t.Errorf("Expected to delete user, but user was not deleted")
+	expected := 0
+	actual := GetTableSize(db, "users")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestLogin(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+
+	//Returns UserID if login is successful
+	expected := 1
+	actual := Login(db, "root", "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=")
+	if actual != expected {
+		t.Errorf("Expected UserID: %d, got %d", expected, actual)
+	}
+}
+
+func TestGetMostUsedSubscription(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+
+	CreateNewSub(db, "HBO Max", "9.99")
+	AddOldUserSub(db, 1, "HBO Max", "2022-01-01 02:30:20", "2022-01-01 02:30:50")
+
+	expectedName, expectedSubTime := "HBO Max", 30
+	actualName, actualSubTime := GetMostUsedSubscription(db, 1, true, false)
+	if expectedName != actualName || expectedSubTime != actualSubTime {
+		t.Errorf("Expected Subname: %s, SubTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
+	}
+}
+
+func TestGetPriceForMonth(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+
+	CreateCommonSubscriptions(db)
+	AddOldUserSub(db, 1, "HBO Max (With ADS)", "2022-01-01 02:30:20", "2022-01-01 02:30:50")
+	AddOldUserSub(db, 1, "Hulu", "2022-01-01 02:30:20", "2022-01-01 02:30:50")
+	AddOldUserSub(db, 1, "Amazon Prime", "2022-01-01 02:30:20", "2022-01-01 02:30:50")
+
+	//9.99 + 7.99 + 14.99 = 32.97
+	expected := "32.97"
+	actual := GetPriceForMonth(db, 1, 1, 2022)
+	if actual != expected {
+		t.Errorf("Expected Cost: %s, got %s", expected, actual)
 	}
 }
