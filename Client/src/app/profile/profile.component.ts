@@ -95,17 +95,22 @@ export class ProfileComponent {
   editUsername(): void {
     this.usernameEdit = !this.usernameEdit;
     
-    if (this.usernameEdit == false && this.username != "root"){
+    if (this.usernameEdit == false){
       var oldUsername: string = this.username
       this.username = this.usernameForm.controls['username'].value || this.username
 
       if (this.username != oldUsername){
         if (confirm("Are you sure you want to change your username from " + oldUsername + " to " + this.username + "?")){
-          this.api.updateUsername(this.username).subscribe((res) => {
-            alert("Username Updated! Logging Out...")
-            this.authService.userLogOut();
-            this.router.navigate(['/login']);
-          })
+            if(oldUsername != "root"){
+              this.api.updateUsername(this.username).subscribe((res) => {
+                alert("Username Updated! Logging Out...")
+                this.authService.userLogOut();
+                this.router.navigate(['/login']);
+              })
+            }else{
+              alert("Cannot Change Username of root user!")
+              this.username = oldUsername;
+            }
         }else{
           this.username = oldUsername;
 
@@ -115,10 +120,6 @@ export class ProfileComponent {
         }  
       }
     }else{
-      if (this.username == "root"){
-          alert("Cannot Change root!")
-      }
-
       this.usernameForm = new FormGroup({
         'username': new FormControl(this.username, [Validators.pattern('^[A-z0-9]+$')]),
       });
@@ -129,17 +130,21 @@ export class ProfileComponent {
   editEmail(): void {
     this.emailEdit = !this.emailEdit;
 
-    if (this.emailEdit == false && this.username != "root"){
+    if (this.emailEdit == false){
       var oldEmail: string = this.email
       this.email = this.emailForm.controls['email'].value || this.email
 
       if (this.email != oldEmail){
         if (confirm("Are you sure you want to change your email address from " + oldEmail + " to " + this.email + "?")){
-          this.api.updateUserEmail(this.email).subscribe((res) => {
-            alert("Email Updated! Please Verify Email Before Logging Back In. Logging Out...")
-            this.authService.userLogOut();
-            this.router.navigate(['/login']);
-          })
+          if(this.username != "root"){
+            this.api.updateUserEmail(this.email).subscribe((res) => {
+              alert("Email Updated! Please Verify Email Before Logging Back In. Logging Out...")
+              this.authService.userLogOut();
+              this.router.navigate(['/login']);
+            })
+          }else{
+            alert("Cannot Change Email Address of root user!")
+          }
         }else{
           this.email = oldEmail;
 
@@ -149,10 +154,6 @@ export class ProfileComponent {
         }
       } 
     }else{
-      if (this.username == "root"){
-        alert("Cannot Change root!")
-      }
-
       this.emailForm = new FormGroup({
         'email': new FormControl(this.email, [Validators.email]),
       });
@@ -169,11 +170,15 @@ export class ProfileComponent {
 
   delete(): void {
     if (confirm("Are you sure you want to delete user " + this.username + "?") && this.username != "root"){
-      this.api.deleteUserAccount().subscribe((res) => {
-        alert("User " + this.username + " has been deleted! Logging Out...")
-        this.authService.userLogOut()
-        this.router.navigate(['login']);
-      })
+      if (this.username != "root"){
+        this.api.deleteUserAccount().subscribe((res) => {
+          alert("User " + this.username + " has been deleted! Logging Out...")
+          this.authService.userLogOut()
+          this.router.navigate(['login']);
+        })
+      }else{
+        alert("Cannot Delete root!")
+      }
     }
   }
 
