@@ -157,12 +157,37 @@ func TestCreateAdminUser(t *testing.T) {
 	}
 }
 
+func TestCreateCommonSubscriptions(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateCommonSubscriptions(db)
+
+	expected := 46
+	actual := GetTableSize(db, "subscriptions")
+	if actual != expected {
+		t.Errorf("Expected %d, got %d", expected, actual)
+	}
+}
+
+func TestGetPassword(t *testing.T) {
+	db := MySQLConnect()
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
+
+	expected := "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg="
+	actual := GetPassword(db, 1)
+	if actual != expected {
+		t.Errorf("Expected %s, got %s", expected, actual)
+	}
+}
+
 func TestChangePassword(t *testing.T) {
 	db := MySQLConnect()
-
-	//ResetAllTables(db)
-	//SetUpTables(db)
-	//CreateAdminUser(db)
+	ResetAllTables(db)
+	SetUpTables(db)
+	CreateAdminUser(db)
 
 	userID := 1
 	oldPassword := ""
@@ -172,6 +197,11 @@ func TestChangePassword(t *testing.T) {
 	if errorCode != -204 {
 		t.Errorf("Expected an error code -204, but got %d", errorCode)
 	}
+
+	//Checks if password changed
+	//var oldPassword string
+
+	//expected := db.
 }
 
 func TestChangeEmail(t *testing.T) {

@@ -228,6 +228,14 @@ func CreateCommonSubscriptions(db *sql.DB) {
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"AMC+ (Yearly)\", 83.88);")
 }
 
+func GetPassword(db *sql.DB, userID int) string {
+	var password string
+	err := db.QueryRow("SELECT Password FROM Users WHERE UserId = ?", userID).Scan(&password)
+	checkError(err)
+
+	return password
+}
+
 func ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int {
 	if oldPassword == "" || newPassword == "" {
 		return -204
