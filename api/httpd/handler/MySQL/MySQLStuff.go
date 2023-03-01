@@ -447,7 +447,7 @@ func canAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 		log.Fatal(err)
 	}
 	if rows.Next() && (oldCanceledDate == "0001-01-01 00:00:00 +0000 UTC" || oldCanceledDate == "") {
-		fmt.Println("Error: Can't Have Two of the Same Subscription At The Same Time")
+		//fmt.Println("Error: Can't Have Two of the Same Subscription At The Same Time")
 		return (-223 - 1)
 	}
 
@@ -456,7 +456,7 @@ func canAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 		log.Fatal(err)
 	}
 	if rows.Next() {
-		fmt.Println("Error: Can't Have The Same Subscription In The Middle Of A Subscription")
+		//fmt.Println("Error: Can't Have The Same Subscription In The Middle Of A Subscription")
 		return (-223 - 2)
 	}
 
@@ -465,7 +465,7 @@ func canAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 		log.Fatal(err)
 	}
 	if rows.Next() {
-		fmt.Println("Error: Can't Have The Same Subscription Be On the Same Exact Time")
+		//fmt.Println("Error: Can't Have The Same Subscription Be On the Same Exact Time")
 		return (-223 - 3)
 	}
 
@@ -477,7 +477,7 @@ func canAddOldUserSub(db *sql.DB, userID int, subID int, oldDate string, oldCanc
 		}
 
 		if rows.Next() {
-			fmt.Println("Error: Can't Have The Same Subscription Be In The Middle Of That Same Subscription")
+			//fmt.Println("Error: Can't Have The Same Subscription Be In The Middle Of That Same Subscription")
 			return (-223 - 4)
 		}
 	}
@@ -530,12 +530,12 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	}
 
 	if dateCanceledTime.After(currentTime) || dateAddedTime.After(currentTime) {
-		fmt.Println("Error: Can't Add or Cancel Subscription in Future (After Now)!")
+		//fmt.Println("Error: Can't Add or Cancel Subscription in Future (After Now)!")
 		return (-223 - 5)
 	}
 
 	if !dateCanceledTime.IsZero() && (dateCanceledTime.Before(dateAddedTime) || dateCanceledTime.Equal(dateAddedTime)) {
-		fmt.Println("Error: Can't Cancel Subscription Before Adding It")
+		//fmt.Println("Error: Can't Cancel Subscription Before Adding It")
 		return -401
 	}
 
@@ -567,8 +567,8 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 	//Checks to see if sub was already added to user before creating a new table value (night be irrelevent, future issue)
 	var isRenewed int = canAddOldUserSub(db, userID, CurrentSubID, dateAddedTime.String(), dateCanceledTime.String())
 	if isRenewed < 0 {
-		fmt.Println("Subscription already added to User's Profile!")
-		fmt.Println(dateAdded + ", " + dateCanceled)
+		//fmt.Println("Subscription already added to User's Profile!")
+		//fmt.Println(dateAdded + ", " + dateCanceled)
 		return isRenewed
 	}
 

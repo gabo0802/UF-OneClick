@@ -31,9 +31,8 @@ func main() {
 	//Sets pointer in "handler" package to main.go's db:
 	handler.SetDB(db)
 
-	//Testing:
-	//MySQL.TestBackend(db)
-	//handler.SendAllReminders()
+	//Reminders:
+	handler.SendAllReminders()
 
 	//Angular Connection:
 	r := gin.Default()
@@ -41,8 +40,8 @@ func main() {
 	api := r.Group("/api")
 	{
 		//Background
-		api.GET("/remind", handler.DailyReminder)
-		api.POST("/remind", handler.DailyReminder)
+		//api.GET("/remind", handler.DailyReminder)
+		//api.POST("/remind", handler.DailyReminder)
 
 		//Account Management
 		api.POST("/userinfo", handler.GetUserInfo)
@@ -57,10 +56,10 @@ func main() {
 		api.PUT("/changeemail", handler.ChangeUserEmail)
 		api.POST("/deleteuser", handler.DeleteUser)
 		api.DELETE("/deleteuser", handler.DeleteUser)
-		//api.GET("/logout/:valid", handler.Logout(""))
-		//api.POST("/logout", handler.Logout(""))
 		api.GET("/verify/:code", handler.VerifyEmail)
 		api.PUT("/changetimezone", handler.ChangeTimezone)
+		//api.GET("/logout/:valid", handler.Logout(""))
+		//api.POST("/logout", handler.Logout(""))
 
 		//Subscription Management
 		api.POST("/subscriptions", handler.GetAllUserSubscriptions())

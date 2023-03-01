@@ -152,7 +152,7 @@ func sendReminders(rows *sql.Rows, message string, header string) bool {
 
 		} else {
 			emailSent = sendEmail(currentEmail, header, userMessage)
-			fmt.Println(userMessage)
+			//fmt.Println(userMessage)
 
 			if !emailSent {
 				return false
@@ -164,7 +164,7 @@ func sendReminders(rows *sql.Rows, message string, header string) bool {
 		}
 	}
 
-	fmt.Println(userMessage)
+	//fmt.Println(userMessage)
 	if currentEmail != "" {
 		emailSent = sendEmail(currentEmail, header, userMessage)
 	}
@@ -365,7 +365,7 @@ func startVerifyCheck(username string, userID int, email string) {
 	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vE\");", ID, newCodeEncrypted, expireDate)
 	sendEmail(email, "Verify Identity", "http://localhost:4200/api/verify/"+newCode)
 
-	fmt.Println("http://localhost:4200/api/verify/" + newCode)
+	//fmt.Println("http://localhost:4200/api/verify/" + newCode)
 	newCode = ""
 	username = ""
 }
@@ -630,7 +630,7 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 		if err == nil {
 			currentID, _ = strconv.Atoi(cookie)
 		} else {
-			fmt.Println("No currentUserID Cookie!")
+			currentID = -1
 		}
 
 		var usersubInfo = []userData{}
@@ -756,7 +756,7 @@ func GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFu
 	}
 }
 
-func Logout(message string) gin.HandlerFunc {
+/*func Logout(message string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		currentID = -1
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
@@ -770,7 +770,7 @@ func Logout(message string) gin.HandlerFunc {
 			c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
 		}
 	}
-}
+}*/
 
 func DeleteUser(c *gin.Context) {
 	MySQL.DeleteUser(currentDB, currentID)
@@ -1020,7 +1020,7 @@ func GetUserInfo(c *gin.Context) {
 	if err == nil {
 		currentID, _ = strconv.Atoi(cookie)
 	} else {
-		fmt.Println("No currentUserID Cookie!")
+		currentID = -1
 	}
 
 	if currentID != -1 {
@@ -1077,7 +1077,6 @@ func ResetALL(c *gin.Context) {
 }
 
 func GetAllUserData() gin.HandlerFunc {
-
 	return func(c *gin.Context) {
 		if currentID == 1 {
 			var allUserData = []userData{}
