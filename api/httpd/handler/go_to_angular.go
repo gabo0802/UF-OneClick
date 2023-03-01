@@ -828,10 +828,12 @@ func NewPreviousUserSubscription(c *gin.Context) {
 		c.BindJSON(&userSubscriptionData)
 
 		subscriptionName := userSubscriptionData.Name
-		subscriptionDateAdded, _ := convert_timezone(userSubscriptionData.DateAdded, true)
+		subscriptionDateAdded := strings.Replace(userSubscriptionData.DateAdded, "-02-29", "-03-01", 1)
+		subscriptionDateAdded, _ = convert_timezone(subscriptionDateAdded, true)
 
 		subscriptionDateRemoved := userSubscriptionData.DateRemoved
 		if subscriptionDateRemoved != "" {
+			subscriptionDateRemoved = strings.Replace(subscriptionDateRemoved, "-02-29", "-03-01", 1)
 			subscriptionDateRemoved, _ = convert_timezone(subscriptionDateRemoved, true)
 		}
 		//subscriptionID := userSubscriptionData.ID
@@ -866,16 +868,16 @@ func NewPreviousUserSubscription(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"Error": "Can't Cancel Subscription Before Adding It"})
 
 		} else if rowsAffected == (-223 - 1) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have Two of the Same Subscription At The Same Time"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have An Active Subscription Before An Already Active Subscription"})
 
-		} else if rowsAffected == (-223 - 2) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Same Subscription In The Middle Of That Same Subscription"})
+		} else if rowsAffected == (-223-2) || rowsAffected == (-223-4) {
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have A Subscription Be Active In The Middle Of That Same Subscription"})
 
 		} else if rowsAffected == (-223 - 3) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Same Subscription Be On the Same Exact Time"})
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Two of Same Subscription Be On the Same Exact Time"})
 
-		} else if rowsAffected == (-223 - 4) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Same Subscription Be In The Middle Of That Same Subscription"})
+		} else if rowsAffected == (-223 - 5) {
+			c.JSON(http.StatusOK, gin.H{"Error": "Can't Add or Cancel Subscription In The Future"})
 
 		} else {
 			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)

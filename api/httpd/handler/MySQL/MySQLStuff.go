@@ -393,6 +393,9 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
 	currentTime := time.Now()
+	if int(currentTime.Month()) == 2 && currentTime.Day() == 29 { //No Leap Days
+		currentTime = time.Date(currentTime.Year(), time.March, 1, currentTime.Hour(), currentTime.Minute(), currentTime.Second(), 0, time.Local)
+	}
 	currentTime.Format("2006-01-02 15:04:05")
 
 	var CurrentSubID int
@@ -521,8 +524,15 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		}
 	}
 
-	fmt.Println("DateAdded", dateAddedTime.String())
-	fmt.Println("DateRemoved", dateCanceledTime.String())
+	currentTime := time.Now()
+	if int(currentTime.Month()) == 2 && currentTime.Day() == 29 {
+		currentTime = time.Date(currentTime.Year(), time.March, 1, currentTime.Hour(), currentTime.Minute(), currentTime.Second(), 0, time.Local) //No Leap Days
+	}
+
+	if dateCanceledTime.After(currentTime) || dateAddedTime.After(currentTime) {
+		fmt.Println("Error: Can't Add or Cancel Subscription in Future (After Now)!")
+		return (-223 - 5)
+	}
 
 	if !dateCanceledTime.IsZero() && (dateCanceledTime.Before(dateAddedTime) || dateCanceledTime.Equal(dateAddedTime)) {
 		fmt.Println("Error: Can't Cancel Subscription Before Adding It")
