@@ -6,7 +6,7 @@ import (
 )
 
 //Tests all non-helper functions in MySQL package for basic functionality
-//Except for "func ManuallyTestBackend"
+//Except for "func ManuallyTestBackend()"
 
 // Tests if server error is caught properly
 // Change the MySQLPassword.txt name to test this
@@ -31,7 +31,7 @@ func TestGetDatabaseSize(t *testing.T) {
 	expected := 1
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d table, got %d", expected, actual)
 	}
 }
 
@@ -43,7 +43,7 @@ func TestSetUpTables(t *testing.T) {
 	expected := 4
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d tables, got %d", expected, actual)
 	}
 }
 
@@ -67,7 +67,7 @@ func TestGetTableSize(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -81,7 +81,7 @@ func TestResetTable(t *testing.T) {
 	expected := 3
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d tables, got %d", expected, actual)
 	}
 }
 
@@ -95,7 +95,7 @@ func TestResetAllTables(t *testing.T) {
 	expected := 0
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d tables, got %d", expected, actual)
 	}
 }
 
@@ -142,7 +142,7 @@ func TestCreateNewUser(t *testing.T) {
 	expected := 2
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entries, got %d", expected, actual)
 	}
 }
 
@@ -155,7 +155,7 @@ func TestCreateAdminUser(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -168,7 +168,7 @@ func TestCreateCommonSubscriptions(t *testing.T) {
 	expected := 46
 	actual := GetTableSize(db, "subscriptions")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entries, got %d", expected, actual)
 	}
 }
 
@@ -181,7 +181,7 @@ func TestGetPassword(t *testing.T) {
 	expected := "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg="
 	actual := GetPassword(db, 1)
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected password: %s, got %s", expected, actual)
 	}
 }
 
@@ -210,7 +210,7 @@ func TestChangePassword(t *testing.T) {
 	actual := GetPassword(db, 1)
 
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected new password: %s, got %s", expected, actual)
 	}
 }
 
@@ -223,7 +223,7 @@ func TestGetEmail(t *testing.T) {
 	expected := "vanbestindustries@gmail.com"
 	actual := GetEmail(db, 1)
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected email: %s, got %s", expected, actual)
 	}
 }
 
@@ -252,7 +252,7 @@ func TestChangeEmail(t *testing.T) {
 	actual := GetEmail(db, userID)
 
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected new email: %s, got %s", expected, actual)
 	}
 }
 
@@ -265,7 +265,7 @@ func TestGetUsername(t *testing.T) {
 	expected := "root"
 	actual := GetUsername(db, 1)
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected username: %s, got %s", expected, actual)
 	}
 }
 
@@ -294,7 +294,7 @@ func TestChangeUsername(t *testing.T) {
 	actual := GetUsername(db, 1)
 
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected new username: %s, got %s", expected, actual)
 	}
 }
 
@@ -307,7 +307,7 @@ func TestCreateNewSub(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "subscriptions")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -322,7 +322,7 @@ func TestCreateNewUserSub(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "usersubs")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -337,7 +337,7 @@ func TestAddOldUserSub(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "usersubs")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -360,7 +360,7 @@ func TestCancelUserSub(t *testing.T) {
 	expected := currentTime.Format("2006-01-02 15:04:05")
 	actual := cancelledDate
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected cancelled date: %s, got %s", expected, actual)
 	}
 
 }
@@ -376,7 +376,7 @@ func TestDeleteUser(t *testing.T) {
 	expected := 0
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d, got %d", expected, actual)
+		t.Errorf("Expected %d entries, got %d", expected, actual)
 	}
 }
 
@@ -390,7 +390,7 @@ func TestLogin(t *testing.T) {
 	expected := 1
 	actual := Login(db, "root", "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=")
 	if actual != expected {
-		t.Errorf("Expected UserID: %d, got %d", expected, actual)
+		t.Errorf("Expected userID: %d, got %d", expected, actual)
 	}
 }
 
@@ -406,7 +406,7 @@ func TestGetMostUsedSubscription(t *testing.T) {
 	expectedName, expectedSubTime := "HBO Max", 30
 	actualName, actualSubTime := GetMostUsedSubscription(db, 1, true, false)
 	if expectedName != actualName || expectedSubTime != actualSubTime {
-		t.Errorf("Expected Subname: %s, SubTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
+		t.Errorf("Expected subName: %s, SubTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
 	}
 }
 
@@ -425,6 +425,6 @@ func TestGetPriceForMonth(t *testing.T) {
 	expected := "32.97"
 	actual := GetPriceForMonth(db, 1, 1, 2022)
 	if actual != expected {
-		t.Errorf("Expected Cost: %s, got %s", expected, actual)
+		t.Errorf("Expected cost: %s, got %s", expected, actual)
 	}
 }
