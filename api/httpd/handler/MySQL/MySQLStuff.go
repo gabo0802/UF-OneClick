@@ -49,7 +49,7 @@ func MySQLConnect() *sql.DB {
 
 	err = db.Ping()
 	checkError(err)
-	fmt.Println("Successfully created connection to database.")
+	//fmt.Println("Successfully created connection to database.")
 	//Function code based on https://learn.microsoft.com/en-us/azure/mysql/single-server/connect-go
 
 	return db
@@ -141,7 +141,7 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 		log.Fatal(err)
 	}
 
-	fmt.Println("Rows Affected:", numRows)
+	//fmt.Println("Rows Affected:", numRows)
 	//Test If User Creation Worked
 
 	return int(numRows)
@@ -149,20 +149,22 @@ func CreateNewUser(db *sql.DB, username string, password string, email string) i
 
 func CreateAdminUser(db *sql.DB) {
 	//result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"SBNJTRN-FjG7owHVrKtue7eqdM4RhdRWVl71HXN2d7I=\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", companyemail)
-	result, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"root\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", companyemail)
+	_, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (1, \"root\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", companyemail)
 	//maybe change password to something more secure?
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	numRows, err := result.RowsAffected()
+	//commented out so they don't show on unit tests
+	//uncomment to test and show rows affected
+	/*numRows, err := result.RowsAffected()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Rows Affected:", numRows)
+	fmt.Println("Rows Affected:", numRows)*/
 }
 
 func CreateCommonSubscriptions(db *sql.DB) {
@@ -351,7 +353,6 @@ func CreateNewSub(db *sql.DB, name string, price string) int {
 		}
 	}
 
-	//Tests to see if function worked (can remove later)
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
@@ -359,7 +360,7 @@ func CreateNewSub(db *sql.DB, name string, price string) int {
 		return -502
 	}
 
-	fmt.Println("Rows Affected:", numRows)
+	//fmt.Println("Rows Affected:", numRows)
 	return int(numRows)
 }
 
@@ -429,7 +430,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	//Create New UserSub Data
 	result, _ := db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, currentTime)
 
-	//Tests to see if function worked (can remove later)
+	//Tests to see if function worked
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
@@ -437,7 +438,7 @@ func CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int {
 		return -402
 	}
 
-	fmt.Println("Rows Affected:", numRows)
+	//fmt.Println("Rows Affected:", numRows)
 	return int(numRows) + isRenewed
 }
 
@@ -580,7 +581,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		result, _ = db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded) VALUES (?,?,?);", userID, CurrentSubID, dateAddedTime)
 	}
 
-	//Tests to see if function worked (can remove later)
+	//Tests to see if function worked
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
@@ -588,7 +589,7 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		return -502
 	}
 
-	fmt.Println("Rows Affected:", numRows)
+	//fmt.Println("Rows Affected:", numRows)
 	return int(numRows) + isRenewed
 }
 
@@ -626,7 +627,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 	//Update UserSub Data
 	result, _ := db.Exec("UPDATE UserSubs SET DateRemoved = ? WHERE UserID = ? AND SubID = ? AND DateRemoved IS NULL;", currentTime, userID, CurrentSubID)
 
-	//Tests to see if function worked (can remove later)
+	//Tests to see if function worked
 	numRows, err := result.RowsAffected()
 
 	if err != nil {
@@ -634,7 +635,7 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 		return -502
 	}
 
-	fmt.Println("Rows Affected:", numRows)
+	//fmt.Println("Rows Affected:", numRows)
 	return int(numRows)
 }
 
@@ -659,19 +660,21 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 func DeleteUser(db *sql.DB, ID int) {
 	db.Exec("DELETE FROM Verification WHERE UserID = ?;", ID)
 	db.Exec("DELETE FROM UserSubs WHERE UserID = ?;", ID)
-	result, err := db.Exec("DELETE FROM Users WHERE UserID = ?;", ID)
+	//originally result, err := db.Exec("DELETE FROM Users WHERE UserID = ?;", ID)
+	_, err := db.Exec("DELETE FROM Users WHERE UserID = ?;", ID)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	numRows, err := result.RowsAffected()
+	//commented out to not show on unit test
+	/*numRows, err := result.RowsAffected()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Rows Affected:", numRows)
+	fmt.Println("Rows Affected:", numRows)*/
 }
 
 // Selects entry from database "Users" based on username and password

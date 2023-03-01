@@ -15,7 +15,9 @@ func TestMySQLConnect(t *testing.T) {
 		//checks for panic()
 		//example would be when password txt file is not found
 		if r := recover(); r != nil {
-			t.Errorf("An error occurred: %v", r)
+			t.Errorf("MySQLConnect() FAILED. An error occurred: %v", r)
+		} else {
+			t.Logf("MySQLConnect() PASSED. Connection is established")
 		}
 	}()
 
@@ -31,7 +33,9 @@ func TestGetDatabaseSize(t *testing.T) {
 	expected := 1
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d table, got %d", expected, actual)
+		t.Errorf("GetDatabaseSize(db) FAILED. Expected %d table, got %d", expected, actual)
+	} else {
+		t.Logf("GetDatabaseSize(db) PASSED. Expected %d table, got %d", expected, actual)
 	}
 }
 
@@ -43,7 +47,9 @@ func TestSetUpTables(t *testing.T) {
 	expected := 4
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d tables, got %d", expected, actual)
+		t.Errorf("SetUpTables(db) FAILED. Expected %d tables, got %d", expected, actual)
+	} else {
+		t.Logf("SetUpTables(db) PASSED. Expected %d tables, got %d", expected, actual)
 	}
 }
 
@@ -59,7 +65,9 @@ func TestGetTableSize(t *testing.T) {
 
 	// Checks if the error code is working as intended (shows up when the table does not exist)
 	if errorCode != -404 {
-		t.Errorf("Expected an error code -404, but got %d", errorCode)
+		t.Errorf("GetTableSize(db, \"userss\") FAILED. Expected an error code -404, got %d", errorCode)
+	} else {
+		t.Logf("GetTableSize(db, \"userss\") PASSED. Expected an error code -404, got %d", errorCode)
 	}
 
 	CreateAdminUser(db)
@@ -67,7 +75,9 @@ func TestGetTableSize(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d entry, got %d", expected, actual)
+		t.Errorf("GetTableSize(db, \"users\") FAILED. Expected %d entry, got %d", expected, actual)
+	} else {
+		t.Logf("GetTableSize(db, \"users\") PASSED. Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -81,7 +91,9 @@ func TestResetTable(t *testing.T) {
 	expected := 3
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d tables, got %d", expected, actual)
+		t.Errorf("ResetTable(db, \"Verification\") FAILED. Expected %d tables, got %d", expected, actual)
+	} else {
+		t.Logf("ResetTable(db, \"Verification\") PASSED. Expected %d tables, got %d", expected, actual)
 	}
 }
 
@@ -95,7 +107,9 @@ func TestResetAllTables(t *testing.T) {
 	expected := 0
 	actual := GetDatabaseSize(db)
 	if actual != expected {
-		t.Errorf("Expected %d tables, got %d", expected, actual)
+		t.Errorf("ResetAllTables(db) FAILED. Expected %d tables, got %d", expected, actual)
+	} else {
+		t.Logf("ResetAllTables(db) PASSED. Expected %d tables, got %d", expected, actual)
 	}
 }
 
@@ -111,7 +125,9 @@ func TestCreateNewUser(t *testing.T) {
 
 	errorCode := CreateNewUser(db, username, password, email)
 	if errorCode != -204 {
-		t.Errorf("Expected an error code -204, but got %d", errorCode)
+		t.Errorf("CreateNewUser(db, \"\", \"\", \"\") FAILED. Expected an error code -204, got %d", errorCode)
+	} else {
+		t.Logf("CreateNewUser(db, \"\", \"\", \"\") PASSED. Expected an error code -204, got %d", errorCode)
 	}
 
 	//Will always have admin credentials, so tests using them
@@ -122,7 +138,9 @@ func TestCreateNewUser(t *testing.T) {
 
 	errorCode = CreateNewUser(db, username, password, email)
 	if errorCode != -223 {
-		t.Errorf("Expected an error code -223, but got %d", errorCode)
+		t.Errorf("CreateNewUser(db, \"root\", \"test\", \"unique@gmail.com\") FAILED. Expected an error code -223, got %d", errorCode)
+	} else {
+		t.Logf("CreateNewUser(db, \"root\", \"test\", \"unique@gmail.com\") PASSED. Expected an error code -223, got %d", errorCode)
 	}
 
 	//testing duplicate email
@@ -131,7 +149,9 @@ func TestCreateNewUser(t *testing.T) {
 
 	errorCode = CreateNewUser(db, username, password, email)
 	if errorCode != -225 {
-		t.Errorf("Expected an error code -225, but got %d", errorCode)
+		t.Errorf("CreateNewUser(db, \"unique\", \"test\", \"vanbestindustries@gmail.com\") FAILED. Expected an error code -225, got %d", errorCode)
+	} else {
+		t.Logf("CreateNewUser(db, \"unique\", \"test\", \"vanbestindustries@gmail.com\") PASSED. Expected an error code -225, got %d", errorCode)
 	}
 
 	ResetAllTables(db)
@@ -142,7 +162,9 @@ func TestCreateNewUser(t *testing.T) {
 	expected := 2
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d entries, got %d", expected, actual)
+		t.Errorf("CreateNewUser(db, \"testUser\", \"password\", \"example@gmail.com\") FAILED. Expected %d entries, got %d", expected, actual)
+	} else {
+		t.Logf("CreateNewUser(db, \"testUser\", \"password\", \"example@gmail.com\") PASSED. Expected %d entries, got %d", expected, actual)
 	}
 }
 
@@ -155,7 +177,9 @@ func TestCreateAdminUser(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d entry, got %d", expected, actual)
+		t.Errorf("CreateAdminUser(db) FAILED. Expected %d entry, got %d", expected, actual)
+	} else {
+		t.Logf("CreateAdminUser(db) PASSED. Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -168,7 +192,9 @@ func TestCreateCommonSubscriptions(t *testing.T) {
 	expected := 46
 	actual := GetTableSize(db, "subscriptions")
 	if actual != expected {
-		t.Errorf("Expected %d entries, got %d", expected, actual)
+		t.Errorf("CreateCommonSubscriptions(db) FAILED. Expected %d entries, got %d", expected, actual)
+	} else {
+		t.Logf("CreateCommonSubscriptions(db) PASSED. Expected %d entries, got %d", expected, actual)
 	}
 }
 
@@ -181,7 +207,9 @@ func TestGetPassword(t *testing.T) {
 	expected := "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg="
 	actual := GetPassword(db, 1)
 	if actual != expected {
-		t.Errorf("Expected password: %s, got %s", expected, actual)
+		t.Errorf("GetPassword(db, 1) FAILED. Expected password: %s, got %s", expected, actual)
+	} else {
+		t.Logf("GetPassword(db, 1) PASSED. Expected password: %s, got %s", expected, actual)
 	}
 }
 
@@ -197,7 +225,9 @@ func TestChangePassword(t *testing.T) {
 
 	errorCode := ChangePassword(db, userID, oldPassword, newPassword)
 	if errorCode != -204 {
-		t.Errorf("Expected an error code -204, but got %d", errorCode)
+		t.Errorf("ChangePassword(db, 1, \"\", \"\") FAILED. Expected an error code -204, got %d", errorCode)
+	} else {
+		t.Logf("ChangePassword(db, 1, \"\", \"\") PASSED. Expected an error code -204, got %d", errorCode)
 	}
 
 	//Checks if password changed
@@ -210,7 +240,9 @@ func TestChangePassword(t *testing.T) {
 	actual := GetPassword(db, 1)
 
 	if actual != expected {
-		t.Errorf("Expected new password: %s, got %s", expected, actual)
+		t.Errorf("ChangePassword(db, 1, \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", \"newPassw0rd\") FAILED. Expected new password: %s, got %s", expected, actual)
+	} else {
+		t.Logf("ChangePassword(db, 1, \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", \"newPassw0rd\") PASSED. Expected new password: %s, got %s", expected, actual)
 	}
 }
 
@@ -223,7 +255,9 @@ func TestGetEmail(t *testing.T) {
 	expected := "vanbestindustries@gmail.com"
 	actual := GetEmail(db, 1)
 	if actual != expected {
-		t.Errorf("Expected email: %s, got %s", expected, actual)
+		t.Errorf("GetEmail(db, 1) FAILED. Expected email: %s, got %s", expected, actual)
+	} else {
+		t.Logf("GetEmail(db, 1) PASSED. Expected email: %s, got %s", expected, actual)
 	}
 }
 
@@ -241,7 +275,9 @@ func TestChangeEmail(t *testing.T) {
 
 	errorCode := ChangeEmail(db, userID, newEmail)
 	if errorCode != -223 {
-		t.Errorf("Expected an error code -223, but got %d", errorCode)
+		t.Errorf("ChangeEmail(db, 1, \"valekseev2003@gmail.com\") FAILED. Expected an error code -223 got %d", errorCode)
+	} else {
+		t.Logf("ChangeEmail(db, 1, \"valekseev2003@gmail.com\") PASSED. Expected an error code -223 got %d", errorCode)
 	}
 
 	newEmail = "test@gmail.com"
@@ -252,7 +288,9 @@ func TestChangeEmail(t *testing.T) {
 	actual := GetEmail(db, userID)
 
 	if actual != expected {
-		t.Errorf("Expected new email: %s, got %s", expected, actual)
+		t.Errorf("ChangeEmail(db, 1, \"test@gmail.com\") FAILED. Expected new email: %s, got %s", expected, actual)
+	} else {
+		t.Logf("ChangeEmail(db, 1, \"test@gmail.com\") PASSED. Expected new email: %s, got %s", expected, actual)
 	}
 }
 
@@ -265,7 +303,9 @@ func TestGetUsername(t *testing.T) {
 	expected := "root"
 	actual := GetUsername(db, 1)
 	if actual != expected {
-		t.Errorf("Expected username: %s, got %s", expected, actual)
+		t.Errorf("GetUsername(db, 1) FAILED. Expected username: %s, got %s", expected, actual)
+	} else {
+		t.Logf("GetUsername(db, 1) PASSED. Expected username: %s, got %s", expected, actual)
 	}
 }
 
@@ -283,7 +323,9 @@ func TestChangeUsername(t *testing.T) {
 
 	errorCode := ChangeUsername(db, userID, newUsername)
 	if errorCode != -223 {
-		t.Errorf("Expected an error code -223, but got %d", errorCode)
+		t.Errorf("ChangeUsername(db, 1, \"valek\") FAILED. Expected an error code -223, got %d", errorCode)
+	} else {
+		t.Logf("ChangeUsername(db, 1, \"valek\") PASSED. Expected an error code -223, got %d", errorCode)
 	}
 
 	newUsername = "userExample"
@@ -294,7 +336,9 @@ func TestChangeUsername(t *testing.T) {
 	actual := GetUsername(db, 1)
 
 	if actual != expected {
-		t.Errorf("Expected new username: %s, got %s", expected, actual)
+		t.Errorf("ChangeUsername(db, 1, \"userExample\") FAILED. Expected new username: %s, got %s", expected, actual)
+	} else {
+		t.Logf("ChangeUsername(db, 1, \"userExample\") PASSED. Expected new username: %s, got %s", expected, actual)
 	}
 }
 
@@ -307,7 +351,9 @@ func TestCreateNewSub(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "subscriptions")
 	if actual != expected {
-		t.Errorf("Expected %d entry, got %d", expected, actual)
+		t.Errorf("CreateNewSub(db, \"HBO Max\", \"9.99\") FAILED. Expected %d entry, got %d", expected, actual)
+	} else {
+		t.Logf("CreateNewSub(db, \"HBO Max\", \"9.99\") PASSED. Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -322,7 +368,9 @@ func TestCreateNewUserSub(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "usersubs")
 	if actual != expected {
-		t.Errorf("Expected %d entry, got %d", expected, actual)
+		t.Errorf("CreateNewUserSub(db, 1, \"HBO Max\") FAILED. Expected %d entry, got %d", expected, actual)
+	} else {
+		t.Logf("CreateNewUserSub(db, 1, \"HBO Max\") PASSED. Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -337,7 +385,9 @@ func TestAddOldUserSub(t *testing.T) {
 	expected := 1
 	actual := GetTableSize(db, "usersubs")
 	if actual != expected {
-		t.Errorf("Expected %d entry, got %d", expected, actual)
+		t.Errorf("AddOldUserSub(db, 1, \"HBO Max\", \"2022-01-01 02:30:20\", \"2022-04-05 04:30:20\") FAILED. Expected %d entry, got %d", expected, actual)
+	} else {
+		t.Logf("AddOldUserSub(db, 1, \"HBO Max\", \"2022-01-01 02:30:20\", \"2022-04-05 04:30:20\") PASSED. Expected %d entry, got %d", expected, actual)
 	}
 }
 
@@ -360,7 +410,9 @@ func TestCancelUserSub(t *testing.T) {
 	expected := currentTime.Format("2006-01-02 15:04:05")
 	actual := cancelledDate
 	if actual != expected {
-		t.Errorf("Expected cancelled date: %s, got %s", expected, actual)
+		t.Errorf("CancelUserSub(db, 1, \"HBO Max\") FAILED. Expected cancelled date: %s, got %s", expected, actual)
+	} else {
+		t.Logf("CancelUserSub(db, 1, \"HBO Max\") PASSED. Expected cancelled date: %s, got %s", expected, actual)
 	}
 
 }
@@ -376,7 +428,9 @@ func TestDeleteUser(t *testing.T) {
 	expected := 0
 	actual := GetTableSize(db, "users")
 	if actual != expected {
-		t.Errorf("Expected %d entries, got %d", expected, actual)
+		t.Errorf("DeleteUser(db, 1) FAILED. Expected %d entries, got %d", expected, actual)
+	} else {
+		t.Logf("DeleteUser(db, 1) PASSED. Expected %d entries, got %d", expected, actual)
 	}
 }
 
@@ -390,7 +444,9 @@ func TestLogin(t *testing.T) {
 	expected := 1
 	actual := Login(db, "root", "XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=")
 	if actual != expected {
-		t.Errorf("Expected userID: %d, got %d", expected, actual)
+		t.Errorf("Login(db, \"root\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\") FAILED. Expected userID: %d, got %d", expected, actual)
+	} else {
+		t.Logf("Login(db, \"root\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\") PASSED. Expected userID: %d, got %d", expected, actual)
 	}
 }
 
@@ -406,7 +462,9 @@ func TestGetMostUsedSubscription(t *testing.T) {
 	expectedName, expectedSubTime := "HBO Max", 30
 	actualName, actualSubTime := GetMostUsedSubscription(db, 1, true, false)
 	if expectedName != actualName || expectedSubTime != actualSubTime {
-		t.Errorf("Expected subName: %s, subTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
+		t.Errorf("GetMostUsedSubscription(db, 1, true, false) FAILED. Expected subName: %s, subTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
+	} else {
+		t.Logf("GetMostUsedSubscription(db, 1, true, false) PASSED. Expected subName: %s, subTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
 	}
 }
 
@@ -425,6 +483,8 @@ func TestGetPriceForMonth(t *testing.T) {
 	expected := "32.97"
 	actual := GetPriceForMonth(db, 1, 1, 2022)
 	if actual != expected {
-		t.Errorf("Expected cost: %s, got %s", expected, actual)
+		t.Errorf("GetPriceForMonth(db, 1, 1, 2022) FAILED. Expected cost: %s, got %s", expected, actual)
+	} else {
+		t.Logf("GetPriceForMonth(db, 1, 1, 2022) PASSED. Expected cost: %s, got %s", expected, actual)
 	}
 }
