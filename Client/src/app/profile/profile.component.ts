@@ -110,6 +110,10 @@ export class ProfileComponent {
             }else{
               alert("Cannot Change Username of root user!")
               this.username = oldUsername;
+              
+              this.usernameForm = new FormGroup({
+                'username': new FormControl(this.username, [Validators.pattern('^[A-z0-9]+$')]),
+              });
             }
         }else{
           this.username = oldUsername;
@@ -144,6 +148,12 @@ export class ProfileComponent {
             })
           }else{
             alert("Cannot Change Email Address of root user!")
+
+            this.email = oldEmail;
+
+            this.emailForm = new FormGroup({
+              'email': new FormControl(this.email, [Validators.email]),
+            });
           }
         }else{
           this.email = oldEmail;
@@ -169,7 +179,7 @@ export class ProfileComponent {
   }
 
   delete(): void {
-    if (confirm("Are you sure you want to delete user " + this.username + "?") && this.username != "root"){
+    if (confirm("Are you sure you want to delete user " + this.username + "?")){
       if (this.username != "root"){
         this.api.deleteUserAccount().subscribe((res) => {
           alert("User " + this.username + " has been deleted! Logging Out...")
@@ -177,7 +187,7 @@ export class ProfileComponent {
           this.router.navigate(['login']);
         })
       }else{
-        alert("Cannot Delete root!")
+        alert("Cannot Delete root user!")
       }
     }
   }
