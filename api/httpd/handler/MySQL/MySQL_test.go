@@ -406,7 +406,7 @@ func TestGetMostUsedSubscription(t *testing.T) {
 	expectedName, expectedSubTime := "HBO Max", 30
 	actualName, actualSubTime := GetMostUsedSubscription(db, 1, true, false)
 	if expectedName != actualName || expectedSubTime != actualSubTime {
-		t.Errorf("Expected subName: %s, SubTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
+		t.Errorf("Expected subName: %s, subTimeUsedInSeconds: %d, got %s and %d", expectedName, expectedSubTime, actualName, actualSubTime)
 	}
 }
 
