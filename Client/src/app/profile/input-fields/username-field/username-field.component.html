@@ -1,7 +1,9 @@
 <div class="field">
     <label class="label">Username:</label>
-    <form [formGroup]="usernameForm" (ngSubmit)="updateUsername()">                                           
-        <mat-form-field appearance="fill">                           
+    <form [formGroup]="usernameForm">                                           
+        <mat-form-field appearance="fill" hideRequiredMarker>
+            
+            <!-- <mat-label *ngIf="!editing && usernameForm.untouched">{{oldUsername}}</mat-label> -->
                      
             <input *ngIf="!editing" matInput formControlName="username" readonly="usernameForm">
             <input *ngIf="editing" matInput formControlName="username">
@@ -12,5 +14,5 @@
         </mat-form-field>
     </form>                    
     <button type="button"*ngIf="!editing" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
-    <button type="submit" *ngIf="editing" mat-raised-button color="accent" [disabled]="usernameForm.invalid">Save</button>
+    <button type="button" *ngIf="editing" mat-raised-button color="accent" [disabled]="usernameForm.invalid" (click)="updateUsername()">Save</button>
 </div>

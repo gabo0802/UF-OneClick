@@ -1,0 +1,16 @@
+<div class="field">
+    <label class="label">Timezone:</label>
+    <form [formGroup]="timeZoneForm" (ngSubmit)="updateTimeZone()">
+                           
+        <mat-form-field appearance="fill">                           
+                     
+            <input *ngIf="!editing" matInput formControlName="timezone" readonly="timezoneForm">
+            <input *ngIf="editing" matInput formControlName="timezone">
+            
+            <mat-error *ngIf="timeZoneForm.get('timeZoneForm')?.hasError('pattern')">Please enter a valid Time Zone</mat-error>
+
+        </mat-form-field>
+    </form>
+    <button type="button" *ngIf="!editing" mat-raised-button color="primary" (click)="editTimeZone()">Edit</button>
+    <button type="submit" *ngIf="editing" mat-raised-button color="accent" [disabled]="timeZoneForm.invalid">Save</button>                  
+</div>             

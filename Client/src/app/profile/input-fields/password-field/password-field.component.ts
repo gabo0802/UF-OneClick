@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DialogsService } from 'src/app/dialogs.service';
 
@@ -7,7 +7,7 @@ import { DialogsService } from 'src/app/dialogs.service';
   templateUrl: './password-field.component.html',
   styleUrls: ['./password-field.component.css']
 })
-export class PasswordFieldComponent {
+export class PasswordFieldComponent implements OnInit{
 
   constructor(private dialogs: DialogsService) {}
 

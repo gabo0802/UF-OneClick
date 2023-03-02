@@ -6,23 +6,9 @@
             </mat-card-header>
             <mat-card-content>
                 <app-username-field [oldUsername]="username"></app-username-field>
-                <app-email-field></app-email-field>
+                <app-email-field [oldEmail]="email"></app-email-field>
                 <app-password-field></app-password-field>
-                <!-- Timezone Begin--> 
-                <div class="field">
-                    <label class="label">Timezone:</label>
-                    <form [formGroup]="timezoneForm">
-                                           
-                        <mat-form-field appearance="fill">                           
-                                     
-                            <input *ngIf="!timezoneEdit" matInput formControlName="timezonedifference" readonly="timezoneForm">
-                            <input *ngIf="timezoneEdit" matInput formControlName="timezonedifference">
-                                                   
-                        </mat-form-field>
-                    </form>
-                    <button *ngIf="!timezoneEdit" mat-raised-button color="primary" (click)="editTimezone()">Edit</button>
-                    <button *ngIf="timezoneEdit" mat-raised-button color="accent" [disabled]="timezoneForm.invalid" (click)="editTimezone()">Save</button>                  
-                </div>               
+                <app-timezone-field [oldTimeZone]="timezone"></app-timezone-field>  
             </mat-card-content>
             <mat-card-actions>
                 <div class="buttons">                    

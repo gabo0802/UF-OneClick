@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from 'src/app/api.service';
 import { AuthService } from '../auth.service';
 
@@ -10,64 +8,32 @@ import { AuthService } from '../auth.service';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit{
 
-  constructor(private router: Router, private dialog: MatDialog, private api: ApiService, private authService: AuthService) {}
+  constructor(private router: Router, private api: ApiService, private authService: AuthService) {}
 
   hide: boolean = true;
   passwordCharacterLength: number = 3;
 
-  timezoneEdit: boolean = false;
-
   username: string = '';
   email: string = '';
-  timezone: string = '';
+  timezone: string = '';  
 
-  timezoneForm = new FormGroup({
-    'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
-  });
+  ngOnInit(){  
 
-  ngOnInit(){
-      this.api.getEmailandUsername().subscribe((resultMessage: string[]) => {
-        this.username = resultMessage[0], 
-        this.email = resultMessage[1];
+    this.api.getEmailandUsername().subscribe((res: Object) => {
 
-      });
-
-      this.api.getTimezone().subscribe((resultMessage: string[]) => {
-        this.timezone = resultMessage[1] + "UTC";
-
-        this.timezoneForm = new FormGroup({
-          'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
-        });
-      
-      });
-  }
-
-
-  editTimezone(): void{
-    this.timezoneEdit = !this.timezoneEdit;
-
-    if (this.timezoneEdit == false){
-      var oldTimezone: string = this.timezone
-      this.timezone = this.timezoneForm.controls['timezonedifference'].value || this.timezone
-
-      if (this.timezone != oldTimezone ){
-        if (confirm("Are you sure you want to change your time from " + oldTimezone + " to " + this.timezone + "?")){
-          var actualtimezone: string = this.timezone.replaceAll("UTC", "")
-          actualtimezone  = actualtimezone.replaceAll("+", "")
-
-          this.api.updateTimezone(actualtimezone).subscribe((res) => {
-            alert("Timezone Changed!")
-          })
-        }
-      }
-    }
-
-    this.timezoneForm = new FormGroup({
-      'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
+      let data = JSON.stringify(res);
+      let userInfo = JSON.parse(data);
+      this.username = userInfo.username;          
     });
-  }  
+
+    this.api.getTimezone().subscribe((resultMessage: string[]) => {
+      this.timezone = resultMessage[1] + "UTC";      
+      
+    });
+
+  }
  
   back(): void {
     this.router.navigate(['users']);

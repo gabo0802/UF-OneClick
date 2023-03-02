@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -6,16 +6,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   templateUrl: './email-field.component.html',
   styleUrls: ['./email-field.component.css']
 })
-export class EmailFieldComponent {
+export class EmailFieldComponent implements OnInit{
 
   emailForm: FormGroup = {} as FormGroup;
   editing: boolean = false;
-  oldEmail: string = '';
+  @Input() oldEmail: string = '';
   
 
   ngOnInit(): void {
     this.emailForm = new FormGroup({
-      'email': new FormControl({value: '', disabled: true}, [Validators.required, Validators.email]),
+      'email': new FormControl({value: this.oldEmail, disabled: true}, [Validators.required, Validators.email]),
     });
   }
 
