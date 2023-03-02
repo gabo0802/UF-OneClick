@@ -70,6 +70,8 @@ Each unit test checks the general functionality of their respective function:
 
 
 ## Back-End API
+<b>[Error Codes Can Be Viewed In UF-OneClick/ProjectNotes/errorcode.txt]</b>
+
 ### MySQL
 <code> MySQLConnect() *sql.DB </code>
 <br> Establishes a connection to the remote database hosted on a Microsoft Azure server. Returns the variable holding the database connection. <br>
