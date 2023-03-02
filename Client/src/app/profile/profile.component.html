@@ -6,21 +6,7 @@
             </mat-card-header>
             <mat-card-content>
                 <app-username-field [oldUsername]="username"></app-username-field>
-                <!-- Email Begin-->
-                <div class="field">
-                    <label class="label">Email:</label>
-                    <form [formGroup]="emailForm">
-                                           
-                        <mat-form-field appearance="fill">                           
-                                     
-                            <input *ngIf="!emailEdit" matInput formControlName="email" readonly="emailForm">
-                            <input *ngIf="emailEdit" matInput formControlName="email">
-                                                   
-                        </mat-form-field>
-                    </form>
-                    <button *ngIf="!emailEdit" mat-raised-button color="primary" (click)="editEmail()">Edit</button>
-                    <button *ngIf="emailEdit" mat-raised-button color="accent" [disabled]="emailForm.invalid" (click)="editEmail()">Save</button>
-                </div>
+                <app-email-field></app-email-field>
                 <!-- Password Begin-->
                 <div class="field">
                     <label class="label">Password:</label>

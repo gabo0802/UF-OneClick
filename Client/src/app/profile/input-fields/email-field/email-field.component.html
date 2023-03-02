@@ -1,0 +1,17 @@
+<div class="field">
+    <label class="label">Email:</label>
+    <form [formGroup]="emailForm" (ngSubmit)="updateEmail()">
+                           
+        <mat-form-field appearance="fill">                           
+                     
+            <input *ngIf="!editing" matInput formControlName="email" readonly="emailForm">
+            <input *ngIf="editing" matInput formControlName="email">
+
+            <mat-error *ngIf="emailForm.get('email')?.hasError('required') || emailForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
+            <mat-error *ngIf="emailForm.get('email')?.hasError('duplicate')">Duplicate Email</mat-error> 
+                                   
+        </mat-form-field>
+    </form>
+    <button type="button" *ngIf="!editing" mat-raised-button color="primary" (click)="editEmail()">Edit</button>
+    <button type="submit" *ngIf="editing" mat-raised-button color="accent" [disabled]="emailForm.invalid">Save</button>
+</div>

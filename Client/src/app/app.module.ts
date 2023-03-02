@@ -23,6 +23,7 @@ import { SuccessComponent } from './dialogs/success/success.component';
 import { DialogsService } from './dialogs.service';
 import { ErrorComponent } from './dialogs/error/error.component';
 import { UsernameFieldComponent } from './profile/input-fields/username-field/username-field.component';
+import { EmailFieldComponent } from './profile/input-fields/email-field/email-field.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { UsernameFieldComponent } from './profile/input-fields/username-field/us
     PasswordResetComponent,
     SuccessComponent,
     ErrorComponent,
-    UsernameFieldComponent
+    UsernameFieldComponent,
+    EmailFieldComponent
   ],
   imports: [
     BrowserModule,
