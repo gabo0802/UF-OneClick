@@ -20,12 +20,13 @@ func main() {
 	//MySQL.ResetAllTables(db)
 	MySQL.SetUpTables(db)
 
-	if MySQL.GetTableSize(db, "Users") == 0 {
-		MySQL.CreateAdminUser(db)
-	}
-
 	if MySQL.GetTableSize(db, "Subscriptions") == 0 {
 		MySQL.CreateCommonSubscriptions(db)
+	}
+
+	if MySQL.GetTableSize(db, "Users") == 0 {
+		MySQL.CreateAdminUser(db)
+		MySQL.CreateTestUser(db) //for testing
 	}
 
 	//Sets pointer in "handler" package to main.go's db:

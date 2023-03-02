@@ -167,6 +167,19 @@ func CreateAdminUser(db *sql.DB) {
 	fmt.Println("Rows Affected:", numRows)*/
 }
 
+func CreateTestUser(db *sql.DB) {
+	_, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (2, \"test\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", "sir.testmctestington.the.tester@gmail.com")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	AddOldUserSub(db, 2, "Disney+ (Basic)", "2023-02-15 01:18:56", "")
+	AddOldUserSub(db, 2, "Playstation Plus (Essential) (3 Months)", "2020-12-05 04:13:44", "")
+	AddOldUserSub(db, 2, "AMC+ (Yearly)", "2020-03-01 11:42:33", "")
+	AddOldUserSub(db, 2, "Hulu (Student)", "2022-02-01 09:28:33", "2023-01-01 11:48:53")
+	AddOldUserSub(db, 2, "Amazon Prime (Student) (Yearly)", "2022-04-01 11:53:33", "")
+}
+
 func CreateCommonSubscriptions(db *sql.DB) {
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Basic with ads)\", 6.99);")
 	db.Exec("INSERT INTO Subscriptions(name, price) VALUES (\"Netflix (Basic)\", 9.99);")
