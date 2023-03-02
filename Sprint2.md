@@ -97,6 +97,9 @@ Each unit test checks the general functionality of their respective function:
 <code> CreateAdminUser(db *sql.DB) </code>
 <br> Inserts an admin user into the User table for testing. <br>
   
+<code> CreateTestUser(db *sql.DB) </code>
+<br> Inserts an test user into the User table and adds some random subscriptions for them for testing purposes. <br>
+
 <code> CreateCommonSubscriptions(db *sql.DB) </code>
 <br> Inserts many common subscription entries into the Subscriptions table. <br>
 
@@ -144,8 +147,6 @@ Each unit test checks the general functionality of their respective function:
   
 <code> ManuallyTestBackend(db *sql.DB) </code>
 <br> Allows manual testing of functions that manipulate the database with a simple user interface based on inputs of 1-10. <br>
-
-<br>
 
 ### Handler
 <code> SetDB(db *sql.DB) </code> 
