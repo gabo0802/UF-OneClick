@@ -18,12 +18,13 @@ import { UsersComponent } from './dashboard/users/users.component';
 import { AdminComponent } from './dashboard/admin/admin.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FooterComponent } from './footer/footer.component';
-import { PasswordResetComponent } from './profile/password-reset/password-reset.component';
 import { SuccessComponent } from './dialogs/success/success.component';
 import { DialogsService } from './dialogs.service';
 import { ErrorComponent } from './dialogs/error/error.component';
 import { UsernameFieldComponent } from './profile/input-fields/username-field/username-field.component';
 import { EmailFieldComponent } from './profile/input-fields/email-field/email-field.component';
+import { PasswordFieldComponent } from './profile/input-fields/password-field/password-field.component';
+import { PasswordResetComponent } from './dialogs/password-reset/password-reset.component';
 
 @NgModule({
   declarations: [
@@ -37,11 +38,12 @@ import { EmailFieldComponent } from './profile/input-fields/email-field/email-fi
     AdminComponent,
     ProfileComponent,
     FooterComponent,
-    PasswordResetComponent,
     SuccessComponent,
     ErrorComponent,
     UsernameFieldComponent,
-    EmailFieldComponent
+    EmailFieldComponent,
+    PasswordFieldComponent,
+    PasswordResetComponent
   ],
   imports: [
     BrowserModule,

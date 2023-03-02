@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PasswordResetComponent } from './password-reset/password-reset.component'
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from 'src/app/api.service';
 import { AuthService } from '../auth.service';
@@ -21,16 +20,11 @@ export class ProfileComponent {
   timezoneEdit: boolean = false;
 
   username: string = '';
-  password: string = '************';
   email: string = '';
   timezone: string = '';
 
   timezoneForm = new FormGroup({
     'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
-  });
-
-  passwordForm = new FormGroup({
-    'password': new FormControl(this.password, [Validators.minLength(this.passwordCharacterLength)]),
   });
 
   ngOnInit(){
@@ -74,11 +68,7 @@ export class ProfileComponent {
       'timezonedifference': new FormControl(this.timezone, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
     });
   }  
-
-  editPassword(): void {
-    this.callDialog();   
-  }
-
+ 
   back(): void {
     this.router.navigate(['users']);
   }
@@ -95,12 +85,5 @@ export class ProfileComponent {
         alert("Cannot Delete root user!")
       }
     }
-  }
-
-  callDialog(): void {
-    this.dialog.open( PasswordResetComponent, { 
-      height: '335px',
-      width: '500px',
-    });    
   }
 }

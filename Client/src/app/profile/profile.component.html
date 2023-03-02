@@ -7,20 +7,7 @@
             <mat-card-content>
                 <app-username-field [oldUsername]="username"></app-username-field>
                 <app-email-field></app-email-field>
-                <!-- Password Begin-->
-                <div class="field">
-                    <label class="label">Password:</label>
-                    <form [formGroup]="passwordForm">   
-
-                        <mat-form-field appearance="fill">                              
-                            <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" readonly="passwordForm">                            
-                            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" disabled="hide">  
-                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
-                        </button>                            
-                        </mat-form-field>
-                    </form>
-                    <button mat-raised-button color="primary" (click)="editPassword()">Edit</button>                    
-                </div> 
+                <app-password-field></app-password-field>
                 <!-- Timezone Begin--> 
                 <div class="field">
                     <label class="label">Timezone:</label>

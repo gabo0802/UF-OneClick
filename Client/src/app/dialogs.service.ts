@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ErrorComponent } from './dialogs/error/error.component';
 import { SuccessComponent } from './dialogs/success/success.component';
+import { PasswordResetComponent } from './dialogs/password-reset/password-reset.component';
 
 @Injectable({
   providedIn: 'root'
@@ -27,13 +28,20 @@ export class DialogsService {
 
   }
 
-  errorDialog(ErrorTitle: string, ErrorMessage: string): void {
+  errorDialog(errorTitle: string, errorMessage: string): void {
 
     this.dialog.open(ErrorComponent, {
-      data: {dialogTitle: ErrorTitle, dialogMessage: ErrorMessage},      
+      data: {dialogTitle: errorTitle, dialogMessage: errorMessage},      
       height: '180px',
       width: '370px',
     });
+  }
 
+  passwordReset(): void {
+
+    this.dialog.open(PasswordResetComponent, { 
+      height: '335px',
+      width: '500px',
+    }); 
   }
 }
