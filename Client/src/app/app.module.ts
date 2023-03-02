@@ -11,7 +11,6 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { SignupMessageComponent } from './signup/signup-message/signup-message.component';
 import { LoginMessageComponent } from './login/login-message/login-message.component';
 import { AuthGuard, LogInGuard } from './auth-guard.guard';
 import { AuthService } from './auth.service';
@@ -21,6 +20,9 @@ import { AdminComponent } from './dashboard/admin/admin.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FooterComponent } from './footer/footer.component';
 import { PasswordResetComponent } from './profile/password-reset/password-reset.component';
+import { SuccessComponent } from './dialogs/success/success.component';
+import { DialogsService } from './dialogs.service';
+import { ErrorComponent } from './dialogs/error/error.component';
 
 @NgModule({
   declarations: [
@@ -30,13 +32,14 @@ import { PasswordResetComponent } from './profile/password-reset/password-reset.
     LoginComponent,
     SignupComponent,
     DashboardComponent,
-    SignupMessageComponent,
     LoginMessageComponent,
     UsersComponent,
     AdminComponent,
     ProfileComponent,
     FooterComponent,
-    PasswordResetComponent
+    PasswordResetComponent,
+    SuccessComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,7 @@ import { PasswordResetComponent } from './profile/password-reset/password-reset.
    
     MaterialDesignModule
   ],
-  providers: [AuthService, AuthGuard, ApiService, LogInGuard],
+  providers: [AuthService, AuthGuard, ApiService, LogInGuard, DialogsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
