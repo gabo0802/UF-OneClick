@@ -1,9 +1,46 @@
 ## Work Completed
 * Integrated front-end and back-end 
-* 
+
+Front-End
+* Login functionality implemented
+* Sign Up functionality implemented
+* Header Navigation bar at top changes based on component status
+* Authentication service implemented
+* Main Page styling and text added
+* Created scroll bar
+* Created visuals section with placeholder context
+* Profile Page created - not stylized yet
+
+Worked on unit tests
+
 
 ## Front-End Unit Tests
-*
+
+App Component:
+* Check title
+
+AuthService:
+* Returning logged in user is logged in
+* Visitor logging in should be logged in
+* User should be logged in
+* User logging out should be logged out
+* Visitor should not be logged in
+
+HeaderComponent:
+* If user not logged in, redirected to home on image header click
+
+LoginComponent:
+* Password input field hidden by default
+
+Cypress tests:
+* Login form can be filled in
+* Sign up form can be filled in
+* Login button has text Login
+* Login button can be clicked
+* Sign Up button has text Sign Up
+* Sign Up button can be clicked
+* Main Page Card title has correct title
+
 
 ## Back-End Unit Tests
 * TestMySQLConnect(t *testing.T)
@@ -178,4 +215,4 @@
 <br>
 
 ## Video
-* https://drive.google.com/file/d/1jcK0cF0H5ZVGPdjgcqcRghn0X-Dc9Z5T/view
+*
