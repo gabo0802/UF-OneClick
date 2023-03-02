@@ -3,14 +3,14 @@
     <form [formGroup]="usernameForm" (ngSubmit)="updateUsername()">                                           
         <mat-form-field appearance="fill">                           
                      
-            <input *ngIf="!usernameEdit" matInput formControlName="username" readonly="usernameForm">
-            <input *ngIf="usernameEdit" matInput formControlName="username">
+            <input *ngIf="!editing" matInput formControlName="username" readonly="usernameForm">
+            <input *ngIf="editing" matInput formControlName="username">
 
             <mat-error *ngIf="usernameForm.get('username')?.hasError('required') || usernameForm.get('username')?.hasError('pattern')">Please enter a valid username</mat-error>
             <mat-error *ngIf="usernameForm.get('username')?.hasError('duplicate')">Duplicate Username</mat-error>
             
         </mat-form-field>
     </form>                    
-    <button type="button"*ngIf="!usernameEdit" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
-    <button type="submit" *ngIf="usernameEdit" mat-raised-button color="accent" [disabled]="usernameForm.invalid">Save</button>
+    <button type="button"*ngIf="!editing" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
+    <button type="submit" *ngIf="editing" mat-raised-button color="accent" [disabled]="usernameForm.invalid">Save</button>
 </div>
