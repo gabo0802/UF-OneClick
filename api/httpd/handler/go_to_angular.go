@@ -244,11 +244,11 @@ func SendAllReminders() int {
 	currentTime := time.Now()
 	currentDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()-1, 11, 59, 59, 0, time.Local)
 
-	currentMonth := strconv.Itoa(int(currentDate.Month()))
+	currentMonth := strconv.Itoa(int(currentTime.Month()))
 	if len(currentMonth) < 2 {
 		currentMonth = "0" + currentMonth
 	}
-	currentYear := strconv.Itoa(currentDate.Year())
+	currentYear := strconv.Itoa(currentTime.Year())
 
 	nextDayDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 11, 59, 59, 0, time.Local)
 	nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+7, 11, 59, 59, 0, time.Local)

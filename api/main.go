@@ -33,7 +33,7 @@ func main() {
 	handler.SetDB(db)
 
 	//Reminders:
-	handler.SendAllReminders()
+	fmt.Println(handler.SendAllReminders())
 
 	//Angular Connection:
 	r := gin.Default()
