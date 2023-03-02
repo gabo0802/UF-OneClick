@@ -11,7 +11,6 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginMessageComponent } from './login/login-message/login-message.component';
 import { AuthGuard, LogInGuard } from './auth-guard.guard';
 import { AuthService } from './auth.service';
 import { ApiService } from './api.service';
@@ -32,7 +31,6 @@ import { ErrorComponent } from './dialogs/error/error.component';
     LoginComponent,
     SignupComponent,
     DashboardComponent,
-    LoginMessageComponent,
     UsersComponent,
     AdminComponent,
     ProfileComponent,
