@@ -43,6 +43,7 @@ Cypress tests:
 
 
 ## Back-End Unit Tests
+Each unit test checks the general functionality of their respective function:
 * TestMySQLConnect(t *testing.T)
 * TestGetDatabaseSize(t *testing.T)
 * TestSetUpTables(t *testing.T)
@@ -67,80 +68,81 @@ Cypress tests:
 * TestGetMostUsedSubscription(t *testing.T)
 * TestGetPriceForMonth(t *testing.T)
 
+
 ## Back-End API
 ### MySQL
-<code> MySQLConnect() </code>
-<br> Enter text here<br>
+<code> MySQLConnect() *sql.DB </code>
+<br> Establishes a connection to the remote database hosted on a Microsoft Azure server. Returns the variable holding the database connection. <br>
 
-<code> GetTableSize() </code>
-<br> Enter text here<br>
+<code> GetDatabaseSize(db *sql.DB) int </code>
+<br> Returns the number of tables in the main database (called "userdb"). <br>
 
-<code> SetUpTables() </code>
-<br> Enter text here<br>
-  
-<code> ResetTable() </code>
-<br> Enter text here<br>
-  
-<code> ResetAllTables() </code>
-<br> Enter text here<br>
-  
-<code> CreateNewUser() </code>
-<br> Enter text here<br>
-  
-<code> CreateAdminUser() </code>
-<br> Enter text here<br>
-  
-<code> CreateCommonSubscriptions() </code>
-<br> Enter text here<br>
+<code> SetUpTables(db *sql.DB) </code>
+<br> Creates the "Users," "Subscriptions," "UserSubs," and "Verification" tables in the database. <br>
 
-<code> ChangePassword() </code>
-<br> Enter text here<br>
+<code> GetTableSize(db *sql.DB, tableName string) int </code>
+<br> Returns the size of the table of the specified tableName passed in. <br>
   
-<code> ChangeEmail() </code>
-<br> Enter text here<br>
+<code> ResetTable(db *sql.DB, tableName string) </code>
+<br> Removes the specified tableName from the database. <br>
   
-<code> ChangeUsername() </code>
-<br> Enter text here<br>
+<code> ResetAllTables(db *sql.DB) </code>
+<br> Removes all tables from the database. <br>
+  
+<code> CreateNewUser(db *sql.DB, username string, password string, email string) int </code>
+<br> Inserts a new entry into the User table with an inputted username, password, and email. Cannot use: empty inputs, emails that already exist in the system, usernames that already exist in the system. Returns 1 if successful, and an error code otherwise. <br>
+  
+<code> CreateAdminUser(db *sql.DB) </code>
+<br> Inserts an admin user into the User table for testing. <br>
+  
+<code> CreateCommonSubscriptions(db *sql.DB) </code>
+<br> Inserts many common subscription entries into the Subscriptions table. <br>
 
-<code> GetUsername() </code>
-<br> Enter text here<br>
+<code> GetPassword(db *sql.DB, userID int) string </code>
+<br> Returns the password of the specified userID. <br>
+
+<code> ChangePassword(db *sql.DB, userID int, oldPassword string, newPassword string) int </code>
+<br> Takes in a userID, old password, and new password as parameters. Changes the password based on the inputted userID. oldPassword and newPassword must not be empty. Returns 1 if successful, and an error code otherwise. <br>
+
+<code> GetEmail(db *sql.DB, userID int) string </code>
+<br> Returns the email of the specified userID. <br>
   
-<code> GetEmail() </code>
-<br> Enter text here<br>
+<code> ChangeEmail(db *sql.DB, userID int, newEmail string) int </code>
+<br> Takes in a userID and new email. The userID specifies which users' email to change. newEmail must not already exist in the database. Returns 1 if successful, and an error code otherwise. <br>
+
+<code> GetUsername(db *sql.DB, userID int) string </code>
+<br> Returns the username of the specified userID or an error code otherwise. <br>
   
-<code> CreateNewSub() </code>
-<br> Enter text here<br>
+<code> ChangeUsername(db *sql.DB, userID int, newUsername string) int </code>
+<br> Changes the username based on the userID. newUsername must not already exist in the database. Returns 1 if successful, and an error code otherwise. <br>
   
-<code> CreateNewUserSub() </code>
-<br> Enter text here<br>
+<code> CreateNewSub(db *sql.DB, name string, price string) int </code>
+<br> Inserts a new subscription into the Subscriptions table. name must not already exist in database. Returns 1 if successful, and an error code otherwise. <br>
   
-<code> AddOldUserSub() </code>
-<br> Enter text here<br>
+<code> CreateNewUserSub(db *sql.DB, userID int, subscriptionName string) int </code>
+<br> Inserts a new userSub into the UserSubs table. subscriptionName must: not be empty, already exist in the Subscriptions table, and not currently associated with the userID. DateAdded column in the table is based on the current time. Returns 1 if successful and an error code otherwise. <br>
   
-<code> CancelUserSub() </code>
-<br> Enter text here<br>
+<code> AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded string, dateCanceled string) int </code>
+<br> Inserts a userSub into the UserSubs table, but with a specified dateAdded and dateCancelled entry. This is used for old subscriptions that want to be entered. Returns 1 if successful and an error code otherwise. <br>
   
-<code> DeleteUser() </code>
-<br> Enter text here<br>
+<code> CancelUserSub(db *sql.DB, userID int, subscriptionName string) int </code>
+<br> Removes a userSub based on the inputted subscriptionName.  Returns 1 if successful, and an error code otherwise. <br>
   
-<code> Login() </code>
-<br> Enter text here<br>
+<code> DeleteUser(db *sql.DB, ID int) </code>
+<br> Removes a user entry from the User table based on the inputted userID. <br>
   
-<code> GetMostUsedSubscription() </code>
-<br> Enter text here<br>
+<code> Login(db *sql.DB, username string, password string) int </code>
+<br> Checks to see if inputted username and password already exist in the database. Returns the current userID if successful, and an error code otherwise. <br>
   
-<code> GetPriceForMonth() </code>
-<br> Enter text here<br>
+<code> GetMostUsedSubscription(db *sql.DB, currentID int, isContinuous bool, isCurrentlyActive bool) (string, int) </code>
+<br> Calculates the most used subscription based on the userID and if the subscription is continuous and/or currently active on the plan. Returns the subscription name and the time used with the subscription in seconds. <br>
   
-<code> TestBackend() </code>
-<br> Enter text here<br>
+<code> GetPriceForMonth(db *sql.DB, currentID int, monthNumber int, yearNumber int) string </code>
+<br> Returns the price of an inputted month and year of a specified user's subscription total. <br>
   
-<code> ShowDatabaseTables() </code>
-<br> Enter text here<br>
-  
-<code> GetColumnData() </code>
-<br> Enter text here<br>
-  
+<code> ManuallyTestBackend(db *sql.DB) </code>
+<br> Allows manual testing of functions that manipulate the database with a simple user interface based on inputs of 1-10. <br>
+
 <br>
 
 ### Handler
