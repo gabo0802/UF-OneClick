@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
-import { LoginMessageComponent } from './login-message/login-message.component';
+import { DialogsService } from '../dialogs.service';
+
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent {
   loginForm: FormGroup = {} as FormGroup;
   hide: boolean = true;
 
-  constructor(private api: ApiService, private dialog: MatDialog, private router: Router, private authService: AuthService) {};  
+  constructor(private api: ApiService, private router: Router, private dialogs: DialogsService, private authService: AuthService) {};  
 
   ngOnInit(){
     this.loginForm = new FormGroup({
@@ -35,21 +36,12 @@ export class LoginComponent {
         this.router.navigate(['users']);
         this.loginForm.reset();
       }
-      else{
-        this.callDialog(resultMessage[0], resultMessage[1]);
+      else{        
+        this.dialogs.errorDialog(resultMessage[0], resultMessage[1]);
       }
     })
 
     
-  }
-
-  callDialog(title: string, message: string){
-
-    this.dialog.open(LoginMessageComponent, {
-      data: { dialogTitle: title, dialogMessage: message},      
-      height: '180px',
-      width: '370px',
-    });    
   }
 
 }
