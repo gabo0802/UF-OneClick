@@ -6,7 +6,29 @@
 *
 
 ## Back-End Unit Tests
-*
+* TestMySQLConnect(t *testing.T)
+* TestGetDatabaseSize(t *testing.T)
+* TestSetUpTables(t *testing.T)
+* TestGetTableSize(t *testing.T)
+* TestResetTable(t *testing.T)
+* TestResetAllTables(t *testing.T)
+* TestCreateNewUser(t *testing.T)
+* TestCreateAdminUser(t *testing.T)
+* TestCreateCommonSubscriptions(t *testing.T)
+* TestGetPassword(t *testing.T)
+* TestChangePassword(t *testing.T)
+* TestGetEmail(t *testing.T)
+* TestChangeEmail(t *testing.T)
+* TestGetUsername(t *testing.T)
+* TestChangeUsername(t *testing.T)
+* TestCreateNewSub(t *testing.T)
+* TestCreateNewUserSub(t *testing.T)
+* TestAddOldUserSub(t *testing.T)
+* TestCancelUserSub(t *testing.T)
+* TestDeleteUser(t *testing.T)
+* TestLogin(t *testing.T)
+* TestGetMostUsedSubscription(t *testing.T)
+* TestGetPriceForMonth(t *testing.T)
 
 ## Back-End API
 ### MySQL
