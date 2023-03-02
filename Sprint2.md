@@ -128,10 +128,10 @@ Each unit test checks the general functionality of their respective function:
 <br> Inserts a userSub into the UserSubs table, but with a specified dateAdded and dateCancelled entry. This is used for old subscriptions that want to be entered. Returns 1 if successful and an error code otherwise. <br>
   
 <code> CancelUserSub(db *sql.DB, userID int, subscriptionName string) int </code>
-<br> Updates a userSub's DateRemoved value based on the inputted subscriptionName.  Returns 1 if successful, and an error code otherwise. <br>
+<br> Updates a userSub's subscriptionName DateRemoved value based on the current time.  Returns 1 if successful, and an error code otherwise. <br>
   
 <code> DeleteUser(db *sql.DB, ID int) </code>
-<br> Removes a user entry from the User table based on the inputted userID. <br>
+<br> Removes a user entry from all associated tables based on the inputted userID. <br>
   
 <code> Login(db *sql.DB, username string, password string) int </code>
 <br> Checks to see if inputted username and password already exist in the database. Returns the current userID if successful, and an error code otherwise. <br>
