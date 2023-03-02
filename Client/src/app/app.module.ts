@@ -22,6 +22,7 @@ import { PasswordResetComponent } from './profile/password-reset/password-reset.
 import { SuccessComponent } from './dialogs/success/success.component';
 import { DialogsService } from './dialogs.service';
 import { ErrorComponent } from './dialogs/error/error.component';
+import { UsernameFieldComponent } from './profile/input-fields/username-field/username-field.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ErrorComponent } from './dialogs/error/error.component';
     FooterComponent,
     PasswordResetComponent,
     SuccessComponent,
-    ErrorComponent
+    ErrorComponent,
+    UsernameFieldComponent
   ],
   imports: [
     BrowserModule,

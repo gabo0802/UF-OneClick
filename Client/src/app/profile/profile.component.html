@@ -5,20 +5,7 @@
                 <mat-card-title><h3>Profile Information</h3></mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <!-- Username Begin-->
-                <div class="field">
-                    <label class="label">Username:</label>
-                    <form [formGroup]="usernameForm">                                           
-                        <mat-form-field appearance="fill">                           
-                                     
-                            <input *ngIf="!usernameEdit" matInput formControlName="username" readonly="usernameForm">
-                            <input *ngIf="usernameEdit" matInput formControlName="username">
-                            
-                        </mat-form-field>
-                    </form>                    
-                    <button *ngIf="!usernameEdit" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
-                    <button *ngIf="usernameEdit" mat-raised-button color="accent" [disabled]="usernameForm.invalid" (click)="editUsername()">Save</button>
-                </div>
+                <app-username-field [oldUsername]="username"></app-username-field>
                 <!-- Email Begin-->
                 <div class="field">
                     <label class="label">Email:</label>
