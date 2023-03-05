@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { DialogsService } from '../dialogs.service';
+import { passwordLength } from '../passwordLength';
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +17,7 @@ export class SignupComponent implements OnInit{
   constructor(private api: ApiService, private dialogs: DialogsService, private router: Router) {};
 
   hide: boolean = true;
-  passwordCharacterLength: number = 3;
+  passwordCharacterLength: number = passwordLength.length;
 
   signUpForm: FormGroup = {} as FormGroup;
 
