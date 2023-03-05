@@ -1,17 +1,18 @@
 <div class="field">
     <label class="label">Email:</label>
-    <form [formGroup]="emailForm" (ngSubmit)="updateEmail()">
-                           
-        <mat-form-field appearance="fill">                           
+    <form>                           
+        <mat-form-field appearance="fill" hideRequiredMarker>
+            
+            <mat-label *ngIf="!editing && emailForm.untouched">{{oldEmail}}</mat-label>
                      
-            <input *ngIf="!editing" matInput formControlName="email" readonly="emailForm">
-            <input *ngIf="editing" matInput formControlName="email">
+            <input *ngIf="!editing" matInput [formControl]="emailForm" readonly="emailForm">
+            <input *ngIf="editing" matInput [formControl]="emailForm">
 
-            <mat-error *ngIf="emailForm.get('email')?.hasError('required') || emailForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
-            <mat-error *ngIf="emailForm.get('email')?.hasError('duplicate')">Duplicate Email</mat-error> 
+            <mat-error *ngIf="emailForm.hasError('required') || emailForm.hasError('email')">Please enter a valid email</mat-error>
+            <mat-error *ngIf="emailForm.hasError('duplicate')">Duplicate Email</mat-error> 
                                    
         </mat-form-field>
     </form>
     <button type="button" *ngIf="!editing" mat-raised-button color="primary" (click)="editEmail()">Edit</button>
-    <button type="submit" *ngIf="editing" mat-raised-button color="accent" [disabled]="emailForm.invalid">Save</button>
+    <button type="button" *ngIf="editing" mat-raised-button color="accent" [disabled]="emailForm.invalid" (click)="updateEmail()">Save</button>
 </div>

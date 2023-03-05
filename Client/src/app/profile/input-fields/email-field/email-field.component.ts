@@ -1,41 +1,34 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input} from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-email-field',
   templateUrl: './email-field.component.html',
   styleUrls: ['./email-field.component.css']
 })
-export class EmailFieldComponent implements OnInit{
-
-  emailForm: FormGroup = {} as FormGroup;
+export class EmailFieldComponent {
+  
   editing: boolean = false;
   @Input() oldEmail: string = '';
-  
-
-  ngOnInit(): void {
-    this.emailForm = new FormGroup({
-      'email': new FormControl({value: this.oldEmail, disabled: true}, [Validators.required, Validators.email]),
-    });
-  }
+  emailForm: FormControl = new FormControl({value: this.oldEmail, disabled: true}, [Validators.required, Validators.email]);
 
   editEmail(): void {
 
-    this.editing = !this.editing;
-    this.emailForm.enable();
+    this.editing = !this.editing;       
 
     if(this.editing){
-      this.emailForm.get('email')?.setValue('');
+      this.emailForm.enable();
+      this.emailForm.setValue('');
     }
   }
 
   updateEmail(): void {
 
-    const newEmail: string = this.emailForm.get('email')?.value;    
+    const newEmail: string = this.emailForm.getRawValue();    
 
     if(newEmail === this.oldEmail){
       
-      this.emailForm.get('email')?.setErrors({'duplicate': true});
+      this.emailForm.setErrors({'duplicate': true});
     }
     else{
 

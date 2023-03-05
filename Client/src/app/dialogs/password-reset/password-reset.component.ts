@@ -14,15 +14,10 @@ export class PasswordResetComponent {
 
   hideNew: boolean = true;
 
-  passwordForm: FormGroup = {} as FormGroup;
-
-  ngOnInit(): void {
-    
-    this.passwordForm = new FormGroup({
-      'oldPassword': new FormControl('', [Validators.required, Validators.minLength(this.passwordCharacterLength)]),
-      'newPassword': new FormControl('', [Validators.required, Validators.minLength(this.passwordCharacterLength)]),
-    });
-  }
+  passwordForm: FormGroup = new FormGroup({
+    'oldPassword': new FormControl('', [Validators.required, Validators.minLength(this.passwordCharacterLength)]),
+    'newPassword': new FormControl('', [Validators.required, Validators.minLength(this.passwordCharacterLength)]),
+  });
 
   onSave(): void {
     

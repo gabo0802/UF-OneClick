@@ -6,39 +6,36 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   templateUrl: './timezone-field.component.html',
   styleUrls: ['./timezone-field.component.css']
 })
-export class TimezoneFieldComponent implements OnInit{
-
-  timeZoneForm: FormGroup = {} as FormGroup;
+export class TimezoneFieldComponent {
+  
   editing: boolean = false;
   @Input() oldTimeZone: string = '';
+  timeZoneForm: FormControl = new FormControl({value: this.oldTimeZone, disable: true}, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')])
   
-  ngOnInit(): void {
-
-    this.timeZoneForm = new FormGroup({
-      'timezone': new FormControl({value: this.oldTimeZone, disable: true}, [Validators.pattern('^[-+]{0,1}[0-9][0-9][0-9][0-9]UTC+$')]),
-    });
-  }
-
   editTimeZone(): void {
 
-    this.editing = !this.editing;
-    this.timeZoneForm.enable();
+    this.editing = !this.editing;       
 
     if(this.editing){
-      this.timeZoneForm.get('timezone')?.setValue('');
+      this.timeZoneForm.setValue('');
+      this.timeZoneForm.enable();
     }
   }
 
   updateTimeZone(): void {
 
-    const newTimeZone: string = this.timeZoneForm.get('timezone')?.value;    
+    const newTimeZone: string = this.timeZoneForm.getRawValue();    
 
     if(newTimeZone !== this.oldTimeZone){
-
+      
       // this.api.updateUserEmail(newUsername).subscribe();
       this.editTimeZone();
       this.oldTimeZone = newTimeZone;
             
+    }
+    else{
+
+      this.timeZoneForm.setErrors({'duplicate': true});
     }       
   }
 }

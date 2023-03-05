@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/api.service';
 
 @Component({
@@ -7,37 +7,32 @@ import { ApiService } from 'src/app/api.service';
   templateUrl: './username-field.component.html',
   styleUrls: ['./username-field.component.css']
 })
-export class UsernameFieldComponent implements OnInit {
+export class UsernameFieldComponent {
 
   constructor(private api: ApiService) {}
-
-  usernameForm: FormGroup = {} as FormGroup;
+  
   @Input() oldUsername: string = '';
   editing: boolean = false;
-
-  ngOnInit(): void {
-
-    this.usernameForm = new FormGroup({
-      'username': new FormControl({value: this.oldUsername, disabled: true}, [Validators.required, Validators.pattern('^[A-z0-9]+$')]),
-    });    
-  }
+  usernameForm: FormControl = new FormControl({value: this.oldUsername, disabled: true}, [Validators.required, Validators.pattern('^[A-z0-9]+$')]);
 
   editUsername(): void {
 
-    this.editing = !this.editing;    
+    this.editing = !this.editing;       
     
     if(this.editing){
-      this.usernameForm.enable();      
+      this.usernameForm.enable();
+      this.usernameForm.setValue('');      
     }
   }
 
   updateUsername(): void {
             
-    const newUsername: string = this.usernameForm.get('username')?.value;
+    const newUsername: string = this.usernameForm.getRawValue();
 
     if(newUsername === this.oldUsername){
+
+      this.usernameForm.setErrors({'duplicate': true});     
       
-      this.usernameForm.get('username')?.setErrors({'duplicate': true});
     }
     else{
 

@@ -1,15 +1,15 @@
 <div class="field">
     <label class="label">Username:</label>
-    <form [formGroup]="usernameForm">                                           
+    <form>                                           
         <mat-form-field appearance="fill" hideRequiredMarker>
             
-            <!-- <mat-label *ngIf="!editing && usernameForm.untouched">{{oldUsername}}</mat-label> -->
+            <mat-label *ngIf="!editing && usernameForm.untouched">{{oldUsername}}</mat-label>
                      
-            <input *ngIf="!editing" matInput formControlName="username" readonly="usernameForm">
-            <input *ngIf="editing" matInput formControlName="username">
+            <input *ngIf="!editing" matInput [formControl]="usernameForm" readonly="usernameForm">
+            <input *ngIf="editing" matInput [formControl]="usernameForm">
 
-            <mat-error *ngIf="usernameForm.get('username')?.hasError('required') || usernameForm.get('username')?.hasError('pattern')">Please enter a valid username</mat-error>
-            <mat-error *ngIf="usernameForm.get('username')?.hasError('duplicate')">Duplicate Username</mat-error>
+            <mat-error *ngIf="usernameForm.hasError('required') || usernameForm.hasError('pattern')">Please enter a valid username</mat-error>
+            <mat-error *ngIf="usernameForm.hasError('duplicate')">Duplicate Username</mat-error>
             
         </mat-form-field>
     </form>                    
