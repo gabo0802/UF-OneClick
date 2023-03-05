@@ -50,7 +50,7 @@ export class SignupComponent implements OnInit{
         this.dialogs.successDialog(resultMessage[1]);
       }
       else if(resultMessage[0] === "Error"){
-        this.dialogs.successDialog(resultMessage[1]);
+        this.dialogs.errorDialog("Error", resultMessage[1]);
       }
     });
     
