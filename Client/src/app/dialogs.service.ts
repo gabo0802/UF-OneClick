@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ErrorComponent } from './dialogs/error/error.component';
 import { SuccessComponent } from './dialogs/success/success.component';
 import { PasswordResetComponent } from './dialogs/password-reset/password-reset.component';
+import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.component';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,14 @@ export class DialogsService {
       data: {dialogTitle: errorTitle, dialogMessage: errorMessage},      
       height: '180px',
       width: '370px',
+    });
+  }
+
+  deleteAccount(): void {
+
+    this.dialog.open(DeleteAccountComponent, {           
+      height: '200px',
+      width: '410px',
     });
   }
 

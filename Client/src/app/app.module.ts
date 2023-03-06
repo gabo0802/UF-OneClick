@@ -26,6 +26,7 @@ import { EmailFieldComponent } from './profile/input-fields/email-field/email-fi
 import { PasswordFieldComponent } from './profile/input-fields/password-field/password-field.component';
 import { PasswordResetComponent } from './dialogs/password-reset/password-reset.component';
 import { TimezoneFieldComponent } from './profile/input-fields/timezone-field/timezone-field.component';
+import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { TimezoneFieldComponent } from './profile/input-fields/timezone-field/ti
     EmailFieldComponent,
     PasswordFieldComponent,
     PasswordResetComponent,
-    TimezoneFieldComponent
+    TimezoneFieldComponent,
+    DeleteAccountComponent
   ],
   imports: [
     BrowserModule,

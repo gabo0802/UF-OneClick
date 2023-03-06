@@ -2,7 +2,9 @@
     <label class="label">Timezone:</label>
     <form >
                            
-        <mat-form-field appearance="fill" hideRequiredMarker>                           
+        <mat-form-field appearance="fill" hideRequiredMarker>
+            
+            <mat-label *ngIf="!editing && timeZoneForm.untouched">{{oldTimeZone + 'UTC'}}</mat-label>
                      
             <input *ngIf="!editing" matInput [formControl]="timeZoneForm" readonly="timezoneForm">
             <input *ngIf="editing" matInput [formControl]="timeZoneForm">

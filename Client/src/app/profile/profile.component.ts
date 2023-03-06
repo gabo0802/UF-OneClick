@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
 import { AuthService } from '../auth.service';
+import { DialogsService } from '../dialogs.service';
 
 @Component({
   selector: 'app-profile',
@@ -10,7 +11,7 @@ import { AuthService } from '../auth.service';
 })
 export class ProfileComponent implements OnInit{
 
-  constructor(private router: Router, private api: ApiService, private authService: AuthService) {}
+  constructor(private router: Router, private api: ApiService, private authService: AuthService, private dialogs: DialogsService) {}
 
   hide: boolean = true;
   passwordCharacterLength: number = 3;
@@ -40,16 +41,9 @@ export class ProfileComponent implements OnInit{
   }
 
   delete(): void {
-    if (confirm("Are you sure you want to delete user " + this.username + "?")){
-      if (this.username != "root"){
-        this.api.deleteUserAccount().subscribe((res) => {
-          alert("User " + this.username + " has been deleted! Logging Out...")
-          this.authService.userLogOut()
-          this.router.navigate(['login']);
-        })
-      }else{
-        alert("Cannot Delete root user!")
-      }
-    }
+
+    if(this.username !== 'root'){
+      this.dialogs.deleteAccount();
+    }        
   }
 }

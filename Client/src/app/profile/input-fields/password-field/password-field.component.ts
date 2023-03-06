@@ -12,8 +12,8 @@ export class PasswordFieldComponent {
   constructor(private dialogs: DialogsService) {}
 
   hide: boolean = true;
-  passwordCharacterLength: number = 3; 
-  passwordForm: FormControl = new FormControl({value: '********', disabled: true});  
+  
+  passwordForm: FormControl = new FormControl({value: '**********', disabled: true});  
 
   editPassword(): void {
     this.dialogs.passwordReset();    
