@@ -23,6 +23,9 @@ export class UsernameFieldComponent {
       this.usernameForm.enable();
       this.usernameForm.setValue('');      
     }
+    else{
+      this.usernameForm.disable();
+    }
   }
 
   updateUsername(): void {

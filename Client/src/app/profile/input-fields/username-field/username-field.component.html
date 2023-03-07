@@ -3,10 +3,9 @@
     <form>                                           
         <mat-form-field appearance="fill" hideRequiredMarker>
             
-            <mat-label *ngIf="!editing && usernameForm.untouched">{{oldUsername}}</mat-label>
-                     
-            <input *ngIf="!editing" matInput [formControl]="usernameForm" readonly="usernameForm">
-            <input *ngIf="editing" matInput [formControl]="usernameForm">
+            <mat-label *ngIf="!editing && usernameForm.untouched">{{oldUsername}}</mat-label>                     
+            
+            <input matInput [formControl]="usernameForm">
 
             <mat-error *ngIf="usernameForm.hasError('required') || usernameForm.hasError('pattern')">Please enter a valid username</mat-error>
             <mat-error *ngIf="usernameForm.hasError('duplicate')">Duplicate Username</mat-error>

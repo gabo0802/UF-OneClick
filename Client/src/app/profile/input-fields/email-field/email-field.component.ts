@@ -20,6 +20,9 @@ export class EmailFieldComponent {
       this.emailForm.enable();
       this.emailForm.setValue('');
     }
+    else{
+      this.emailForm.disable();
+    }
   }
 
   updateEmail(): void {

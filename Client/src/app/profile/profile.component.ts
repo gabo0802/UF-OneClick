@@ -13,8 +13,7 @@ export class ProfileComponent implements OnInit{
 
   constructor(private router: Router, private api: ApiService, private authService: AuthService, private dialogs: DialogsService) {}
 
-  hide: boolean = true;
-  passwordCharacterLength: number = 3;
+  hide: boolean = true;  
 
   username: string = '';
   email: string = '';

@@ -3,10 +3,9 @@
     <form>                           
         <mat-form-field appearance="fill" hideRequiredMarker>
             
-            <mat-label *ngIf="!editing && emailForm.untouched">{{oldEmail}}</mat-label>
-                     
-            <input *ngIf="!editing" matInput [formControl]="emailForm" readonly="emailForm">
-            <input *ngIf="editing" matInput [formControl]="emailForm">
+            <mat-label *ngIf="!editing && emailForm.untouched">{{oldEmail}}</mat-label>                     
+            
+            <input matInput [formControl]="emailForm">
 
             <mat-error *ngIf="emailForm.hasError('required') || emailForm.hasError('email')">Please enter a valid email</mat-error>
             <mat-error *ngIf="emailForm.hasError('duplicate')">Duplicate Email</mat-error> 
