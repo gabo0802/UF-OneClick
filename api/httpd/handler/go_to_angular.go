@@ -30,6 +30,7 @@ type userData struct {
 	Price       string `json:"price"`
 	DateAdded   string `json:"dateadded"`
 	DateRemoved string `json:"dateremoved"`
+	Timezone    string `json:"timezone"`
 }
 type passwordChange struct {
 	OldPassword string `json:"oldPassword"`
@@ -1015,6 +1016,41 @@ func ChangeUserEmail(c *gin.Context) {
 	changeInfo = userData{}
 }
 
+func GetAllCurrentUserInfo(c *gin.Context) {
+	cookie, err := c.Cookie("currentUserID")
+	if err == nil {
+		currentID, _ = strconv.Atoi(cookie)
+	} else {
+		currentID = -1
+	}
+
+	if currentID != -1 {
+		outputUserData := userData{}
+
+		outputUserData.Username = MySQL.GetUsername(currentDB, currentID)
+		outputUserData.Email = MySQL.GetEmail(currentDB, currentID)
+
+		fmt.Println(currentTimezone)
+		outputUserData.Timezone = strconv.Itoa(currentTimezone)
+
+		if currentTimezone < 0 {
+			outputUserData.Timezone = strings.ReplaceAll(outputUserData.Timezone, "-", "")
+			for len(outputUserData.Timezone) < 4 {
+				outputUserData.Timezone = "0" + outputUserData.Timezone
+			}
+			outputUserData.Timezone = "-" + outputUserData.Timezone
+		} else {
+			for len(outputUserData.Timezone) < 4 {
+				outputUserData.Timezone = "0" + outputUserData.Timezone
+			}
+
+			outputUserData.Timezone = "+" + outputUserData.Timezone
+		}
+
+		c.JSON(http.StatusOK, outputUserData)
+	}
+}
+
 func GetUserInfo(c *gin.Context) {
 	cookie, err := c.Cookie("currentUserID")
 	if err == nil {
@@ -1030,7 +1066,7 @@ func GetUserInfo(c *gin.Context) {
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, "/login")
 	}
-}
+} //remove if above function works
 
 func GetTimezone(c *gin.Context) {
 	//c.JSON(http.StatusOK, gin.H{"CurrentTimezone": currentTimezone})
@@ -1053,7 +1089,7 @@ func GetTimezone(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"CurrentTimezone": timezoneString})
 
-}
+} //remove if above function worksf
 
 func resetCookies(c *gin.Context) {
 	c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
