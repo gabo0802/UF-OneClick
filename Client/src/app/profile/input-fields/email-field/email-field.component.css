@@ -40,3 +40,7 @@ form {
 mat-label.ng-star-inserted {
     color: rgba(0,0,0, .75)
 }
+
+.mdc-text-field__input{
+    color: rgba(0,0,0, .75);
+}

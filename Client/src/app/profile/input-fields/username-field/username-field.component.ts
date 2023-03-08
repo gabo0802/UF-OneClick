@@ -1,6 +1,8 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, ErrorHandler, Input} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/api.service';
+import { DialogsService } from 'src/app/dialogs.service';
 
 @Component({
   selector: 'app-username-field',
@@ -9,7 +11,7 @@ import { ApiService } from 'src/app/api.service';
 })
 export class UsernameFieldComponent {
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private dialogs: DialogsService) {}
   
   @Input() oldUsername: string = '';
   editing: boolean = false;
@@ -39,13 +41,25 @@ export class UsernameFieldComponent {
     }
     else{
 
-      // this.api.updateUsername(newUsername).subscribe((res) => {
+      this.api.updateUsername(newUsername).subscribe({
 
-      // });
+        next: (res: Object) => {
 
-      this.oldUsername = newUsername;
-      this.editUsername();               
+          this.oldUsername = newUsername;
+          this.editUsername(); 
+
+        },
+        error: (error: HttpErrorResponse) => {
+
+          if(error.status == 409){
+            
+            this.usernameForm.setErrors({'taken': true});
+          }
+          else{
+            this.dialogs.errorDialog("Unexpected Error!", error.statusText + " Please try again later");
+          }          
+        }
+      });                    
     }    
   }
-
 }

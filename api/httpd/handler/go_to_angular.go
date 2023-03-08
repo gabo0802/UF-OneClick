@@ -983,7 +983,7 @@ func ChangeUserPassword(c *gin.Context) {
 		rowsAffected := MySQL.ChangePassword(currentDB, currentID, oldPassword, newPassword)
 
 		if rowsAffected == 0 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Incorrect Old Password"})
+			c.JSON(http.StatusConflict, gin.H{"Error": "Incorrect Old Password"})
 		} else if rowsAffected == -502 {
 			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
 		} else if rowsAffected == -204 {
@@ -1002,7 +1002,13 @@ func ChangeUserUsername(c *gin.Context) {
 	var changeInfo userData
 	c.BindJSON(&changeInfo)
 
-	MySQL.ChangeUsername(currentDB, currentID, changeInfo.Username)
+	rowsAffected := MySQL.ChangeUsername(currentDB, currentID, changeInfo.Username)
+
+	if rowsAffected == (-223 - 0) { //already exists
+		//c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
+		c.JSON(http.StatusConflict, gin.H{"Error": "Username Already Exists"})
+	}
+
 	changeInfo = userData{}
 }
 
@@ -1010,9 +1016,15 @@ func ChangeUserEmail(c *gin.Context) {
 	var changeInfo userData
 	c.BindJSON(&changeInfo)
 
-	MySQL.ChangeEmail(currentDB, currentID, changeInfo.Email)
+	rowsAffected := MySQL.ChangeEmail(currentDB, currentID, changeInfo.Email)
 
-	startVerifyCheck("", currentID, changeInfo.Email)
+	if rowsAffected == (-223 - 0) { //already exists
+		//c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
+		c.JSON(http.StatusConflict, gin.H{"Error": "Email Already Exists"})
+	} else {
+		startVerifyCheck("", currentID, changeInfo.Email)
+	}
+
 	changeInfo = userData{}
 }
 

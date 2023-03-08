@@ -9,6 +9,7 @@
 
             <mat-error *ngIf="usernameForm.hasError('required') || usernameForm.hasError('pattern')">Please enter a valid username</mat-error>
             <mat-error *ngIf="usernameForm.hasError('duplicate')">Duplicate Username</mat-error>
+            <mat-error *ngIf="usernameForm.hasError('taken')">Username already taken</mat-error>
             
         </mat-form-field>
     </form>                    

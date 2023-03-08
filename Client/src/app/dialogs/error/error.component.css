@@ -1,3 +1,8 @@
 .mdc-dialog__title { 
-    font-size: 18px
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.mdc-dialog__actions {
+    margin-top: 15px;
 }

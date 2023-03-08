@@ -32,9 +32,9 @@ export class UsersComponent {
   //       this.adminButtonVisible = true
   //     }
 
-      this.api.getEmailandUsername().subscribe((resultMessage: string[]) => {
-        this.currentUsername  = resultMessage[0]; 
-      });
+      // this.api.getEmailandUsername().subscribe((resultMessage: string[]) => {
+      //   this.currentUsername  = resultMessage[0]; 
+      // });
 
        this.createSubServiceForm = new FormGroup({
          'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),

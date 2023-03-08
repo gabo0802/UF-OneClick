@@ -1,5 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ApiService } from 'src/app/api.service';
+import { AuthService } from 'src/app/auth.service';
+import { DialogsService } from 'src/app/dialogs.service';
 
 @Component({
   selector: 'app-email-field',
@@ -7,6 +12,8 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./email-field.component.css']
 })
 export class EmailFieldComponent {
+
+  constructor(private api: ApiService, private dialogs: DialogsService, private router: Router, private authService: AuthService) {}
   
   editing: boolean = false;
   @Input() oldEmail: string = '';
@@ -35,9 +42,27 @@ export class EmailFieldComponent {
     }
     else{
 
-      // this.api.updateUserEmail(newUsername).subscribe();
-      this.editEmail();
-      this.oldEmail = newEmail;
+      this.api.updateUserEmail(newEmail).subscribe({
+
+        next: (res: Object) => {
+
+          this.oldEmail = newEmail;
+          this.editEmail();
+          this.dialogs.successDialog("Please verify your email before logging back in.");
+          this.authService.userLogOut();           
+          this.router.navigate(['login']);
+        },
+        error: (error: HttpErrorResponse) => {
+
+          if(error.status == 409){
+            
+            this.emailForm.setErrors({'taken': true});
+          }
+          else{
+            this.dialogs.errorDialog("Unexpected Error!", error.statusText + " Please try again later");
+          }          
+        }
+      });
       
     }    
   }

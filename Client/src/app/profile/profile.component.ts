@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
@@ -21,18 +22,22 @@ export class ProfileComponent implements OnInit{
 
   ngOnInit(){  
 
-    this.api.getEmailandUsername().subscribe((res: Object) => {
+    this.api.getUserInfo().subscribe({
 
-      let data = JSON.stringify(res);
-      let userInfo = JSON.parse(data);
-      this.username = userInfo.username;          
+      next: (res: Object) => {
+        
+        let data = JSON.stringify(res);
+        let userInfo = JSON.parse(data);
+        this.username = userInfo.username;
+        this.email = userInfo.email;
+        this.timezone = userInfo.timezone; 
+        
+      },
+      error: (error: HttpErrorResponse) => {
+
+        this.dialogs.errorDialog("Unexpected Error!", error.statusText);
+      }               
     });
-
-    this.api.getTimezone().subscribe((resultMessage: string[]) => {
-      this.timezone = resultMessage[1] + "UTC";      
-      
-    });
-
   }
  
   back(): void {
