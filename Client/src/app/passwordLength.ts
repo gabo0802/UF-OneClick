@@ -1,3 +1,3 @@
-export class passwordLength {
-    passwordlength: number = 3;
-}
+
+//password length
+export default 3;

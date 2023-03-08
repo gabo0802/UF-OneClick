@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
 import { AuthService } from 'src/app/auth.service';
 import { DialogsService } from 'src/app/dialogs.service';
-import { passwordLength } from 'src/app/passwordLength';
+import  passwordLength  from 'src/app/passwordLength';
 
 @Component({
   selector: 'app-password-reset',
@@ -17,7 +17,7 @@ export class PasswordResetComponent {
 
   constructor(private api: ApiService, private authService: AuthService, private router: Router, private dialogs: DialogsService, private dialogRef: MatDialogRef<PasswordResetComponent>) {}
 
-  passwordCharacterLength: number = passwordLength.length;
+  passwordCharacterLength: number = passwordLength;
 
   hideOld: boolean = true;
 
