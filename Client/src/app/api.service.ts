@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs';
+import { Subscription } from './subscription.model';
 
 @Injectable({
   providedIn: 'root'
@@ -66,9 +67,31 @@ export class ApiService {
     );
   }
 
+  //UserInformation
   getUserInfo(): Observable<Object> {
     return this.http.get('api/alluserinfo');
   }
+
+  //User subscriptions
+  getUserSubscriptions(): Observable<Subscription[]> {
+
+    return this.http.get('/api/subscriptions').pipe(
+      map( (res: Object) => {
+
+        let userSubs: Subscription[] = [];
+
+        let data = JSON.stringify(res);
+        let subData = JSON.parse(data);
+        
+        for(const sub in subData){
+          userSubs.push(subData[sub]);
+          console.log(subData[sub].dateadded);
+        }
+        
+        return userSubs;
+      })
+    );
+   }
 
   updateUsername(newUsername: string): Observable<Object> {
     const newUserUsername = {username: newUsername};
@@ -90,122 +113,7 @@ export class ApiService {
     return this.http.put('api/changetimezone', timezone);
   }
 
-
   deleteUserAccount(): Observable<Object> {
     return this.http.delete('api/deleteuser');
   }
-
-
-  // addUserSub(userData: {name: string}): Observable<Array<string>>{   
-
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
-
-  //       const resultMessage: string[] = [];
-        
-  //       for(const key in statusMessage){
-
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
-
-  //       }       
-
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
-
-  // removeUserSub(userData: {name: string}): Observable<Array<string>>{   
-
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/cancelsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
-
-  //       const resultMessage: string[] = [];
-        
-  //       for(const key in statusMessage){
-
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
-
-  //       }       
-
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
-
-  // addOldUserSub(userData: {name: string}): Observable<Array<string>>{   
-
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/addoldsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
-
-  //       const resultMessage: string[] = [];
-        
-  //       for(const key in statusMessage){
-
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
-
-  //       }       
-
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
-
-  // createSub(userData: {name: string, price: string}): Observable<Array<string>>{   
-  //   userData.price = userData.price.replaceAll("$", "")
-  //   console.log("test")
-
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/subscriptions/createsubscription', JSON.stringify(userData)).pipe(
-  //     map( (statusMessage) => {        
-
-  //       const resultMessage: string[] = [];
-        
-  //       for(const key in statusMessage){
-
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
-
-  //       }       
-
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
-
-  // getSubs(): Observable<Object>{
-  //   return this.http.post('/api/subscriptions', null);
-  // }
-
-  // logout(): Observable<Object>{
-  //   return this.http.post('/api/logout', null);
-  // }
-
-  // resetall(): Observable<Object>{
-  //   return this.http.post('/api/reset', null);
-  // }
-
-  // sendNews(userData: {name: string}): Observable<Object>{
-  //   return this.http.post('/api/news', JSON.stringify(userData));
-  // }
-
-  // getAllUserData(): Observable<Array<string>>{   
-  //   return this.http.post<{[key: string]: string, message: string}>('/api/alldata', null).pipe(
-  //     map( (statusMessage) => {        
-
-  //       const resultMessage: string[] = [];
-        
-  //       for(const key in statusMessage){
-
-  //         resultMessage.push(key);
-  //         resultMessage.push(statusMessage[key]);
-
-  //       }       
-
-  //       return resultMessage;
-  //     })
-  //   );
-  // }
-
 }

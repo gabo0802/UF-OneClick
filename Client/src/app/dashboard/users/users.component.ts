@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
+import { Subscription } from 'src/app/subscription.model';
 
 @Component({
   selector: 'app-users',
@@ -12,9 +13,8 @@ export class UsersComponent implements OnInit{
 
   constructor(private api: ApiService, private dialogs: DialogsService) {}
 
-
   username: string = '';
-
+  userSubscriptions: Subscription[] = [];
 
   ngOnInit(): void {
 
@@ -29,11 +29,20 @@ export class UsersComponent implements OnInit{
       },
       error: (error: HttpErrorResponse) => {
 
-        this.dialogs.errorDialog("Unexpected Error!", "Please try again later.")
+        this.dialogs.errorDialog("Unexpected Error!", "Please try again later.");
       }
     });
 
-    
+    this.api.getUserSubscriptions().subscribe({
+
+      next: (res: Subscription[]) => {
+        this.userSubscriptions = res;
+      },
+      error: (error: HttpErrorResponse) => {
+
+        this.dialogs.errorDialog("Unexpected Error!", "Please try again later.");
+      }
+    });
   }
 }
 
