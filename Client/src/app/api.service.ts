@@ -84,8 +84,7 @@ export class ApiService {
         let subData = JSON.parse(data);
         
         for(const sub in subData){
-          userSubs.push(subData[sub]);
-          console.log(subData[sub].dateadded);
+          userSubs.push(subData[sub]);          
         }
         
         return userSubs;

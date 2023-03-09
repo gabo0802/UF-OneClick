@@ -28,6 +28,7 @@ import { PasswordResetComponent } from './dialogs/password-reset/password-reset.
 import { TimezoneFieldComponent } from './profile/input-fields/timezone-field/timezone-field.component';
 import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.component';
 import { WelcomeHeaderComponent } from './dashboard/users/welcome-header/welcome-header.component';
+import { SubscriptionListComponent } from './dashboard/users/subscription-list/subscription-list.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { WelcomeHeaderComponent } from './dashboard/users/welcome-header/welcome
     PasswordResetComponent,
     TimezoneFieldComponent,
     DeleteAccountComponent,
-    WelcomeHeaderComponent
+    WelcomeHeaderComponent,
+    SubscriptionListComponent
   ],
   imports: [
     BrowserModule,
