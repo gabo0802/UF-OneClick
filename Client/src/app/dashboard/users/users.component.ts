@@ -1,9 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/auth.service';
-import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
+import { DialogsService } from 'src/app/dialogs.service';
 
 @Component({
   selector: 'app-users',
@@ -12,7 +10,7 @@ import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 })
 export class UsersComponent implements OnInit{
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private dialogs: DialogsService) {}
 
 
   username: string = '';
@@ -28,9 +26,13 @@ export class UsersComponent implements OnInit{
         let userData = JSON.parse(data);
 
         this.username = userData.username;
-      }
+      },
+      error: (error: HttpErrorResponse) => {
 
+        this.dialogs.errorDialog("Unexpected Error!", "Please try again later.")
+      }
     });
+
     
   }
 }
