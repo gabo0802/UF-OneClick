@@ -1,0 +1,17 @@
+.mdc-dialog__title { 
+    font-size: 18px
+}
+
+#warning {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.mdc-dialog__content {
+    font-size: 15px;
+}
+
+.mdc-dialog__actions {
+    margin-right: 5px;
+    margin-top: 10px;
+}

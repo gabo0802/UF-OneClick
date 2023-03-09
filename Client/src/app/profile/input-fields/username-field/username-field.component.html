@@ -1,0 +1,18 @@
+<div class="field">
+    <label class="label">Username:</label>
+    <form>                                           
+        <mat-form-field appearance="fill" hideRequiredMarker>
+            
+            <mat-label *ngIf="!editing && usernameForm.untouched">{{oldUsername}}</mat-label>                     
+            
+            <input matInput [formControl]="usernameForm">
+
+            <mat-error *ngIf="usernameForm.hasError('required') || usernameForm.hasError('pattern')">Please enter a valid username</mat-error>
+            <mat-error *ngIf="usernameForm.hasError('duplicate')">Duplicate Username</mat-error>
+            <mat-error *ngIf="usernameForm.hasError('taken')">Username already taken</mat-error>
+            
+        </mat-form-field>
+    </form>                    
+    <button type="button"*ngIf="!editing" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
+    <button type="button" *ngIf="editing" mat-raised-button color="accent" [disabled]="usernameForm.invalid" (click)="updateUsername()">Save</button>
+</div>

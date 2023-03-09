@@ -13,11 +13,11 @@ export class ApiService {
    post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string, dateadded: string, dateremoved: ""}, url:string): Observable<Array<string>>{
       return this.http.post<{[key: string]: string, message: string}>(url, JSON.stringify(userData)).pipe(
          map( (statusMessage) => {        
-
+          
            const resultMessage: string[] = [];
           
            for(const key in statusMessage){
-
+            
              resultMessage.push(key);
              resultMessage.push(statusMessage[key]);
 
@@ -27,10 +27,6 @@ export class ApiService {
          })
        );
    }
-
-  // post_request(userData: {name: string}, url:string): Observable<Object>{
-  //       return this.http.post(url, JSON.stringify(userData));
-  // }
 
   login(userData: {password: string, username: string}): Observable<Array<string>>{
 
@@ -70,40 +66,8 @@ export class ApiService {
     );
   }
 
-  getEmailandUsername(): Observable<Array<string>> {
-    return this.http.post<{[key: string]: string, message: string}>('api/userinfo', null).pipe(
-      map( (statusMessage) => {        
-
-        const resultMessage: string[] = [];
-        
-        for(const key in statusMessage){
-
-          resultMessage.push(key);
-          resultMessage.push(statusMessage[key]);
-
-        }       
-
-        return resultMessage;
-      })
-    );
-  }
-
-  getTimezone():Observable<Array<string>> {
-    return this.http.post<{[key: string]: string, message: string}>('api/currenttimezone', null).pipe(
-      map( (statusMessage) => {        
-
-        const resultMessage: string[] = [];
-        
-        for(const key in statusMessage){
-
-          resultMessage.push(key);
-          resultMessage.push(statusMessage[key]);
-
-        }       
-
-        return resultMessage;
-      })
-    );
+  getUserInfo(): Observable<Object> {
+    return this.http.get('api/alluserinfo');
   }
 
   updateUsername(newUsername: string): Observable<Object> {

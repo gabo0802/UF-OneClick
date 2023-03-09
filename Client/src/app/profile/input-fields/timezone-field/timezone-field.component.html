@@ -1,0 +1,18 @@
+<div class="field">
+    <label class="label">Timezone:</label>
+    <form >
+                           
+        <mat-form-field appearance="fill" hideRequiredMarker>
+            
+            <mat-label *ngIf="!editing && timeZoneForm.untouched">{{oldTimeZone + 'UTC'}}</mat-label>                     
+            
+            <input matInput [formControl]="timeZoneForm">
+            
+            <mat-error *ngIf="timeZoneForm.hasError('pattern')">Please enter a valid Time Zone</mat-error>
+            <mat-error *ngIf="timeZoneForm.hasError('duplicate')">Time Zone unchanged</mat-error>
+
+        </mat-form-field>
+    </form>
+    <button type="button" *ngIf="!editing" mat-raised-button color="primary" (click)="editTimeZone()">Edit</button>
+    <button type="button" *ngIf="editing" mat-raised-button color="accent" [disabled]="timeZoneForm.invalid" (click)="updateTimeZone()">Save</button>                  
+</div>             

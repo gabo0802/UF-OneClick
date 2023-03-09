@@ -8,13 +8,13 @@
             
             <mat-card-content>
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">                    
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" hideRequiredMarker>
                         <mat-label>Username</mat-label>            
                         <input matInput formControlName="username">
                         <mat-error *ngIf="loginForm.get('username')?.getError">Please enter a valid username</mat-error>                        
                     </mat-form-field>
 
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" hideRequiredMarker>
                         <mat-label>Password</mat-label>
                         <input matInput formControlName="password" [type]="hide ? 'password' : 'text'">
                         <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">

@@ -5,64 +5,10 @@
                 <mat-card-title><h3>Profile Information</h3></mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <!-- Username Begin-->
-                <div class="field">
-                    <label class="label">Username:</label>
-                    <form [formGroup]="usernameForm">                                           
-                        <mat-form-field appearance="fill">                           
-                                     
-                            <input *ngIf="!usernameEdit" matInput formControlName="username" readonly="usernameForm">
-                            <input *ngIf="usernameEdit" matInput formControlName="username">
-                            
-                        </mat-form-field>
-                    </form>                    
-                    <button *ngIf="!usernameEdit" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
-                    <button *ngIf="usernameEdit" mat-raised-button color="accent" [disabled]="usernameForm.invalid" (click)="editUsername()">Save</button>
-                </div>
-                <!-- Email Begin-->
-                <div class="field">
-                    <label class="label">Email:</label>
-                    <form [formGroup]="emailForm">
-                                           
-                        <mat-form-field appearance="fill">                           
-                                     
-                            <input *ngIf="!emailEdit" matInput formControlName="email" readonly="emailForm">
-                            <input *ngIf="emailEdit" matInput formControlName="email">
-                                                   
-                        </mat-form-field>
-                    </form>
-                    <button *ngIf="!emailEdit" mat-raised-button color="primary" (click)="editEmail()">Edit</button>
-                    <button *ngIf="emailEdit" mat-raised-button color="accent" [disabled]="emailForm.invalid" (click)="editEmail()">Save</button>
-                </div>
-                <!-- Password Begin-->
-                <div class="field">
-                    <label class="label">Password:</label>
-                    <form [formGroup]="passwordForm">   
-
-                        <mat-form-field appearance="fill">                              
-                            <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" readonly="passwordForm">                            
-                            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" disabled="hide">  
-                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>                              
-                        </button>                            
-                        </mat-form-field>
-                    </form>
-                    <button mat-raised-button color="primary" (click)="editPassword()">Edit</button>                    
-                </div> 
-                <!-- Timezone Begin--> 
-                <div class="field">
-                    <label class="label">Timezone:</label>
-                    <form [formGroup]="timezoneForm">
-                                           
-                        <mat-form-field appearance="fill">                           
-                                     
-                            <input *ngIf="!timezoneEdit" matInput formControlName="timezonedifference" readonly="timezoneForm">
-                            <input *ngIf="timezoneEdit" matInput formControlName="timezonedifference">
-                                                   
-                        </mat-form-field>
-                    </form>
-                    <button *ngIf="!timezoneEdit" mat-raised-button color="primary" (click)="editTimezone()">Edit</button>
-                    <button *ngIf="timezoneEdit" mat-raised-button color="accent" [disabled]="timezoneForm.invalid" (click)="editTimezone()">Save</button>                  
-                </div>               
+                <app-username-field [oldUsername]="username"></app-username-field>
+                <app-email-field [oldEmail]="email"></app-email-field>
+                <app-password-field></app-password-field>
+                <app-timezone-field [oldTimeZone]="timezone"></app-timezone-field>  
             </mat-card-content>
             <mat-card-actions>
                 <div class="buttons">                    

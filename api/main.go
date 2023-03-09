@@ -45,7 +45,7 @@ func main() {
 		//api.POST("/remind", handler.DailyReminder)
 
 		//Account Management
-		api.POST("/alluserinfo", handler.GetAllCurrentUserInfo)
+		api.GET("/alluserinfo", handler.GetAllCurrentUserInfo)
 		api.POST("/userinfo", handler.GetUserInfo)        //remove if above function works
 		api.POST("/currenttimezone", handler.GetTimezone) //remove if above function works
 		api.POST("/login", handler.TryLogin)
