@@ -9,4 +9,6 @@ export class WelcomeHeaderComponent {
 
   @Input() username = '';
 
+  currentDate: Date = new Date();
+
 }

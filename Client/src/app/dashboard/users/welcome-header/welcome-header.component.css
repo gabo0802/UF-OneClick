@@ -1,0 +1,8 @@
+.welcome-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 15px;
+    background-color: purple;
+    margin-top: 25px;      
+}

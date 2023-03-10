@@ -10,5 +10,5 @@ export class SubscriptionListComponent {
 
   @Input() subscriptionList: Subscription[] = [];
 
-  displayedColumns: string[] = ['sub-name', 'sub-price', 'sub-edit'];
+  displayedColumns: string[] = ['sub-name', 'sub-price', 'sub-actions'];
 }
