@@ -29,6 +29,7 @@ import { TimezoneFieldComponent } from './profile/input-fields/timezone-field/ti
 import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.component';
 import { WelcomeHeaderComponent } from './dashboard/users/welcome-header/welcome-header.component';
 import { SubscriptionListComponent } from './dashboard/users/subscription-list/subscription-list.component';
+import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { SubscriptionListComponent } from './dashboard/users/subscription-list/s
     TimezoneFieldComponent,
     DeleteAccountComponent,
     WelcomeHeaderComponent,
-    SubscriptionListComponent
+    SubscriptionListComponent,
+    AddSubscriptionComponent
   ],
   imports: [
     BrowserModule,

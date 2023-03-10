@@ -1,5 +1,7 @@
 <div class="subscription-container">
-  
+  <div class="buttons-container">
+    <button mat-flat-button color="primary" id="add" (click)="addSubscription()">Add Subscription</button>
+  </div>  
     <table mat-table [dataSource]="subscriptionList" class="mat-elevation-z8 demo-table">
         <!-- Position Column -->
       <ng-container matColumnDef="sub-name">

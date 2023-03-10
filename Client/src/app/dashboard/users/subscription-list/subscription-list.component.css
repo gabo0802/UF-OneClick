@@ -1,7 +1,19 @@
 .subscription-container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     width: 100%;    
+}
+
+.buttons-container {
+    width: 100%;
+    background-color: lightgray;
+    padding: 5px;
+}
+
+#add {
+    border-radius: 9px;
+    padding: 8px;
 }
 
 #warning {
