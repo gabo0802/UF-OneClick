@@ -19,4 +19,9 @@ export class SubscriptionListComponent {
 
     this.dialogs.addSubscription();
   }
+
+  editSubscription(subscriptionInfo: Subscription): void {
+
+    this.dialogs.editSubscription(subscriptionInfo);
+  }
 }
