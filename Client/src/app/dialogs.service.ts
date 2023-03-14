@@ -68,6 +68,7 @@ export class DialogsService {
   editSubscription(subscriptionInfo: Subscription): void {
 
     this.dialog.open(EditSubscriptionComponent, {
+      data: { subData: subscriptionInfo},
       height: '650px',
       width: '600px'
     });
