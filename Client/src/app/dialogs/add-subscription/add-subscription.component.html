@@ -1,1 +1,24 @@
-<p>add-subscription works!</p>
+<h1 mat-dialog-title>Add Subscription</h1>
+<div mat-dialog-content>
+    <form [formGroup]="addSubsriptionForm">
+        <div> 
+            <label>Name:</label>   
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                        
+                <input matInput formControlName="username">                                   
+            </mat-form-field>
+        </div>
+        <div>
+            <label>Price:</label>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                        
+                <input matInput formControlName="username">                                   
+            </mat-form-field>
+        </div> 
+        <div mat-dialog-actions align="end">
+            <button mat-raised-button color="primary" mat-dialog-close>Cancel</button>
+            <button mat-raised-button color="accent">Add</button>
+        </div>
+    </form>  
+</div>
+
