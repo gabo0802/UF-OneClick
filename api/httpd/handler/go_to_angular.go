@@ -625,7 +625,30 @@ func NewUser(c *gin.Context) {
 	}
 }
 
-func GetAllUserSubscriptions() gin.HandlerFunc {
+func GetAllSubscriptionServices() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var allSubs = []userData{}
+		var subid int
+		rows, err := currentDB.Query("SELECT SubID, Name, Price FROM Subscriptions;")
+
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
+		}
+
+		for rows.Next() {
+			var newData userData
+			rows.Scan(&subid, &newData.Name, &newData.Price)
+
+			newData.SubID = strconv.Itoa(subid)
+
+			allSubs = append(allSubs, newData)
+		}
+
+		c.JSON(http.StatusOK, allSubs)
+	}
+}
+
+func GetAllCurrentUserSubscriptions() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie("currentUserID")
 		if err == nil {
