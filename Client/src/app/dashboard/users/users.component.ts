@@ -36,6 +36,19 @@ export class UsersComponent {
       //   this.currentUsername  = resultMessage[0]; 
       // });
 
+      //Might need to change
+      this.api.getUserInfo().subscribe((res: Object) => {
+        var allSubsString:string = ""
+          const response: string = JSON.stringify(res);
+          const responseMessage = JSON.parse(response);
+        
+         if (responseMessage["username"] != undefined){
+            this.currentUsername = responseMessage["username"]
+         }
+
+         //console.log(responseMessage)
+      })
+
        this.createSubServiceForm = new FormGroup({
          'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z+() ]+$')]),
          'price': new FormControl(null, [Validators.required, Validators.pattern('^[$]{0,1}[0-9]+.99$')]),
