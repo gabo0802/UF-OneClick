@@ -9,15 +9,17 @@ import { AppRoutingModule } from "../app-routing.module"
 import { AuthGuard } from "../auth-guard.guard"
 import { AuthService } from "../auth.service"
 import { MaterialDesignModule } from "../material-design/material-design.module"
-import { LoginMessageComponent } from "./login-message/login-message.component"
 import { LoginComponent } from "./login.component"
 
 
 describe('LoginComponent', () => {
+
+    
+
     it('mounts Login', () => {
       cy.mount(LoginComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
-        declarations: [LoginMessageComponent],
+        declarations: [],
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router]
       })
     })
@@ -25,12 +27,36 @@ describe('LoginComponent', () => {
     it('Able to fill In Login form', () => {
         cy.mount(LoginComponent, {
           imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
-          declarations: [LoginMessageComponent],
+          declarations: [],
           providers: [ApiService, AuthService, AuthGuard, MatDialog, Router]
         })
         
         cy.get('[formControlName="username"]').type("Username")
         cy.get('mat-form-field').get('input').get('[formControlName="password"]').type("password")
         
-      }) 
+      })
+      
+    it('Form should be initially empty', () => {
+
+      cy.mount(LoginComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+        declarations: [],
+        providers: [ApiService, AuthService, AuthGuard, MatDialog, Router]
+      })
+      
+      cy.get('[formControlName="username"]').should('have.value', '')
+      cy.get('mat-form-field').get('input').get('[formControlName="password"]').should('have.value', '')
+    })
+
+    it('Form values should be accurate', () => {
+
+      cy.mount(LoginComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+        declarations: [],
+        providers: [ApiService, AuthService, AuthGuard, MatDialog, Router]
+      })
+      
+      cy.get('[formControlName="username"]').type('Johnny').should('have.value', 'Johnny')
+      cy.get('mat-form-field').get('input').get('[formControlName="password"]').type('kittycat').should('have.value', 'kittycat')
+    })
   })
