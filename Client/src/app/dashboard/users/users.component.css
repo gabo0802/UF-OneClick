@@ -1,3 +1,5 @@
+.container { 
+}
 .users-container {
     margin-top: 60px;  
     width: 100%;
@@ -6,11 +8,19 @@
     background-position: center;
     background-image: var(--background-image3);
     background-color: rgba(241, 237, 237, 0.925);
+
+    /*display: flex;
+    justify-content: left;
+    align-items: top;   */
     display: flex;
     justify-content: center;
     color: white
 }
 
+.mat-card-content{
+    align-items: center;
+    justify-content: left;
+}
 .content-container {
     max-width: 975px;
     width: 100%;
