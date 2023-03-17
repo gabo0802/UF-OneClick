@@ -12,32 +12,53 @@ import { HeaderComponent } from "./header.component";
 describe('HeaderComponent', () => {
     it('mounts', () => {
       cy.mount(HeaderComponent, {
-        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],        
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],         
         providers: [ApiService, AuthGuard, AuthService, Router]
       })
     })
 
     it('Login button text', () => {
-        cy.mount(HeaderComponent)
-        cy.get('[routerLink="/login"]').within(() => {
-          cy.get('button').should('have.text', 'Login')})        
+
+      cy.mount(HeaderComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],      
+        providers: [ApiService, AuthGuard, AuthService, Router]
+      })
+
+      cy.get('[routerLink="/login"]').within(() => {
+        cy.get('button').should('have.text', 'Login')
+      })        
     })
 
     it('Click login button', ()=>{
-      cy.mount(HeaderComponent)
+      
+      cy.mount(HeaderComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],        
+        providers: [ApiService, AuthGuard, AuthService, Router]
+      })
+
       cy.get('[routerLink="/login"]').within( ()=> {
         cy.get('button').click()
       })
     })
 
     it('Signup button text', () => {
-      cy.mount(HeaderComponent)
+      
+      cy.mount(HeaderComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],        
+        providers: [ApiService, AuthGuard, AuthService, Router]
+      })
+
       cy.get('[routerLink="/signup"]').within(() => {
         cy.get('button').should('have.text', 'Sign Up')})        
   })
 
     it('Click Sign up button', ()=>{
-      cy.mount(HeaderComponent)
+      
+      cy.mount(HeaderComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],        
+        providers: [ApiService, AuthGuard, AuthService, Router]
+      })
+
       cy.get('[routerLink="/signup"]').within( ()=> {
         cy.get('button').click()
       })
