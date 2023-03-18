@@ -45,4 +45,21 @@ describe('ProfileComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('password input field hidden by default', () => {
+
+    expect(component.hide).toBeTruthy();
+  })
+
+  it('username empty before loading', () => {
+    expect(component.username).toEqual('')
+  })
+
+  it('email empty before loading', () => {
+    expect(component.email).toEqual('')
+  })
+
+  it('time zone empty before loading', () => {
+    expect(component.timezone).toEqual('')
+  })
 });
