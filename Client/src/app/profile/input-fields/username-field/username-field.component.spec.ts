@@ -45,4 +45,11 @@ describe('UsernameFieldComponent', () => {
   it('Username form should be disabled initially', () => {
     expect(component.usernameForm.disabled).toBeTruthy();
   })
+
+  it('editing variable set to true when editUsername() initially called', () =>{
+
+    component.editUsername();
+
+    expect(component.editing).toBeTruthy();
+  })
 });
