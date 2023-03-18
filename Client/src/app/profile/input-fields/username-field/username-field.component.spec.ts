@@ -33,4 +33,16 @@ describe('UsernameFieldComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('editing should be false initially', () => {
+    expect(component.editing).toBeFalsy();
+  })
+
+  it('oldUsername should be empty before call', () => {
+    expect(component.oldUsername).toEqual('');
+  })
+
+  it('Username form should be disabled initially', () => {
+    expect(component.usernameForm.disabled).toBeTruthy();
+  })
 });
