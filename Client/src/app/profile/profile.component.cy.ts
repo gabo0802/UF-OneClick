@@ -23,6 +23,18 @@ describe('ProfileComponent', () => {
       })
     })
 
+    it('Correct heading for Profile Component', () => {
+
+      cy.mount(ProfileComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+        declarations: [ErrorComponent],
+        providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+      })
+
+      cy.get('mat-card-header').get('h3').should('have.text', 'Profile Information')
+
+    })
+
     it('Correct delete profile button text', () => {
 
       cy.mount(ProfileComponent, {
