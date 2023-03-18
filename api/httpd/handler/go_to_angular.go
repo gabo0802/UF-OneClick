@@ -625,7 +625,30 @@ func NewUser(c *gin.Context) {
 	}
 }
 
-func GetAllUserSubscriptions() gin.HandlerFunc {
+func GetAllSubscriptionServices() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var allSubs = []userData{}
+		var subid int
+		rows, err := currentDB.Query("SELECT SubID, Name, Price FROM Subscriptions;")
+
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
+		}
+
+		for rows.Next() {
+			var newData userData
+			rows.Scan(&subid, &newData.Name, &newData.Price)
+
+			newData.SubID = strconv.Itoa(subid)
+
+			allSubs = append(allSubs, newData)
+		}
+
+		c.JSON(http.StatusOK, allSubs)
+	}
+}
+
+func GetAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie("currentUserID")
 		if err == nil {
@@ -637,7 +660,13 @@ func GetAllUserSubscriptions() gin.HandlerFunc {
 		var usersubInfo = []userData{}
 
 		if currentID != -1 {
-			rows, err := currentDB.Query("SELECT Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? ORDER BY DateAdded ASC", currentID)
+			var rows *sql.Rows
+
+			if onlyActive {
+				rows, err = currentDB.Query("SELECT Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved is NULL ORDER BY DateAdded ASC", currentID)
+			} else {
+				rows, err = currentDB.Query("SELECT Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? ORDER BY DateAdded ASC", currentID)
+			}
 			//can order by anything
 
 			if err != nil {
@@ -1103,18 +1132,14 @@ func GetTimezone(c *gin.Context) {
 
 } //remove if above function worksf
 
-func resetCookies(c *gin.Context) {
-	c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
-	c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
-}
-
 func ResetALL(c *gin.Context) {
 	if currentID == 1 {
 		MySQL.ResetAllTables(currentDB)
 		MySQL.SetUpTables(currentDB)
 		MySQL.CreateAdminUser(currentDB)
 		MySQL.CreateCommonSubscriptions(currentDB)
-		resetCookies(c)
+		c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
+		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 
 		c.JSON(http.StatusOK, gin.H{"Success": "Reset Successful"})
 		//c.Redirect(http.StatusTemporaryRedirect, "/login")

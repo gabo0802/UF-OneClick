@@ -1,6 +1,11 @@
+
 .container { 
+  
 }
 .users-container {
+  
+}
+.intro {
     margin-top: 60px;  
     width: 100%;
     height: 100%;
@@ -8,20 +13,84 @@
     background-position: center;
     background-image: var(--background-image3);
     background-color: rgba(241, 237, 237, 0.925);
-
     /*display: flex;
     justify-content: left;
-    align-items: top;   */
-    display: flex;
-    justify-content: center;
-    color: white
+    align-items: center;  
+    color: white;
+    border-bottom: solid 5px var(--UF-Orange);
+  */
 }
 
-.mat-card-content{
-    align-items: center;
-    justify-content: left;
+/* 
+For future reference on aligning items: 
+    1. Make sure height is defined somewhere in the layout.
+    2. The properties "align" and "layout-align" seem to work best
+    with angular materials stuff.
+*/
+.subscription-manager {
+    margin-top: 5rem;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.graph-display {
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.subscription-report {
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.TBA-features {
+    min-height: 10%;
+    min-width: 100%;
+}
+
+.title-card {
+    background-color: var(--UF-Orange);
+    margin-top: 10rem;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+.title-header {
+    margin: auto;
+}
+.title {
+    font-weight: bold;
+    display: flex;
+    background-color: var(--UF-Orange);
+    font-size: 3rem;
+    color: white;
+    text-align: center;
+  }
+  
+.create-unknown-sub {
+    background-color: transparent;
+}
+
+.create-unknown-sub > .mat-card-content {
+    display: block;
+    margin: auto;
+}
+
+.create-known-sub {
+    background-color: transparent;
+
+}
+
+.get-sub {
+    background-color: transparent;
+
+}
+
+.delete-sub {
+    background-color: transparent;
+
 }
 .content-container {
     max-width: 975px;
     width: 100%;
 }
+
