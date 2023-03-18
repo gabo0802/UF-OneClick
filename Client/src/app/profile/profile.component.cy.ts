@@ -12,13 +12,14 @@ import { DialogsService } from "../dialogs.service"
 import { MaterialDesignModule } from "../material-design/material-design.module"
 import { ProfileComponent } from "./profile.component"
 import { ErrorComponent } from "../dialogs/error/error.component"
+import { DeleteAccountComponent } from "../dialogs/delete-account/delete-account.component"
 
 describe('ProfileComponent', () => {    
 
     it('mounts Profile', () => {
       cy.mount(ProfileComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
-        declarations: [ErrorComponent],
+        declarations: [ErrorComponent, DeleteAccountComponent],
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
       })
     })
@@ -27,7 +28,7 @@ describe('ProfileComponent', () => {
 
       cy.mount(ProfileComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
-        declarations: [ErrorComponent],
+        declarations: [ErrorComponent, DeleteAccountComponent],
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
       })
 
@@ -39,7 +40,7 @@ describe('ProfileComponent', () => {
 
       cy.mount(ProfileComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
-        declarations: [ErrorComponent],
+        declarations: [ErrorComponent, DeleteAccountComponent],
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
       })
 
@@ -50,10 +51,21 @@ describe('ProfileComponent', () => {
 
       cy.mount(ProfileComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
-        declarations: [ErrorComponent],
+        declarations: [ErrorComponent, DeleteAccountComponent],
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
       })
 
       cy.get('mat-card-actions').get('button').first().next().should('have.text', 'Back')
+    })
+
+    it('Delete profile button Clickable', () => {
+
+      cy.mount(ProfileComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+        declarations: [ErrorComponent, DeleteAccountComponent],
+        providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+      })
+
+      cy.get('mat-card-actions').get('button').first().click()
     })
 })
