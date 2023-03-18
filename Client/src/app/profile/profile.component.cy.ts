@@ -23,7 +23,7 @@ describe('ProfileComponent', () => {
       })
     })
 
-    it('delete profile button text', () => {
+    it('Correct delete profile button text', () => {
 
       cy.mount(ProfileComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
@@ -32,5 +32,16 @@ describe('ProfileComponent', () => {
       })
 
       cy.get('mat-card-actions').get('button').first().should('have.text', 'Delete Profile')
+    })
+
+    it('Correct back button text', () => {
+
+      cy.mount(ProfileComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+        declarations: [ErrorComponent],
+        providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+      })
+
+      cy.get('mat-card-actions').get('button').first().next().should('have.text', 'Back')
     })
 })
