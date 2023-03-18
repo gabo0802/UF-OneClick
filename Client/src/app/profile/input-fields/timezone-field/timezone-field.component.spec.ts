@@ -1,4 +1,8 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialDesignModule } from 'src/app/material-design/material-design.module';
 
 import { TimezoneFieldComponent } from './timezone-field.component';
 
@@ -8,7 +12,17 @@ describe('TimezoneFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TimezoneFieldComponent ]
+      declarations: [ 
+        TimezoneFieldComponent
+       ],
+       imports: [
+        MaterialDesignModule, 
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule
+       ],
+
     })
     .compileComponents();
 
