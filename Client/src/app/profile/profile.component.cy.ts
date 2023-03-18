@@ -22,4 +22,15 @@ describe('ProfileComponent', () => {
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
       })
     })
+
+    it('delete profile button text', () => {
+
+      cy.mount(ProfileComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+        declarations: [ErrorComponent],
+        providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+      })
+
+      cy.get('mat-card-actions').get('button').first().should('have.text', 'Delete Profile')
+    })
 })
