@@ -36,36 +36,36 @@ describe('UsernameFieldComponent', () => {
 
   it('editing should be false initially', () => {
     expect(component.editing).toBeFalsy();
-  })
+  });
 
   it('oldUsername should be empty before call', () => {
     expect(component.oldUsername).toEqual('');
-  })
+  });
 
   it('Username form should be disabled initially', () => {
     expect(component.usernameForm.disabled).toBeTruthy();
-  })
+  });
 
   it('editing variable set to true when editUsername() initially called', () =>{
 
     component.editUsername();
 
     expect(component.editing).toBeTruthy();
-  })
+  });
 
   it('when editUsername() called form is enabled', () => {
 
     component.editUsername()
 
     expect(component.usernameForm.enabled).toBeTruthy();
-  })
+  });
 
   it('when editUsername() called form value is empty string', () => {
 
     component.editUsername()
 
     expect(component.usernameForm.getRawValue()).toEqual('');
-  })
+  });
 
   it('when editing if editUsername() called, editing is false and form is disabled', () => {
 
@@ -77,5 +77,5 @@ describe('UsernameFieldComponent', () => {
 
     expect(component.usernameForm.disabled).toBeTruthy();
     expect(component.editing).toBeFalsy();
-  })
+  });
 });

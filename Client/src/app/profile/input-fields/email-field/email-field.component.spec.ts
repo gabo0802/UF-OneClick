@@ -33,4 +33,16 @@ describe('EmailFieldComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('editing should be false initially', () => {
+    expect(component.editing).toBeFalsy();
+  });
+
+  it('oldEmail should be empty before call', () => {
+    expect(component.oldEmail).toEqual('');
+  });
+
+  it('Email form should be disabled initially', () => {
+    expect(component.emailForm.disabled).toBeTruthy();
+  });
 });
