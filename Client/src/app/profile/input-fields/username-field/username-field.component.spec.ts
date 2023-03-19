@@ -66,4 +66,16 @@ describe('UsernameFieldComponent', () => {
 
     expect(component.usernameForm.getRawValue()).toEqual('');
   })
+
+  it('when editing if editUsername() called, editing is false and form is disabled', () => {
+
+    //enable editing
+    component.editUsername()
+
+    //disabled editing
+    component.editUsername()
+
+    expect(component.usernameForm.disabled).toBeTruthy();
+    expect(component.editing).toBeFalsy();
+  })
 });
