@@ -52,4 +52,18 @@ describe('UsernameFieldComponent', () => {
 
     expect(component.editing).toBeTruthy();
   })
+
+  it('when editUsername() called form is enabled', () => {
+
+    component.editUsername()
+
+    expect(component.usernameForm.enabled).toBeTruthy();
+  })
+
+  it('when editUsername() called form value is empty string', () => {
+
+    component.editUsername()
+
+    expect(component.usernameForm.getRawValue()).toEqual('');
+  })
 });
