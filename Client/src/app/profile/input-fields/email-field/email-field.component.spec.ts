@@ -66,4 +66,30 @@ describe('EmailFieldComponent', () => {
 
     expect(component.emailForm.getRawValue()).toEqual('');
   });
+
+  it('when editing if editEmail() called, editing is false and form is disabled', () => {
+
+    //enable editing
+    component.editEmail()
+
+    //disabled editing
+    component.editEmail()
+
+    expect(component.emailForm.disabled).toBeTruthy();
+    expect(component.editing).toBeFalsy();
+  });
+
+  it('Email form has duplicate error if same email is entered', () => {
+
+    //No error
+    expect(component.emailForm.hasError('duplicate')).toBeFalsy();
+
+    component.oldEmail = 'abc@home.edu'
+    component.emailForm.setValue('abc@home.edu');
+
+    //triggers error
+    component.updateEmail();
+
+    expect(component.emailForm.hasError('duplicate')).toBeTruthy();
+  });
 });
