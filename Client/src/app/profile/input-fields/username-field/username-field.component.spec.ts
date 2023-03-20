@@ -78,4 +78,18 @@ describe('UsernameFieldComponent', () => {
     expect(component.usernameForm.disabled).toBeTruthy();
     expect(component.editing).toBeFalsy();
   });
+
+  it('Username form has duplicate error if same username is entered', () => {
+
+    //No error
+    expect(component.usernameForm.hasError('duplicate')).toBeFalsy();
+
+    component.oldUsername = 'Gator';
+    component.usernameForm.setValue('Gator');
+
+    //triggers error
+    component.updateUsername();
+
+    expect(component.usernameForm.hasError('duplicate')).toBeTruthy();
+  });
 });
