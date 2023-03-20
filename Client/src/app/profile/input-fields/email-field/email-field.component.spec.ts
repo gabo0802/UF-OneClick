@@ -45,4 +45,25 @@ describe('EmailFieldComponent', () => {
   it('Email form should be disabled initially', () => {
     expect(component.emailForm.disabled).toBeTruthy();
   });
+
+  it('editing variable set to true when editEmail() initially called', () =>{
+
+    component.editEmail();
+
+    expect(component.editing).toBeTruthy();
+  });
+
+  it('when editEmail() called form is enabled', () => {
+
+    component.editEmail()
+
+    expect(component.emailForm.enabled).toBeTruthy();
+  });
+
+  it('when editEmail() called, form value is empty string', () => {
+
+    component.editEmail()
+
+    expect(component.emailForm.getRawValue()).toEqual('');
+  });
 });
