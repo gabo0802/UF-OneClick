@@ -38,4 +38,26 @@ describe('PasswordResetComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('oldPassword and newPassword input fields hidden by default', ()=> {
+
+    expect(component.hideOld).toBeTruthy();
+    expect(component.hideNew).toBeTruthy();
+  });
+
+  it('OldPassword and NewPassword form values should be empty string intially', () => {
+
+    expect(component.passwordForm.get('newPassword')?.value).toEqual('');
+    expect(component.passwordForm.get('oldPassword')?.value).toEqual('');
+  });
+
+  it('if newPassword is idenitical to oldPassword throws form duplicate error', ()=> {
+
+    component.passwordForm.get('newPassword')?.setValue('Ja1@4');
+    component.passwordForm.get('oldPassword')?.setValue('Ja1@4');
+
+    component.onSave();
+
+    expect(component.passwordForm.get('newPassword')?.hasError('duplicate'));
+  });
 });
