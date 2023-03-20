@@ -14,7 +14,7 @@ import { EmailFieldComponent } from "./email-field.component"
 
 describe('Email-Field Component', () => {    
 
-    it('mounts Username-Field Component', () => {
+    it('mounts Email-Field Component', () => {
       cy.mount(EmailFieldComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
         declarations: [],

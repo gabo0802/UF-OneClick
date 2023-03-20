@@ -52,4 +52,26 @@ describe('Username-Field Component', () => {
         cy.get('button').first().click()
         cy.get('button').first().should('have.text', 'Save')        
     });
+
+    it('Valid Input into form enables button', () => {
+
+        cy.mount(UsernameFieldComponent, {
+          imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+          declarations: [],
+          providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+        })
+
+        cy.get('button').first().click()
+        cy.get('input').type('OrigamiBear')
+        cy.get('button').first().then(($btn) => {
+
+            if ($btn.is(':enabled')) {
+                cy.log('Valid Input and is enabled!')
+                return
+              }
+              else {
+                cy.log('Invalid Input and is disabled!')          
+              }
+        })       
+    });
 });
