@@ -21,4 +21,35 @@ describe('Username-Field Component', () => {
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
       })
     });
+
+    it('Label contains Username', () => {
+        cy.mount(UsernameFieldComponent, {
+          imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+          declarations: [],
+          providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+        })
+
+        cy.get('label').should('have.text', 'Username:')
+    });
+
+    it('Edit button contains text Edit', () => {
+        cy.mount(UsernameFieldComponent, {
+          imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+          declarations: [],
+          providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+        })
+
+        cy.get('button').first().should('have.text', 'Edit')
+    });
+
+    it('Edit button should change text to Save when clicked', () => {
+        cy.mount(UsernameFieldComponent, {
+          imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
+          declarations: [],
+          providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
+        })
+
+        cy.get('button').first().click()
+        cy.get('button').first().should('have.text', 'Save')        
+    });
 });
