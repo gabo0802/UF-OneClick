@@ -34,4 +34,16 @@ describe('TimezoneFieldComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('editing should be false initially', () => {
+    expect(component.editing).toBeFalsy();
+  });
+
+  it('oldTimeZone should be empty before call', () => {
+    expect(component.oldTimeZone).toEqual('');
+  });
+
+  it('Time Zone form should be disabled initially', () => {
+    expect(component.timeZoneForm.disabled).toBeTruthy();
+  });
 });
