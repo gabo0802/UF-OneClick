@@ -33,4 +33,19 @@ describe('PasswordFieldComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('password input field should be hidden by default', () => {
+    
+    expect(component.hide).toBeTruthy();
+  });
+
+  it('form should be disabled', () => {
+
+    expect(component.passwordForm.disabled).toBeTruthy();
+  });
+
+  it('form value should be asterisks', () => {
+
+    expect(component.passwordForm.getRawValue()).toEqual('**********');
+  })
 });
