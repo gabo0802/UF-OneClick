@@ -29,7 +29,7 @@ describe('Username-Field Component', () => {
           providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
         })
 
-        cy.get('label').should('have.text', 'Username:')
+        cy.get('[class="label"]').should('have.text', 'Username:')
     });
 
     it('Edit button contains text Edit', () => {

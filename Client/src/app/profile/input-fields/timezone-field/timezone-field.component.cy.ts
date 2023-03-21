@@ -10,30 +10,30 @@ import { AuthGuard } from "src/app/auth-guard.guard"
 import { AuthService } from "src/app/auth.service"
 import { DialogsService } from "src/app/dialogs.service"
 import { MaterialDesignModule } from "src/app/material-design/material-design.module"
-import { EmailFieldComponent } from "./email-field.component"
+import { TimezoneFieldComponent } from "./timezone-field.component"
 
-describe('Email-Field Component', () => {    
+describe('Time Zone-Field Component', () => {    
 
-    it('mounts Email-Field Component', () => {
-      cy.mount(EmailFieldComponent, {
+    it('mounts Time Zone-Field Component', () => {
+      cy.mount(TimezoneFieldComponent, {
         imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
         declarations: [],
         providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
       })
     });
 
-    it('Label contains Email:', () => {
-        cy.mount(EmailFieldComponent, {
+    it('Label contains Time Zone:', () => {
+        cy.mount(TimezoneFieldComponent, {
           imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
           declarations: [],
           providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
         })
 
-        cy.get('[class="label"]').should('have.text', 'Email:')
+        cy.get('[class="label"]').should('have.text', 'Time Zone:')
     });
 
     it('Edit button contains text Edit', () => {
-        cy.mount(EmailFieldComponent, {
+        cy.mount(TimezoneFieldComponent, {
           imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
           declarations: [],
           providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
@@ -43,7 +43,7 @@ describe('Email-Field Component', () => {
     });
 
     it('Edit button should change text to Save when clicked', () => {
-        cy.mount(EmailFieldComponent, {
+        cy.mount(TimezoneFieldComponent, {
           imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule, ReactiveFormsModule],
           declarations: [],
           providers: [ApiService, AuthService, AuthGuard, MatDialog, Router, DialogsService]
