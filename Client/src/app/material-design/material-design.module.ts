@@ -33,7 +33,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogModule,
     ScrollingModule,
     MatTabsModule,
-    UserDashboard,
     MatTableModule,
     MatProgressSpinnerModule
   ]
