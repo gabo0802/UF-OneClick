@@ -70,7 +70,6 @@ Username-Field Component:
 * Username form has duplicate error if same username is entered
 
 Email-Field Component:
----------------------------------
 * editing should be false initially
 * oldEmail should be empty before call
 * Email form should be disabled initially
@@ -81,13 +80,11 @@ Email-Field Component:
 * Email form has duplicate error if same email is entered
 
 Password-Field Component:
-------------------------------------
 * password input field should be hidden by default
 * form should be disabled
 * form value should be asterisks
 
 Time Zone-Field Component:
--------------------------------------
 * editing should be false initially
 * oldTimeZone should be empty before call
 * Time Zone form should be disabled initially
