@@ -20,11 +20,7 @@
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="actions">
             <mat-icon>more_vert</mat-icon>
           </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="editSubscription(row)">
-              <mat-icon color="primary">edit</mat-icon>
-              <span >Edit</span>
-            </button>
+          <mat-menu #menu="matMenu">            
             <button mat-menu-item>
               <mat-icon id="warning">delete</mat-icon>
               <span>Delete</span>
