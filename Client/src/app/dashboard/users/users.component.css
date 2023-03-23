@@ -1,3 +1,10 @@
+
+.container { 
+  
+}
+.users-container {
+  
+}
 .intro {
     margin-top: 60px;  
     width: 100%;
@@ -8,10 +15,10 @@
     background-color: rgba(241, 237, 237, 0.925);
     /*display: flex;
     justify-content: left;
-    align-items: top;   */
-    align-items: center;
+    align-items: center;  
     color: white;
     border-bottom: solid 5px var(--UF-Orange);
+  */
 }
 
 /* 
@@ -82,4 +89,8 @@ For future reference on aligning items:
     background-color: transparent;
 
 }
-  
+.content-container {
+    max-width: 975px;
+    width: 100%;
+}
+

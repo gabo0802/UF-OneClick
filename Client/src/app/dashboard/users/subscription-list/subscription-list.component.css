@@ -1,0 +1,41 @@
+.subscription-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;    
+}
+
+.buttons-container {
+    width: 100%;
+    background-color: lightgray;
+    padding: 5px;
+}
+
+#add {
+    border-radius: 9px;
+    padding: 8px;
+}
+
+#warning {
+    color: rgb(202, 2, 2);
+}
+
+.mdc-data-table__header-row {
+    height: 49px;
+    /* background-color: #2e74c4; */
+    /* background-color: #205189; */
+    background-color: #1a51b3;
+}
+
+.mdc-data-table__header-cell {
+    font-weight: normal;
+    color: white;
+}
+
+.mdc-data-table__row:nth-child(even){
+    background-color: #fefefe;
+}
+        
+.mdc-data-table__row:nth-child(odd){
+    background-color: #f8f8f8;
+}

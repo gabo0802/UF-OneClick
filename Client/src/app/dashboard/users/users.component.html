@@ -1,4 +1,14 @@
 
+<!--
+    <div class="users-container">
+    <div class="content-container">
+        <app-welcome-header [username]="username"></app-welcome-header>
+        <app-subscription-list [subscriptionList]="userSubscriptions"></app-subscription-list>
+    </div>
+</div>
+-->
+
+<!-- Main Code Starts-->
 <div class="intro">
 
     <!-- Header breaks -->
@@ -21,7 +31,7 @@
     <button type="submit" mat-raised-button color="primary"  (click)="getUserSubscriptions()" [hidden]="adminButtonVisible">See Your Subscriptions</button>
     <button type="submit" mat-raised-button color="primary"  (click)="getUserData()" [hidden]="adminButtonVisible">Get All User Data</button>
     <button type="submit" mat-raised-button color="primary" (click)="resetAll()" [hidden]="adminButtonVisible">Reset All</button> -->
-
+    
     <mat-card class="create-unknown-sub">
         <mat-card-content >
             <form [formGroup]="createSubServiceForm" (ngSubmit)="newSubscription()">                    
@@ -141,5 +151,4 @@
 <div class="TBA-features">
 
 </div>
-
 
