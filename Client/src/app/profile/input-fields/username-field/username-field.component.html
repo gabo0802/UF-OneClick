@@ -13,6 +13,6 @@
             
         </mat-form-field>
     </form>                    
-    <button type="button"*ngIf="!editing" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
+    <button type="button" *ngIf="!editing" mat-raised-button color="primary" (click)="editUsername()">Edit</button>
     <button type="button" *ngIf="editing" mat-raised-button color="accent" [disabled]="usernameForm.invalid" (click)="updateUsername()">Save</button>
 </div>
