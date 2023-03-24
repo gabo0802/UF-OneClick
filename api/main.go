@@ -65,12 +65,12 @@ func main() {
 
 		//Subscription Management
 
-		api.GET("/subscriptions", handler.GetAllUserSubscriptions())
+		api.GET("/subscriptions", handler.GetAllCurrentUserSubscriptions(true))
 
 		//api.POST("/allsubscriptions", handler.GetAllSubscriptionServices())
-		//api.POST("/subscriptions", handler.GetAllCurrentUserSubscriptions(false))
-		//api.POST("/activesubscriptions", handler.GetAllCurrentUserSubscriptions(true))
-    
+		//api.POST("/subscriptions", handler.GetAllCurrentUserSubscriptions(true))
+		//api.POST("/activesubscriptions", handler.GetAllCurrentUserSubscriptions(false))
+
 		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
