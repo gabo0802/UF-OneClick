@@ -58,6 +58,6 @@ describe('PasswordResetComponent', () => {
 
     component.onSave();
 
-    expect(component.passwordForm.get('newPassword')?.hasError('duplicate'));
+    expect(component.passwordForm.get('newPassword')?.hasError('duplicate')).toBeTruthy();
   });
 });

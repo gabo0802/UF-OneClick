@@ -9,7 +9,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class AddSubscriptionComponent {
 
   addSubsriptionForm = new FormGroup({
-    'name': new FormControl(null, [Validators.required, Validators.pattern('^[A-z0-9]+$')]),
+    'name': new FormControl(null, [Validators.required, Validators.pattern('^[ A-z0-9]+$')]),
     'price': new FormControl(null, Validators.required)
   });
 
