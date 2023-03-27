@@ -34,20 +34,28 @@ For future reference on aligning items:
 }
 
 .graph-display {
+    background-color: rgba(241, 237, 237, 0.925);
     min-height: 100%;
     min-width: 100%;
 }
 
 .subscription-report {
+    background-color: rgba(250, 173, 173, 0.795);
+
     min-height: 100%;
     min-width: 100%;
 }
 
 .TBA-features {
+    text-align: center;
     min-height: 10%;
     min-width: 100%;
 }
 
+.TBA-features h1 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 .title-card {
     background-color: var(--UF-Orange);
     margin-top: 10rem;
