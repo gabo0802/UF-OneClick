@@ -14,9 +14,13 @@ export class SubscriptionListComponent {
   @Input() subscriptionList: Subscription[] = [];
 
   displayedColumns: string[] = ['sub-name', 'sub-price', 'sub-actions'];
-
+  
   addSubscription(): void {
-
     this.dialogs.addSubscription();
+  }
+
+  ngOnInit(): void {
+    console.log(this.subscriptionList)
+
   }
 }
