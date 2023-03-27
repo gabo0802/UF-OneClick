@@ -1,12 +1,7 @@
 
-<!--
-    <div class="users-container">
-    <div class="content-container">
-        <app-welcome-header [username]="username"></app-welcome-header>
-        <app-subscription-list [subscriptionList]="userSubscriptions"></app-subscription-list>
-    </div>
-</div>
--->
+
+
+
 
 <!-- Main Code Starts-->
 <div class="intro">
@@ -16,7 +11,7 @@
 
     <mat-card class="title-card" >
         <mat-card-header class="title-header">
-            <h1 class="title">Welcome {{currentUsername}} to the UF-OneClick Subscription Manager!</h1>
+            <h1 class="title">Welcome {{username}} to the UF-OneClick Subscription Manager!</h1>
         </mat-card-header>
         <mat-card-content>
             
@@ -27,11 +22,20 @@
 
 <div class="subscription-manager" align="center">
 
+
+    <div class="users-container">
+        <div class="content-container">
+            <app-welcome-header [username]="username"></app-welcome-header>
+            <app-subscription-list id="subscriptionList" [subscriptionList]="subscriptionList"></app-subscription-list>
+        </div>
+    </div>
+
     <!-- <button type="submit" mat-raised-button color="primary" (click)="doLogout()">Logout</button>
     <button type="submit" mat-raised-button color="primary"  (click)="getUserSubscriptions()" [hidden]="adminButtonVisible">See Your Subscriptions</button>
     <button type="submit" mat-raised-button color="primary"  (click)="getUserData()" [hidden]="adminButtonVisible">Get All User Data</button>
     <button type="submit" mat-raised-button color="primary" (click)="resetAll()" [hidden]="adminButtonVisible">Reset All</button> -->
     
+    <!-- Vladimir Code
     <mat-card class="create-unknown-sub">
         <mat-card-content >
             <form [formGroup]="createSubServiceForm" (ngSubmit)="newSubscription()">                    
@@ -122,7 +126,7 @@
             <br><br>
         </mat-card-content>      
     </mat-card>  
-
+-->
 </div>
 
 <div class="graph-display">
@@ -140,12 +144,12 @@
             </mat-card-actions>
         </form>
     </mat-card-content>   -->
-
+    <!-- Vladimir Code
     <div id="allSubs"></div> 
     <div id="longestSub"></div> 
     <button type="submit" mat-raised-button color="primary" (click) ="left()"> ← </button>
     <button type="submit" mat-raised-button color="primary" (click) ="right()"> → </button>
-
+-->
 </div>
 
 <div class="TBA-features">
