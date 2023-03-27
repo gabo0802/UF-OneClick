@@ -35,60 +35,43 @@ export class UsersComponent implements OnInit{
         this.dialogs.errorDialog("Unexpected Error getting user data!", "Please try again later.");
       }
     });
-
-    this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/subscriptions").subscribe( (res: Object) => {
-
-      var allSubsString:string = ""
-                const response: string = JSON.stringify(res);
-                const responseMessage = JSON.parse(response);
-              
-               if (responseMessage["Error"] == undefined){
-                 allSubsString += "All Active Subscriptions <br>"
+    this.api.getUserSubscriptions().subscribe({
       
-                 let index: number = 0;
-                 while (responseMessage[index] != null){
-                   if (responseMessage[index]["dateremoved"] == ""){
-                     var dateAdded: string = responseMessage[index]["dateadded"]
-                     allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + "] <br>";
-                 }
-      
-                   index += 1;
-                 }
-                 document.getElementById("subscriptionList")!.innerHTML = allSubsString;
-                 console.log(allSubsString);
-                }
+      next: (res: Object) => {
+        var allSubsString:string = ""
+        const response: string = JSON.stringify(res);
+        const responseMessage = JSON.parse(response);
 
-               error: (error: HttpErrorResponse) => {
-
-                this.dialogs.errorDialog("Unexpected Error getting user data!", "Please try again later.");
-              }
-
-             });
-        }
-    // getUserSubscriptions(){
-    //           this.api.post_request__with_data({username: "", email: "", password: "", name: "", price: "", dateadded:"", dateremoved:""}, "/api/subscriptions").subscribe( (res: Object) => {
-    //             var allSubsString:string = ""
-    //             const response: string = JSON.stringify(res);
-    //             const responseMessage = JSON.parse(response);
-              
-    //            if (responseMessage["Error"] == undefined){
-    //              allSubsString += "All Active Subscriptions <br>"
+        if (responseMessage["Error"] == undefined){
       
-    //              let index: number = 0;
-    //              while (responseMessage[index] != null){
-    //                if (responseMessage[index]["dateremoved"] == ""){
-    //                  var dateAdded: string = responseMessage[index]["dateadded"]
-    //                  allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + "] <br>";
-    //              }
-      
-    //                index += 1;
-    //              }
-      
-    //              document.getElementById("allSubs")!.innerHTML = allSubsString;
-    //            }
-    //          });
-    // }
+          let index: number = 0;
+          while (responseMessage[index] != null){
+            if (responseMessage[index]["dateremoved"] == ""){
+              var dateAdded: string = responseMessage[index]["dateadded"]
+              allSubsString += "[" + responseMessage[index]["name"] + " $"+ responseMessage[index]["price"] + " " + dateAdded.substring(0, dateAdded.length) + "] <br>";
+              let newSub = {name: responseMessage[index]["name"], price: responseMessage[index]["price"], dateadded: dateAdded}
+              this.subscriptionList.push(newSub)
+             }
 
+            index += 1;
+          }
+
+         //  document.getElementById("subscriptionList")!.innerHTML = subscriptionList;
+          console.log(this.subscriptionList);
+          console.log(allSubsString);
+
+         } else {
+           error: (error: HttpErrorResponse) => {
+
+             this.dialogs.errorDialog("Unexpected Error getting user data!", "Please try again later.");
+           }
+         }
+
+      }
+
+    });
+    
+  }
 }
 
 
