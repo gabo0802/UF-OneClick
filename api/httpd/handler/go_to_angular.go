@@ -821,27 +821,27 @@ func NewUserSubscription(c *gin.Context) {
 
 		if rowsAffected == -223 {
 			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Already Active!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
+			c.JSON(http.StatusConflict, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
 
 		} else if rowsAffected == -404 {
 			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == -502 {
 			//c.SetCookie("newusersubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
 			//c.SetCookie("newusersubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else if rowsAffected == 223 {
 			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Renewed!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
+			c.JSON(http.StatusContinue, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
 
 		} else {
 			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Added"})
+			c.JSON(http.StatusCreated, gin.H{"Success": "Subscription to " + subscriptionName + " Added"})
 
 		}
 
@@ -935,26 +935,26 @@ func NewSubscriptionService(c *gin.Context) {
 
 		if rowsAffected == -223 {
 			//c.SetCookie("newsubOutput", "Error: Subscription Service of "+subscriptionName+" Already Exists!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Subscription Service of " + subscriptionName + " Already Exists"})
+			c.JSON(http.StatusConflict, gin.H{"Error": "Subscription Service of " + subscriptionName + " Already Exists"})
 
 		} else if rowsAffected == -502 {
 			//c.SetCookie("newsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
 			//c.SetCookie("newsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else {
 			//c.SetCookie("newsubOutput", "Subscription to "+subscriptionName+" Created!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Created"})
+			c.JSON(http.StatusCreated, gin.H{"Success": "Subscription to " + subscriptionName + " Created"})
 		}
 
 	} else {
 		//c.SetCookie("newsubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
 		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 
-		c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
 	}
 }
 

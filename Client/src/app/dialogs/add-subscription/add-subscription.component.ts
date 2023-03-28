@@ -29,12 +29,13 @@ export class AddSubscriptionComponent {
 
       this.api.createUserSubscription(subName, subPrice).subscribe({
 
-        next: (res: Object) => {
-
+        next: (res) => {
+          
           this.dialogRef.close({isCreated: true, name: subName});
         },
         error: (error: HttpErrorResponse) => {
-          this.dialogs.errorDialog("Error Creating Subscription", "There was an error creating your subscription. Please try again later.");
+          
+          this.dialogs.errorDialog("Error Creating Subscription", error["error"]["Error"]);
         }
 
       });

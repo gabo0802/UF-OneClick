@@ -22,7 +22,7 @@ export class SubscriptionListComponent {
   addSubscription(): void {
     this.dialogs.addSubscription().afterClosed().subscribe((res: {isCreated: boolean, name: string}) => {
 
-
+      //successful creation of sub will fire this to add it
       if(res.isCreated === true){
 
         this.api.addUserSubscription(res.name).subscribe({

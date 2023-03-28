@@ -36,7 +36,7 @@ export class DialogsService {
 
     this.dialog.open(ErrorComponent, {
       data: {dialogTitle: errorTitle, dialogMessage: errorMessage},      
-      height: '180px',
+      height: '195px',
       width: '370px',
     });
   }
