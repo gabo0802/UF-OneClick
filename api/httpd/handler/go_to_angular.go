@@ -971,19 +971,19 @@ func CancelSubscriptionService(c *gin.Context) {
 
 		if rowsAffected == -404 || rowsAffected == 0 {
 			//c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Does Not Exist!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == -1 {
 			//c.SetCookie("cancelsubOutput", "Error: Database Connection Error", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": " Database Connection Issue"})
+			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": " Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
 			//c.SetCookie("cancelsubOutput", "Error: Enter Value Into All Columns!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+			c.JSON(http.StatusBadGateway, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else {
 			//c.SetCookie("cancelsubOutput", "Subscription to "+subscriptionName+" Canceled!", 60, "/", "localhost", false, false)
-			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Canceled"})
+			c.JSON(http.StatusAccepted, gin.H{"Success": "Subscription to " + subscriptionName + " Canceled"})
 		}
 
 	} else {

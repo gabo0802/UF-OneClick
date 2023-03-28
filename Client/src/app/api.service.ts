@@ -75,7 +75,7 @@ export class ApiService {
   //User subscriptions
   getUserSubscriptions(): Observable<Subscription[]> {
 
-    return this.http.get('/api/subscriptions/active').pipe(
+    return this.http.get('/api/subscriptions').pipe(
       map( (res: Object) => {
 
         let userSubs: Subscription[] = [];
@@ -109,6 +109,13 @@ export class ApiService {
     let subData = {name: subName};
 
     return this.http.post('api/subscriptions/addsubscription', subData);
+   }
+
+   deleteSubscription(subName: string): Observable<Object> {
+
+    let subData = {name: subName};
+
+    return this.http.post('api/subscriptions/cancelsubscription', subData);
    }
 
   updateUsername(newUsername: string): Observable<Object> {

@@ -21,12 +21,12 @@
 
       <ng-container matColumnDef="sub-actions">
         <th mat-header-cell *matHeaderCellDef> Actions</th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row, let sub">
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="actions">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">            
-            <button mat-menu-item>
+            <button mat-menu-item (click)="deleteSub(sub.name)">
               <mat-icon id="warning">delete</mat-icon>
               <span>Delete</span>
             </button>       
