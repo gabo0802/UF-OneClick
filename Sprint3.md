@@ -98,3 +98,11 @@ PasswordReset Component:
 * oldPassword and newPassword input fields hidden by default
 * OldPassword and NewPassword form values should be empty string intially
 * if newPassword is idenitical to oldPassword throws form duplicate error
+
+Users Component:
+* username variable should initially be empty
+* subscriptionList should be initially be empty
+
+Welcome-header Component:
+* username should be initially empty
+* currentDate should be today
