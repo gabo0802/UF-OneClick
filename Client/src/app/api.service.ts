@@ -75,7 +75,7 @@ export class ApiService {
   //User subscriptions
   getUserSubscriptions(): Observable<Subscription[]> {
 
-    return this.http.get('/api/subscriptions').pipe(
+    return this.http.get('/api/subscriptions/active').pipe(
       map( (res: Object) => {
 
         let userSubs: Subscription[] = [];
