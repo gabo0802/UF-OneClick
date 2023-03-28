@@ -3,8 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from 'src/app/material-design/material-design.module';
+import { SubscriptionListComponent } from './subscription-list/subscription-list.component';
 
 import { UsersComponent } from './users.component';
+import { WelcomeHeaderComponent } from './welcome-header/welcome-header.component';
 
 describe('UsersComponent', () => {
   let component: UsersComponent;
@@ -13,7 +15,9 @@ describe('UsersComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ 
-        UsersComponent
+        UsersComponent,
+        SubscriptionListComponent,
+        WelcomeHeaderComponent,
        ],
        imports: [
         HttpClientModule, 
@@ -32,5 +36,13 @@ describe('UsersComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('username variable should initially be empty', () => {
+    expect(component.username).toEqual('');
+  });
+
+  it('subscriptionList should be initially be empty', ()=> {
+    expect(component.subscriptionList.length).toEqual(0);
   });
 });

@@ -8,7 +8,9 @@ describe('WelcomeHeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ WelcomeHeaderComponent ]
+      declarations: [ 
+        WelcomeHeaderComponent
+       ]
     })
     .compileComponents();
 
@@ -19,5 +21,16 @@ describe('WelcomeHeaderComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('username should be initially empty', () => {
+    expect(component.username).toEqual('');
+  });
+
+  it('currentDate should be today', () => {
+
+    let todayDate: Date = new Date();
+
+    expect(component.currentDate).toEqual(todayDate);
   });
 });
