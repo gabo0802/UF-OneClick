@@ -28,9 +28,14 @@ For future reference on aligning items:
     with angular materials stuff.
 */
 .subscription-manager {
-    margin-top: 5rem;
+    border-top: solid 5px var(--UF-Orange);
     min-height: 100%;
     min-width: 100%;
+    background-color: lightblue;
+}
+
+.users-container {
+    padding: 5rem;
 }
 
 .graph-display {
@@ -40,7 +45,7 @@ For future reference on aligning items:
 }
 
 .subscription-report {
-    background-color: rgba(250, 173, 173, 0.795);
+    background-color: rgba(255, 203, 203, 0.795);
 
     min-height: 100%;
     min-width: 100%;
