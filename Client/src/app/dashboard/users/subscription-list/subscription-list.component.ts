@@ -40,13 +40,11 @@ export class SubscriptionListComponent {
   }
 
   deleteSub(subName: string): void {
-
-    console.log("In deleteSub!");
+    
     this.api.deleteSubscription(subName).subscribe({
 
       next: (res) => {
-
-        console.log("update! delete " + res);
+        
         this.updateSubscriptions.emit(true);
       },
       error: (error: HttpErrorResponse) => {
