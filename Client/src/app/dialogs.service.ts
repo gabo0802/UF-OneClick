@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ErrorComponent } from './dialogs/error/error.component';
 import { SuccessComponent } from './dialogs/success/success.component';
@@ -57,11 +57,13 @@ export class DialogsService {
     }); 
   }
 
-  addSubscription(): void {
+  addSubscription(): MatDialogRef<AddSubscriptionComponent> {
 
-    this.dialog.open(AddSubscriptionComponent, {
+    let dialogRef = this.dialog.open(AddSubscriptionComponent, {
       height: '650px',
       width: '600px'
     });
+
+    return dialogRef;
   }
 }

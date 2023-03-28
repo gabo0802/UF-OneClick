@@ -97,6 +97,13 @@ export class ApiService {
     );
    }
 
+   createUserSubscription(subName: string, subPrice: string): Observable<Object> {
+
+    let subData = {name: subName, price: subPrice};
+
+    return this.http.post('/subscriptions/createsubscription', subData);
+   }
+
   updateUsername(newUsername: string): Observable<Object> {
     const newUserUsername = {username: newUsername};
     return this.http.put('api/changeusername', newUserUsername);

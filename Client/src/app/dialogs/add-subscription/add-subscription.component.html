@@ -17,8 +17,8 @@
         </div>
         <p>Insert the rest of the fields here</p> 
         <div mat-dialog-actions align="end">
-            <button mat-raised-button color="primary" mat-dialog-close>Cancel</button>
-            <button mat-raised-button color="accent">Add</button>
+            <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+            <button mat-raised-button color="accent" (click)="addSubscription()">Add</button>
         </div>
     </form>  
 </div>

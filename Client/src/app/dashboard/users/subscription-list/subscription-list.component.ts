@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
@@ -16,7 +17,7 @@ export class SubscriptionListComponent {
   displayedColumns: string[] = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-actions'];
   
   addSubscription(): void {
-    this.dialogs.addSubscription();
+    this.dialogs.addSubscription().afterClosed().subscribe({ });
   }
 
 }
