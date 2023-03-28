@@ -14,8 +14,13 @@
         <td mat-cell *matCellDef="let sub"> {{'$ ' + sub.price}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="sub-actions">
+      <ng-container matColumnDef="sub-dateAdded">
         <th mat-header-cell *matHeaderCellDef> Date Added </th>
+        <td mat-cell *matCellDef="let sub"> {{ sub.dateadded | date:'mediumDate'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sub-actions">
+        <th mat-header-cell *matHeaderCellDef> Actions</th>
         <td mat-cell *matCellDef="let row">
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="actions">
             <mat-icon>more_vert</mat-icon>

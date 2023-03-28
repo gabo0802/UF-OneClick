@@ -1,20 +1,11 @@
 export interface Subscription {
      name: string;
      price: number | string;
-     dateadded: string;
-     dateremoved?: string;
+     dateadded: Date | string;
+     dateremoved?: Date | string;
      email?: string;
      subid?: number | string;
      timezone?: string;
      userid?: number | string;
-     username?: string;
-
-
-     
+     username?: string;     
 }
-
-
-// function createSubscript(config: Subscription): {name: string; 
-//     price: number; } {
-        
-//     }

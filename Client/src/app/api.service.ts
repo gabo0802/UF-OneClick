@@ -83,8 +83,13 @@ export class ApiService {
         let data = JSON.stringify(res);
         let subData = JSON.parse(data);
         
-        for(const sub in subData){
-          userSubs.push(subData[sub]);          
+        for(const sub of subData){
+          
+          //Converts to a javascript date Object
+          //Provisional as of now for easier displaying of date added in subscription table
+          sub.dateadded = new Date(sub.dateadded);
+
+          userSubs.push(sub);          
         }
         
         return userSubs;
