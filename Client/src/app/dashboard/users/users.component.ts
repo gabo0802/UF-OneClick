@@ -47,6 +47,25 @@ export class UsersComponent implements OnInit{
     });
     
   }
+
+  updateSubscriptions(update: boolean): void {
+
+    if(update){
+
+      this.api.getUserSubscriptions().subscribe({
+      
+        next: (res: Subscription[]) => {       
+  
+          this.subscriptionList = res;
+          
+        },
+        error: (error: HttpErrorResponse) => {
+  
+          this.dialogs.errorDialog("ERROR TITLE", "ERROR MESSAGE");
+        }
+      });
+    }
+  }
 }
 
 // // Code from main starts here

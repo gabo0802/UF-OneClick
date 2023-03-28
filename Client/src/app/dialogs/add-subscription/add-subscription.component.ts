@@ -31,7 +31,7 @@ export class AddSubscriptionComponent {
 
         next: (res: Object) => {
 
-          this.dialogRef.close({isCreated: true, subData: {name: subName}});
+          this.dialogRef.close({isCreated: true, name: subName});
         },
         error: (error: HttpErrorResponse) => {
           this.dialogs.errorDialog("Error Creating Subscription", "There was an error creating your subscription. Please try again later.");
@@ -43,7 +43,7 @@ export class AddSubscriptionComponent {
 
   cancel(): void {
 
-    this.dialogRef.close({isCreated: false, subData: {name: ''}});
+    this.dialogRef.close({isCreated: false, name: ''});
   }
 
 }
