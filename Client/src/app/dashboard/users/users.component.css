@@ -90,7 +90,7 @@ For future reference on aligning items:
 
 
 .users-container {
-    padding: 5rem;
+    padding: 4rem;
 }
 
 .graph-display {
@@ -115,8 +115,12 @@ For future reference on aligning items:
     height: auto;
     padding: 1%;
     min-height: 80%;
+    text-align: center;
 }
-
+h2 {
+    padding-top: 25px;
+    font-size: 2em;
+}
 .sub-box {
     background-color: white;
    position: relative;
