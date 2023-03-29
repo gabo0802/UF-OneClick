@@ -93,9 +93,15 @@ For future reference on aligning items:
 
 .subscription-report {
     background-color: rgba(255, 203, 203, 0.795);
-    position:static;
-    min-height: 100%;
-    min-width: 100%;
+    /*min-height: 100%;
+    min-width: 100%; */
+    -moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+box-sizing: border-box;
+width: 100%;
+height: auto;
+padding: 1%;
+min-height: 80%;
 }
 
 .sub-box {
