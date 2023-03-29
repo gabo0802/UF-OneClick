@@ -112,8 +112,8 @@ Subscription-List Component:
 * subscription list should be initially empty
 
 ## Back-End Unit Tests
-
 **MySQL Package Tests**
+
 Each unit test checks the general functionality of their respective function:
 * TestMySQLConnect(t *testing.T)
 * TestGetDatabaseSize(t *testing.T)
@@ -140,6 +140,7 @@ Each unit test checks the general functionality of their respective function:
 * TestGetPriceForMonth(t *testing.T)
 
 **Handler Package Tests**
+
 The unit tests create mock gin contexts and cookies to test output:
 * TestSetDB(t *testing.T)
 * TestDailyReminder(t *testing.T)
