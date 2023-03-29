@@ -75,9 +75,17 @@ For future reference on aligning items:
 */
 .subscription-manager {
     border-top: solid 5px var(--UF-Orange);
-    min-height: 100%;
-    min-width: 100%;
+    /*min-height: 100%;
+    min-width: 100%; */
     background-color: lightblue;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 1%;
+    min-height: 70%;
 }
 
 
@@ -87,8 +95,13 @@ For future reference on aligning items:
 
 .graph-display {
     background-color: rgba(241, 237, 237, 0.925);
-    min-height: 100%;
-    min-width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 1%;
+    min-height: 80%;
 }
 
 .subscription-report {
@@ -96,12 +109,12 @@ For future reference on aligning items:
     /*min-height: 100%;
     min-width: 100%; */
     -moz-box-sizing: border-box;
--webkit-box-sizing: border-box;
-box-sizing: border-box;
-width: 100%;
-height: auto;
-padding: 1%;
-min-height: 80%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 1%;
+    min-height: 80%;
 }
 
 .sub-box {
