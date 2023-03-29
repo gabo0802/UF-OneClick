@@ -2,8 +2,9 @@
 
 Front-End
 * Profile functionality implemented and improved
-
-Worked on unit tests
+* Added UI for the Subscription Manager: Seamless (initial) implementation of adding/deleting subscriptions
+* Added the UI for the Subscription Report, doesn't have functionality just yet (First thing we're doing for Sprint 4)
+* Worked on unit tests
 
 
 ## Front-End Unit Tests
