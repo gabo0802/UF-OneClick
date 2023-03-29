@@ -31,7 +31,7 @@ export class SubscriptionListComponent {
             this.updateSubscriptions.emit(true);
           },
           error: (error: HttpErrorResponse) => {
-            this.dialogs.errorDialog("Error Adding Subscription!", "There was an erroring adding your subscription. Please try again later.")
+            this.dialogs.errorDialog("Error Adding Subscription!", "There was an error in adding your subscription. Please try again later.")
           }
         });
 

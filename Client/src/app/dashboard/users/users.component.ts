@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
+import { MatAccordion } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-users',
@@ -11,7 +12,12 @@ import { Subscription } from 'src/app/subscription.model';
 })
 export class UsersComponent implements OnInit{
 
-  constructor(private api: ApiService, private dialogs: DialogsService) {}
+  @ViewChild(MatAccordion) accordion: MatAccordion;
+
+  constructor(private api: ApiService, private dialogs: DialogsService) {
+    this.accordion = new MatAccordion()
+    this.accordion.openAll();
+  }
 
   username: string = '';
   subscriptionList: Subscription[] = [];

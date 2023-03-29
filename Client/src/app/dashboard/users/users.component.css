@@ -20,48 +20,6 @@
     border-bottom: solid 5px var(--UF-Orange);
   */
 }
-
-/* 
-For future reference on aligning items: 
-    1. Make sure height is defined somewhere in the layout.
-    2. The properties "align" and "layout-align" seem to work best
-    with angular materials stuff.
-*/
-.subscription-manager {
-    border-top: solid 5px var(--UF-Orange);
-    min-height: 100%;
-    min-width: 100%;
-    background-color: lightblue;
-}
-
-
-.users-container {
-    padding: 5rem;
-}
-
-.graph-display {
-    background-color: rgba(241, 237, 237, 0.925);
-    min-height: 100%;
-    min-width: 100%;
-}
-
-.subscription-report {
-    background-color: rgba(255, 203, 203, 0.795);
-
-    min-height: 100%;
-    min-width: 100%;
-}
-
-.TBA-features {
-    text-align: center;
-    min-height: 10%;
-    min-width: 100%;
-}
-
-.TBA-features h1 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
 .title-card {
     background-color: var(--UF-Orange);
     margin-top: 10rem;
@@ -108,3 +66,74 @@ For future reference on aligning items:
     width: 100%;
 }
 
+
+/* 
+For future reference on aligning items: 
+    1. Make sure height is defined somewhere in the layout.
+    2. The properties "align" and "layout-align" seem to work best
+    with angular materials stuff.
+*/
+.subscription-manager {
+    border-top: solid 5px var(--UF-Orange);
+    min-height: 100%;
+    min-width: 100%;
+    background-color: lightblue;
+}
+
+
+.users-container {
+    padding: 5rem;
+}
+
+.graph-display {
+    background-color: rgba(241, 237, 237, 0.925);
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.subscription-report {
+    background-color: rgba(255, 203, 203, 0.795);
+    position:static;
+    min-height: 100%;
+    min-width: 100%;
+}
+
+.sub-box {
+    background-color: white;
+   position: relative;
+   max-height: 100%;
+   top: 5rem;
+   border: solid 2px black;
+   border-radius: 0.5%;
+   padding-top: 8px;
+   margin-left: 5rem;
+   margin-right: 5rem;
+}
+
+.sub-box > mat-card > mat-card-title {
+    font-weight: 500;
+    font-size: 1.5em;
+}
+.TBA-features {
+    text-align: center;
+    min-height: 10%;
+    min-width: 100%;
+}
+
+.TBA-features h1 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.accordion-action-buttons {
+    padding-bottom: 20px;
+  }
+  
+  .accordion-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .accordion-headers-align .mat-mdc-form-field + .mat-mdc-form-field {
+    margin-left: 8px;
+  }
