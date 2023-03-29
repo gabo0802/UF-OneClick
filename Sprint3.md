@@ -113,8 +113,8 @@ Subscription-List Component:
 
 ## Back-End Unit Tests
 
-MySQL Package Tests:
-Each unit test checks the general functionality of their respective function-
+**MySQL Package Tests**
+Each unit test checks the general functionality of their respective function:
 * TestMySQLConnect(t *testing.T)
 * TestGetDatabaseSize(t *testing.T)
 * TestSetUpTables(t *testing.T)
@@ -139,8 +139,8 @@ Each unit test checks the general functionality of their respective function-
 * TestGetMostUsedSubscription(t *testing.T)
 * TestGetPriceForMonth(t *testing.T)
 
-Handler Package Tests:
-The unit tests create mock gin contexts and cookies to test output-
+**Handler Package Tests**
+The unit tests create mock gin contexts and cookies to test output:
 * TestSetDB(t *testing.T)
 * TestDailyReminder(t *testing.T)
 * TestNewsLetter(t *testing.T)
