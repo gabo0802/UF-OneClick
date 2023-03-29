@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -12,21 +13,60 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*func SetUpRouter() *gin.Engine {
-	router := gin.Default()
-	return router
-}*/
+func ConnectResetAndSetUpDB() *sql.DB {
+	//Establishes a connection to the remote MySQL server's database:
+	db := MySQL.MySQLConnect()
+	//MySQL.ResetAllTables(db)
+	MySQL.SetUpTables(db)
+
+	if MySQL.GetTableSize(db, "Subscriptions") == 0 {
+		MySQL.CreateCommonSubscriptions(db)
+	}
+
+	if MySQL.GetTableSize(db, "Users") == 0 {
+		MySQL.CreateAdminUser(db)
+		MySQL.CreateTestUser(db) //for testing
+	}
+
+	return db
+}
+
+func TestSetDB(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+
+	// verifies that the currentDB variable has been updated
+	if currentDB == nil {
+		t.Fatalf("currentDB is nil, expected non-nil")
+	}
+}
+
+func TestSendEmailToAllUsers(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	// set the current database for the function to use
+	SetDB(db)
+
+	// call the function with test data
+	emailSubject := "Test Subject"
+	emailMessage := "Test Message"
+	result := SendEmailToAllUsers(emailSubject, emailMessage)
+
+	// check the result
+	if !result {
+		t.Errorf("SendEmailToAllUsers returned false")
+	}
+}
 
 func TestTryLogin(t *testing.T) {
 	// Establishes a connection to the database
-	db := MySQL.MySQLConnect()
+	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	// Set up a test Gin context
+	// Sets up a test Gin context
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	// Set up a test request body
+	// Sets up a test request body
 	login := map[string]string{
 		// Uses admin credentials
 		"username": "root",
@@ -39,7 +79,7 @@ func TestTryLogin(t *testing.T) {
 		t.Fatalf("Failed to marshal request body: %v", err)
 	}
 
-	// Create a test request
+	// Creates a test request
 	req, err := http.NewRequest("POST", "/login", bytes.NewBuffer(body))
 	if err != nil {
 		t.Fatalf("Failed to create request: %v", err)
@@ -47,15 +87,15 @@ func TestTryLogin(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	c.Request = req
 
-	// Call the TryLogin function
+	// Calls the TryLogin function
 	TryLogin(c)
 
-	// Check the response status code
+	// Checks the response status code
 	if w.Code != http.StatusOK {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, w.Code)
 	}
 
-	// Check the response body
+	// Checks the response body
 	var responseBody gin.H
 	//Unmarshal parses the JSON-encoded data and stores the result in the value pointed to by &responseBody
 	//i.e. turns JSON into golang data
