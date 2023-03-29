@@ -9,7 +9,7 @@ Front-End
 
 ## Front-End Unit Tests
 
-Cypress tests:
+**Cypress tests:**
 
 Login Component:
 * Form should be initially empty
@@ -52,7 +52,7 @@ Time Zone-Field Component:
 * Edit button contains text Edit
 * Edit button should change text to Save when clicked
 
-Jasmine Tests:
+**Jasmine Tests:**
 
 Profile Component:
 * password input field hidden by default
@@ -107,6 +107,9 @@ Users Component:
 Welcome-header Component:
 * username should be initially empty
 * currentDate should be today
+
+Subscription-List Component:
+* subscription list should be initially empty
 
 ## Back-End Unit Tests
 

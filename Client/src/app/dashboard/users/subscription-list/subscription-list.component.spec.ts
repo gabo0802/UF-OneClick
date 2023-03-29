@@ -34,4 +34,9 @@ describe('SubscriptionListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('subscription list should be initially empty', ()=> {
+
+    expect(component.subscriptionList).toEqual([]);
+  })
 });
