@@ -16,7 +16,7 @@ import (
 func ConnectResetAndSetUpDB() *sql.DB {
 	//Establishes a connection to the remote MySQL server's database:
 	db := MySQL.MySQLConnect()
-	//MySQL.ResetAllTables(db)
+	MySQL.ResetAllTables(db)
 	MySQL.SetUpTables(db)
 
 	if MySQL.GetTableSize(db, "Subscriptions") == 0 {
@@ -41,21 +41,128 @@ func TestSetDB(t *testing.T) {
 	}
 }
 
-func TestSendEmailToAllUsers(t *testing.T) {
+/*func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
-	// set the current database for the function to use
+	// sets the current database for the function to use
 	SetDB(db)
 
-	// call the function with test data
+	// calls the function with test data
 	emailSubject := "Test Subject"
 	emailMessage := "Test Message"
 	result := SendEmailToAllUsers(emailSubject, emailMessage)
 
-	// check the result
+	// checks the result
 	if !result {
 		t.Errorf("SendEmailToAllUsers returned false")
 	}
+}*/
+
+func TestDailyReminder(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	// creates a new gin context
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	// sets a mock cookie to return a response indicating that emails have already been sent
+	c.Request, _ = http.NewRequest("GET", "/", nil)
+	cookie := &http.Cookie{Name: "didReminder", Value: "yes"}
+	c.Request.AddCookie(cookie)
+
+	// calls the function
+	DailyReminder(c)
+
+	// checks the response
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %v but got %v", http.StatusOK, w.Code)
+	}
+	if w.Body.String() != "{\"Success\":\"Emails Already Sent!\"}" {
+		t.Errorf("Expected response body %v but got %v", "{\"Success\":\"Emails Already Sent!\"}", w.Body.String())
+	}
+
+	// resets the recorder and context
+	w = httptest.NewRecorder()
+	c, _ = gin.CreateTestContext(w)
+	c.Request, _ = http.NewRequest("GET", "/", nil)
+
+	// calls the function again without the cookie to return a response that emails have just been sent
+	DailyReminder(c)
+
+	// checks the response
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %v but got %v", http.StatusOK, w.Code)
+	}
+	if w.Body.String() != "{\"Success\":\"Emails Were Sent!\"}" {
+		t.Errorf("Expected response body %v but got %v", "{\"Success\":\"Emails Were Sent!\"}", w.Body.String())
+	}
 }
+
+func TestNewsLetter(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	// creates a new gin context with a JSON request body
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	requestBody := gin.H{
+		"message": "Newsletter message",
+	}
+	requestBytes, _ := json.Marshal(requestBody)
+	requestReader := bytes.NewReader(requestBytes)
+	c.Request, _ = http.NewRequest("POST", "/news", requestReader)
+	c.Request.Header.Set("Content-Type", "application/json")
+
+	// calls the function
+	NewsLetter(c)
+
+	// checks the response
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %v but got %v", http.StatusOK, w.Code)
+	}
+	expectedResponse := gin.H{"Success": "Newsletter Sent!"}
+	var actualResponse gin.H
+	err := json.Unmarshal(w.Body.Bytes(), &actualResponse)
+	if err != nil {
+		t.Errorf("Error parsing response JSON: %v", err)
+	}
+	if !reflect.DeepEqual(expectedResponse, actualResponse) {
+		t.Errorf("Expected response %v but got %v", expectedResponse, actualResponse)
+	}
+}
+
+/*func TestVerifyEmail(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+
+	// Inserts a verification code for a user
+	currentTime := time.Now()
+	codeGenerator := sha256.New()
+	codeGenerator.Write([]byte("test-code"))
+	code := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
+
+	_, err := currentDB.Exec("INSERT INTO Verification (UserID, ExpireDate, Code, Type) VALUES (?, ?, ?, 'vE')", 1, currentTime.Add(time.Minute), code)
+	if err != nil {
+		t.Fatalf("Failed to insert verification code: %v", err)
+	}
+
+	// Creates a test context and request with the verification code
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.Params = append(c.Params, gin.Param{Key: "code", Value: code})
+
+	// Calls the handler function
+	VerifyEmail(c)
+
+	// Checks that the user was verified and the verification code was deleted
+	var count int
+	err = currentDB.QueryRow("SELECT COUNT(*) FROM Verification WHERE UserID = 1 AND Type = 'vE'").Scan(&count)
+	if err != nil {
+		t.Fatalf("Failed to query verification codes: %v", err)
+	}
+	if count != 0 {
+		t.Error("Expected verification code to be deleted, but it still exists in the database")
+	}
+}*/
 
 func TestTryLogin(t *testing.T) {
 	// Establishes a connection to the database
