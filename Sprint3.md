@@ -52,6 +52,9 @@ Time Zone-Field Component:
 * Edit button contains text Edit
 * Edit button should change text to Save when clicked
 
+SubscriptionList Compontent:
+* Add Subscription Button has text Add Subscription
+
 **Jasmine Tests:**
 
 Profile Component:
