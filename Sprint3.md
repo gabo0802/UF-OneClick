@@ -262,8 +262,8 @@ The unit tests create mock gin contexts and cookies to test output:
 <code> NewUser(c *gin.Context) </code>
 <br> <b>Works only with a POST or PUT request with the username, email, and password parameters being not null.</b> Calls MySQL.CreateNewUser() and if there is no error code returns a JSON object with a success message and starts the email verification process. Returns a JSON object with an error corresponding to the proper error code.<br>
 
-<code> GetAllCurrentUserSubscriptions() gin.HandlerFunc </code> 
-<br> <b>Works with any HTTP request.</b> Returns all of the values in the table UserSubs joined with the table Subscriptions where the UserID is equal to the currentUserID. The values are formatted in the form <i> Subscription Name, Subscription Price, Date Added, Date Removed </i> and are ordered by the DateAdded. <br>
+<code> GetAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc </code> 
+<br> <b>Works with any HTTP request.</b> Returns all of the values if onlyActive false and if onlyActive is true it returns all of the active subscriptions from the table UserSubs joined with the table Subscriptions where the UserID is equal to the currentUserID. The values are formatted in the form <i> Subscription Name, Subscription Price, Date Added, Date Removed </i> and are ordered by the DateAdded. <br>
 
 <code> GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFunc </code> 
 <br> <b>Works with any HTTP request.</b> If isContinuous is false returns the most used user subscription based on currentUserID. If isContinuous is true returns the most used <b>continuous</b> user subscription based on currentUserID. If isActive is true returns the most used <b>currently active</b> user subscription based on currentUserID.Format of return is <i> Subscription Name, Time Used (in seconds)</i>. <br>
