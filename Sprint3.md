@@ -112,6 +112,7 @@ Subscription-List Component:
 * subscription list should be initially empty
 
 ## Back-End Unit Tests
+* To run unit tests, the files of "MySQLPassword.txt" and "EmailCode.txt" are required to be in the same folder as their respective packages.
 **MySQL Package Tests**
 
 Each unit test checks the general functionality of their respective function:
@@ -257,7 +258,7 @@ The unit tests create mock gin contexts and cookies to test output:
 <code> NewUser(c *gin.Context) </code>
 <br> <b>Works only with a POST or PUT request with the username, email, and password parameters being not null.</b> Calls MySQL.CreateNewUser() and if there is no error code returns a JSON object with a success message and starts the email verification process. Returns a JSON object with an error corresponding to the proper error code.<br>
 
-<code> GetAllUserSubscriptions() gin.HandlerFunc </code> 
+<code> GetAllCurrentUserSubscriptions() gin.HandlerFunc </code> 
 <br> <b>Works with any HTTP request.</b> Returns all of the values in the table UserSubs joined with the table Subscriptions where the UserID is equal to the currentUserID. The values are formatted in the form <i> Subscription Name, Subscription Price, Date Added, Date Removed </i> and are ordered by the DateAdded. <br>
 
 <code> GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFunc </code> 
@@ -289,6 +290,9 @@ The unit tests create mock gin contexts and cookies to test output:
 
 <code> ChangeUserEmail(c *gin.Context) </code> 
 <br> <b>Works only with a POST or PUT request with the email parameter not null.</b> Calls MySQL.ChangeEmail(). Attempts to update the email of the currentUserID to the new email. Returns JSON object with success message if successful and returns proper error message corresponding to the error code if unsuccessful.<br>
+
+<code> GetAllCurrentUserInfo(c *gin.Context) </code> 
+<br> <b>Works with any HTTP request.</b> Calls MySQL.GetUsername() and MySQL.GetEmail(). Returns JSON object with all user data based on a cookie that describes the current userID. Also returns a success message if successful and returns proper error message corresponding to the error code if unsuccessful.<br>
 
 <code> GetUserInfo(c *gin.Context) </code> 
 <br> <b>Works with any HTTP request.</b> Calls MySQL.GetUsername() and MySQL.GetEmail(). Returns JSON object in the format <i>username, email</i>. <br>
