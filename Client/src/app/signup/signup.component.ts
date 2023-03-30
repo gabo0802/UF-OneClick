@@ -4,6 +4,7 @@ import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { DialogsService } from '../dialogs.service';
 import  passwordLength  from '../passwordLength';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
@@ -44,16 +45,17 @@ export class SignupComponent implements OnInit{
       password: this.signUpForm.value.password,
     }
 
-    this.api.createUser(newUser).subscribe(( resultMessage: string[]) => {      
+    this.api.createUser(newUser).subscribe({
 
-      if(resultMessage[0] === "Success"){
-        this.dialogs.successDialog(resultMessage[1]);
+      next: (res: Object) => {
+        
+        this.dialogs.successDialog("User Successfully created.");
+      },
+      error: (error: HttpErrorResponse) => {
+
+        this.dialogs.errorDialog("Error!", error["error"]["Error"]);
       }
-      else if(resultMessage[0] === "Error"){
-        this.dialogs.errorDialog("Error", resultMessage[1]);
-      }
-    });
-    
+    });       
   }
 
   ngOnDestroy(){

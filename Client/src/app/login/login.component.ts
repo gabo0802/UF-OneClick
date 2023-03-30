@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,20 +28,19 @@ export class LoginComponent {
 
   onSubmit(){
 
-    this.api.login(this.loginForm.value).subscribe( (resultMessage: string[]) => {
+    this.api.login(this.loginForm.value).subscribe({
 
-      if(resultMessage[0] === "Success"){
-        
+      next: (res) => {
+
         this.authService.userLogIn();
         this.router.navigate(['users']);
         this.loginForm.reset();
-      }
-      else{        
-        this.dialogs.errorDialog(resultMessage[0], resultMessage[1]);
-      }
-    })
+      },
+      error: (error: HttpErrorResponse) => {
 
-    
+        this.dialogs.errorDialog("Error Logging In!", error["error"]["Error"]);
+      }
+    });     
   }
 
 }

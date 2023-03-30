@@ -29,42 +29,14 @@ export class ApiService {
        );
    }
 
-  login(userData: {password: string, username: string}): Observable<Array<string>>{
+  login(userData: {password: string, username: string}): Observable<Object>{
 
-    return this.http.post<{[key: string]: string, message: string}>('/api/login', JSON.stringify(userData)).pipe(
-      map( (statusMessage) => {        
-
-        const resultMessage: string[] = [];
-        
-        for(const key in statusMessage){
-
-          resultMessage.push(key);
-          resultMessage.push(statusMessage[key]);
-
-        }       
-
-        return resultMessage;
-      })
-    );
+    return this.http.post('/api/login', JSON.stringify(userData));
   }
 
-  createUser(userData: {username: string, email: string, password: string}): Observable<Array<string>>{   
+  createUser(userData: {username: string, email: string, password: string}): Observable<Object>{   
 
-    return this.http.post<{[key: string]: string, message: string}>('/api/accountcreation', JSON.stringify(userData)).pipe(
-      map( (statusMessage) => {        
-
-        const resultMessage: string[] = [];
-        
-        for(const key in statusMessage){
-
-          resultMessage.push(key);
-          resultMessage.push(statusMessage[key]);
-
-        }       
-
-        return resultMessage;
-      })
-    );
+    return this.http.post('/api/accountcreation', JSON.stringify(userData)); 
   }
 
   //UserInformation
