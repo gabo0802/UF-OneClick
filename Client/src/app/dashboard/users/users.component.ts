@@ -48,7 +48,7 @@ export class UsersComponent implements OnInit{
       },
       error: (error: HttpErrorResponse) => {
 
-        this.dialogs.errorDialog("ERROR TITLE", "ERROR MESSAGE");
+        this.dialogs.errorDialog("Unexpected Error!", error["error"]["Error"] + " Please try again later.");
       }
     });
     
@@ -67,7 +67,7 @@ export class UsersComponent implements OnInit{
         },
         error: (error: HttpErrorResponse) => {
   
-          this.dialogs.errorDialog("ERROR TITLE", "ERROR MESSAGE");
+          this.dialogs.errorDialog("Unexpected Error!", error["error"]["Error"] + " Please try again later.");
         }
       });
     }
