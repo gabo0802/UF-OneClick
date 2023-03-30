@@ -301,6 +301,9 @@ The unit tests create mock gin contexts and cookies to test output:
 <code> GetUserInfo(c *gin.Context) </code> 
 <br> <b>Works with any HTTP request.</b> Calls MySQL.GetUsername() and MySQL.GetEmail(). Returns JSON object in the format <i>username, email</i>. <br>
 
+<code> GetAllSubscriptionServices (c *gin.Context) </code> 
+<br> <b>Works with any HTTP request.</b> Gets all subscription services from the MySQL table Subscriptions. Returns JSON object in the format <i>subid, name, price</i>. <br>
+
 <code> GetTimezone(c *gin.Context) </code> 
 <br> <b>Works with any HTTP request.</b> Converts currentTimezone global variable to a string. Returns a JSON object in the format "CurrentTimezone:", <i>currentTime</i>. <br>
 
