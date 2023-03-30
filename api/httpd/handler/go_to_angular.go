@@ -289,9 +289,9 @@ func DailyReminder(c *gin.Context) {
 		errorCode := SendAllReminders()
 
 		if errorCode == -502 {
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 		} else if errorCode == -401 {
-			c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Emails Not Sent"})
+			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"Error": "Emails Not Sent"})
 		} else {
 			c.SetCookie("didReminder", "yes", 60*60*24, "/", "localhost", false, true)
 			c.JSON(http.StatusOK, gin.H{"Success": "Emails Were Sent!"})
@@ -385,7 +385,7 @@ func VerifyEmail(c *gin.Context) {
 	verifyUser, err := currentDB.Query("SELECT UserID FROM Verification WHERE Type = \"vE\" AND ExpireDate > ? AND Code = ?;", currentTime, possibleCodeEncrypted)
 
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+		c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 	}
 
 	for verifyUser.Next() {
@@ -503,13 +503,13 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 
 	username := login.Username
 	if username == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Username Entered"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": "No Username Entered"})
 		return
 	}
 
 	password := login.Password
 	if password == "" {
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Password Entered"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": "No Password Entered"})
 		return
 	}
 	login = userData{}
@@ -529,17 +529,17 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 	verifyUser, _ := currentDB.Query("SELECT * FROM Verification WHERE UserID = ? AND Type = \"vE\";", currentID)
 	if verifyUser.Next() {
 		currentID = -1
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Unverified Username"})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"Error": "Unverified Username"})
 		return
 	}
 
 	if currentID == -401 { //unauthorized
 		currentID = -1
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Incorrect Username or Password"})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"Error": "Incorrect Username or Password"})
 
 	} else if currentID == -502 { //server error
 		currentID = -1
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 
 	} else {
 		c.SetCookie("currentUserID", strconv.Itoa(currentID), 60*60, "/", "localhost", false, false)
@@ -566,7 +566,7 @@ func NewUser(c *gin.Context) {
 	username = strings.Trim(username, " ")
 	if username == "" {
 		//c.SetCookie("signupOutput", "Error: No Username Entered!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Username Entered"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": "No Username Entered"})
 		return
 	}
 
@@ -574,7 +574,7 @@ func NewUser(c *gin.Context) {
 	password = strings.Trim(password, " ")
 	if password == "" {
 		//c.SetCookie("signupOutput", "Error: No Password Entered!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Password Entered"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": "No Password Entered"})
 		return
 	}
 
@@ -582,7 +582,7 @@ func NewUser(c *gin.Context) {
 	email = strings.Trim(email, " ")
 	if email == "" {
 		//c.SetCookie("signupOutput", "Error: No Email Entered!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "No Email Entered"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": "No Email Entered"})
 		return
 	}
 	login = userData{}
@@ -601,19 +601,19 @@ func NewUser(c *gin.Context) {
 
 	if rowsAffected == (-223 - 0) { //already exists
 		//c.SetCookie("signupOutput", "Error: Username Already Exists!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Username Already Exists"})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"Error": "Username Already Exists"})
 
 	} else if rowsAffected == (-223 - 2) {
 		//c.SetCookie("signupOutput", "Error: Email "+email+" Already In Use!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Email " + email + " Already In Use"})
+		c.AbortWithStatusJSON(http.StatusConflict, gin.H{"Error": "Email " + email + " Already In Use"})
 
 	} else if rowsAffected == -502 { //bad gateway
 		//c.SetCookie("signupOutput", "Error: Database Connection Error!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 
 	} else if rowsAffected == -204 { //no content
 		//c.SetCookie("signupOutput", "Enter Value Into All Columns!", 60, "/", "localhost", false, false)
-		c.AbortWithStatusJSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"Error": "Enter Value Into All Columns"})
 
 	} else {
 		//c.SetCookie("signupOutput", "New User "+username+" Has Been Created!", 60, "/", "localhost", false, false) //maybe add " Enter Username and Password!"
@@ -693,7 +693,7 @@ func GetAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 			//c.Redirect(http.StatusTemporaryRedirect, "/subscriptions") //change later
 
 		} else {
-			c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
 			//c.Redirect(http.StatusTemporaryRedirect, "/login")
 		}
 	}
@@ -781,7 +781,7 @@ func GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFu
 			message := "Active For: " + stringYears + stringMonths + stringWeeks + stringDays + stringHours + stringMinutes + stringSeconds
 			c.JSON(http.StatusOK, gin.H{subName: message})
 		} else {
-			c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
 		}
 	}
 }
@@ -874,40 +874,40 @@ func NewPreviousUserSubscription(c *gin.Context) {
 		rowsAffected := MySQL.AddOldUserSub(currentDB, currentID, subscriptionName, subscriptionDateAdded, subscriptionDateRemoved)
 
 		if rowsAffected == -223 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
+			c.JSON(http.StatusConflict, gin.H{"Error": "Subscription to " + subscriptionName + " Already Active"})
 
 		} else if rowsAffected == -404 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Subscription to " + subscriptionName + " Does Not Exist"})
 
 		} else if rowsAffected == (-415 - 2) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Date Added Not Formated Properly"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Date Added Not Formated Properly"})
 
 		} else if rowsAffected == (-415 - 3) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Date Canceled Not Formated Properly"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Date Canceled Not Formated Properly"})
 
 		} else if rowsAffected == -502 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 
 		} else if rowsAffected == -204 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Enter Value Into All Columns"})
 
 		} else if rowsAffected == 223 {
-			c.JSON(http.StatusOK, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
+			c.JSON(http.StatusContinue, gin.H{"Success": "Subscription to " + subscriptionName + " Renewed"})
 
 		} else if rowsAffected == -401 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Cancel Subscription Before Adding It"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Can't Cancel Subscription Before Adding It"})
 
 		} else if rowsAffected == (-223 - 1) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have An Active Subscription Before An Already Active Subscription"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Can't Have An Active Subscription Before An Already Active Subscription"})
 
 		} else if rowsAffected == (-223-2) || rowsAffected == (-223-4) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have A Subscription Be Active In The Middle Of That Same Subscription"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Can't Have A Subscription Be Active In The Middle Of That Same Subscription"})
 
 		} else if rowsAffected == (-223 - 3) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Have The Two of Same Subscription Be On the Same Exact Time"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Can't Have The Two of Same Subscription Be On the Same Exact Time"})
 
 		} else if rowsAffected == (-223 - 5) {
-			c.JSON(http.StatusOK, gin.H{"Error": "Can't Add or Cancel Subscription In The Future"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Can't Add or Cancel Subscription In The Future"})
 
 		} else {
 			//c.SetCookie("newusersubOutput", "Subscription to "+subscriptionName+" Added!", 60, "/", "localhost", false, false)
@@ -1014,9 +1014,9 @@ func ChangeUserPassword(c *gin.Context) {
 		if rowsAffected == 0 {
 			c.JSON(http.StatusConflict, gin.H{"Error": "Incorrect Old Password"})
 		} else if rowsAffected == -502 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Database Connection Issue"})
+			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 		} else if rowsAffected == -204 {
-			c.JSON(http.StatusOK, gin.H{"Error": "Enter Value Into All Columns"})
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Enter Value Into All Columns"})
 		} else {
 			currentID = -1
 			c.JSON(http.StatusOK, gin.H{"Success": "Password Changed"})
