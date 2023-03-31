@@ -35,6 +35,10 @@
     color: rgb(202, 2, 2);
 }
 
+#reactivate {
+    color:rgb(23, 133, 13);
+}
+
 .mdc-data-table__header-row {
     height: 49px;
     /* background-color: #2e74c4; */

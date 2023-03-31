@@ -37,11 +37,15 @@
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="actions">
             <mat-icon>more_vert</mat-icon>
           </button>
-          <mat-menu #menu="matMenu">            
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="reactivateSub(sub.name)" *ngIf="!active">
+              <mat-icon id="reactivate">check_circle</mat-icon>
+              <span>Reactivate</span>
+            </button>            
             <button mat-menu-item *ngIf="!active">
               <mat-icon id="warning">delete</mat-icon>
               <span>Delete</span>
-            </button>
+            </button>            
             <button mat-menu-item (click)="deactivateSub(sub.name)" *ngIf="active">
               <mat-icon id="warning">cancel</mat-icon>
               <span>Deactivate</span>

@@ -57,6 +57,22 @@ export class SubscriptionListComponent {
     })
   }
 
+  reactivateSub(subName: string): void {
+
+    this.api.reactivateSubscription(subName).subscribe({
+
+      next: (res) => {
+
+        //Potential other actions here.
+        console.log("Reactivation success");
+      },
+      error: (error: HttpErrorResponse) => {
+
+        this.dialogs.errorDialog("Error Adding Subscription", "Error adding!");
+      }
+    })
+  }
+
   getActive(): void {
     this.isActive.emit(true);
     this.active = true;
