@@ -12,6 +12,20 @@
     text-align: right
 }
 
+.chips-container {
+    display: flex;
+    width: 100%;
+    background-color: rgb(131, 131, 131);
+    padding: 5px;
+    align-items: center;    
+}
+
+#filter-label {
+    margin-right: 10px;
+    margin-left: 10px;
+    color: #fff;
+}
+
 #add {
     border-radius: 9px;
     padding: 8px;
@@ -39,4 +53,8 @@
         
 .mdc-data-table__row:nth-child(odd){
     background-color: #f8f8f8;
+}
+
+.mat-mdc-standard-chip.mdc-evolution-chip--disabled {
+    opacity: 1;
 }

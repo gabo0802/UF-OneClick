@@ -2,8 +2,8 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 15px;
-    /*background-color: purple;*/
+    padding: 15px;    
     background-color: var(--UF-Orange);
-    margin-top: 25px;      
+    margin-top: 25px;
+    font-size: 18px;      
 }

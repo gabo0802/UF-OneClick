@@ -17,6 +17,10 @@ export class SubscriptionListComponent {
   @Input() subscriptionList: Subscription[] = [];
   @Output() updateSubscriptions = new EventEmitter<boolean>();
 
+  active: boolean = true;  
+  @Output() isActive = new EventEmitter<boolean>();
+  @Output() isInactive = new EventEmitter<boolean>();
+
   displayedColumns: string[] = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-actions'];
   
   addSubscription(): void {
@@ -39,9 +43,9 @@ export class SubscriptionListComponent {
     });
   }
 
-  deleteSub(subName: string): void {
+  deactivateSub(subName: string): void {
     
-    this.api.deleteSubscription(subName).subscribe({
+    this.api.deactivateSubscription(subName).subscribe({
 
       next: (res) => {
         
@@ -53,4 +57,17 @@ export class SubscriptionListComponent {
     })
   }
 
+  getActive(): void {
+    this.isActive.emit(true);
+    this.active = true;
+    
+    this.displayedColumns = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-actions'];
+  }
+
+  getInactive(): void {
+    this.isInactive.emit(true);
+    this.active = false;   
+    
+    this.displayedColumns = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-dateRemoved', 'sub-actions'];
+  }
 }

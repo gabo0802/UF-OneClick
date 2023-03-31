@@ -37,8 +37,14 @@ export class LoginComponent {
         this.loginForm.reset();
       },
       error: (error: HttpErrorResponse) => {
-
-        this.dialogs.errorDialog("Error Logging In!", error["error"]["Error"]);
+        
+        if(error.status === 504){
+          this.dialogs.errorDialog("Error Logging In!", error.statusText + " Please try again later.");
+        }
+        else{
+          this.dialogs.errorDialog("Error Logging In!", error["error"]["Error"]);
+        }     
+        
       }
     });     
   }
