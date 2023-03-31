@@ -168,7 +168,7 @@ func CreateAdminUser(db *sql.DB) {
 }
 
 func CreateTestUser(db *sql.DB) {
-	_, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (2, \"test\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", "sir.testmctestington.the.tester@gmail.com")
+	_, err := db.Exec("INSERT INTO Users(UserID, Username, Password, Email) VALUES (2, \"test\", \"XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=\", ?);", "sir.testmctestington.the.tester2@gmail.com")
 	if err != nil {
 		log.Fatal(err)
 	}
