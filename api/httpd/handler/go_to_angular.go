@@ -836,6 +836,28 @@ func DeleteUser(c *gin.Context) {
 	currentID = -1
 }
 
+func DeleteUserSub(c *gin.Context) {
+	if currentID != -1 {
+		var userSubscriptionData userData
+		c.BindJSON(&userSubscriptionData)
+
+		if userSubscriptionData.DateRemoved == "" {
+			userSubscriptionData.DateRemoved = "IS NULL"
+		} else {
+			userSubscriptionData.DateRemoved = "=" + userSubscriptionData.DateRemoved
+		}
+
+		_, err := currentDB.Exec("DELETE FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? AND DateRemoved ? LIMIT 1;", currentID, userSubscriptionData.SubID, userSubscriptionData.DateAdded, userSubscriptionData.DateRemoved)
+		if err != nil {
+			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
+		} else {
+			c.JSON(http.StatusAccepted, gin.H{"Success": "User Subscription Deleted!"})
+		}
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
+	}
+}
+
 func NewUserSubscription(c *gin.Context) {
 	if currentID != -1 {
 		var userSubscriptionData userData
@@ -946,7 +968,7 @@ func NewPreviousUserSubscription(c *gin.Context) {
 	} else {
 		//c.SetCookie("newusersubOutput", "Error: Invalid UserID", 60, "/", "localhost", false, false)
 		//c.Redirect(http.StatusTemporaryRedirect, "/login")
-		c.JSON(http.StatusOK, gin.H{"Error": "Invalid User ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
 	}
 }
 

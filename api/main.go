@@ -74,6 +74,7 @@ func main() {
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
+		api.DELETE("/subscriptions/deletesubscription", handler.DeleteUserSub)
 
 		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
 		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
