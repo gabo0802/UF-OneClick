@@ -45,9 +45,9 @@ export class ApiService {
   }
 
   //User subscriptions
-  getUserSubscriptions(): Observable<Subscription[]> {
+  getActiveUserSubscriptions(): Observable<Subscription[]> {
 
-    return this.http.get('/api/subscriptions').pipe(
+    return this.http.get('/api/subscriptions/active').pipe(
       map( (res: Object) => {
 
         let userSubs: Subscription[] = [];
@@ -69,6 +69,34 @@ export class ApiService {
     );
    }
 
+   getAllInactiveUserSubscriptions(): Observable<Subscription[]> {
+
+    return this.http.get('/api/subscriptions').pipe(
+      map( (res: Object) => {
+
+        let userSubs: Subscription[] = [];
+
+        let data = JSON.stringify(res);
+        let subData = JSON.parse(data);
+        
+        for(const sub of subData){
+          
+          //Converts to a javascript date Object
+          //Provisional as of now for easier displaying of date added in subscription table
+          sub.dateadded = new Date(sub.dateadded);
+
+          //checks to see if they have been removed, which means inactive
+          if(sub.dateremoved !== ""){
+            sub.dateremoved = new Date(sub.dateremoved);
+            userSubs.push(sub); 
+          }                   
+        }
+        
+        return userSubs;
+      })
+    );
+   }
+
    createUserSubscription(subName: string, subPrice: string): Observable<Object> {
 
     let subData = {name: subName, price: subPrice};
@@ -83,7 +111,7 @@ export class ApiService {
     return this.http.post('api/subscriptions/addsubscription', subData);
    }
 
-   deleteSubscription(subName: string): Observable<Object> {
+   deactivateSubscription(subName: string): Observable<Object> {
 
     let subData = {name: subName};
 

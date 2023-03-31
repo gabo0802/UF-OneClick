@@ -1,7 +1,14 @@
 <div class="subscription-container">
   <div class="buttons-container">
     <button mat-flat-button color="primary" id="add" (click)="addSubscription()">Add Subscription</button>
-  </div>  
+  </div>
+  <div class="chips-container">
+    <span id="filter-label">Filter:</span>
+    <mat-chip-listbox aria-label="Subscription selection">      
+      <mat-chip-option color="primary"  [selected]="active" [disabled]="active" (click)="getActive()">Active Subscriptions</mat-chip-option>
+      <mat-chip-option color="warn" [selected]="!active" [disabled]="!active"(click)="getInactive()">Inactive Subscriptions</mat-chip-option>
+    </mat-chip-listbox>
+  </div>   
     <table mat-table id="subscriptionList" [dataSource]="subscriptionList" class="mat-elevation-z8 demo-table">
         <!-- Position Column -->
       <ng-container matColumnDef="sub-name">
@@ -19,6 +26,11 @@
         <td mat-cell *matCellDef="let sub"> {{ sub.dateadded | date:'mediumDate'}} </td>
       </ng-container>
 
+      <ng-container matColumnDef="sub-dateRemoved" *ngIf="!active">
+        <th mat-header-cell *matHeaderCellDef> Date Removed </th>
+        <td mat-cell *matCellDef="let sub"> {{ sub.dateremoved | date:'mediumDate'}} </td>
+      </ng-container>
+
       <ng-container matColumnDef="sub-actions">
         <th mat-header-cell *matHeaderCellDef> Actions</th>
         <td mat-cell *matCellDef="let row, let sub">
@@ -26,11 +38,15 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">            
-            <button mat-menu-item (click)="deleteSub(sub.name)">
+            <button mat-menu-item *ngIf="!active">
               <mat-icon id="warning">delete</mat-icon>
               <span>Delete</span>
-            </button>       
-          </mat-menu>      
+            </button>
+            <button mat-menu-item (click)="deactivateSub(sub.name)" *ngIf="active">
+              <mat-icon id="warning">cancel</mat-icon>
+              <span>Deactivate</span>
+            </button>        
+          </mat-menu>               
         </td>
       </ng-container>
         

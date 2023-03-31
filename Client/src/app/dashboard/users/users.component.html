@@ -1,8 +1,3 @@
-
-
-
-
-
 <!-- Main Code Starts-->
 <div class="intro">
 
@@ -26,7 +21,10 @@
     <div class="users-container">
         <div class="content-container">
             <app-welcome-header [username]="username"></app-welcome-header>
-            <app-subscription-list [subscriptionList]="subscriptionList" (updateSubscriptions)="updateSubscriptions($event)"></app-subscription-list>
+            <app-subscription-list [subscriptionList]="subscriptionList" 
+            (updateSubscriptions)="updateActiveSubscriptions($event)"
+            (isActive)="updateActiveSubscriptions($event)"
+            (isInactive)="updateInactiveSubscriptions($event)"></app-subscription-list>
         </div>
     </div>
 

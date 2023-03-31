@@ -14,8 +14,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'; 
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; 
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatTabsModule,
     MatTableModule,
     MatProgressSpinnerModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatChipsModule
   ]
 })
 export class MaterialDesignModule { }

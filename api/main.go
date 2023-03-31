@@ -65,8 +65,8 @@ func main() {
 
 		//Subscription Management
 
-		api.GET("/subscriptions", handler.GetAllCurrentUserSubscriptions(true))
-		// api.GET("/subscriptions/active", handler.GetAllCurrentUserSubscriptions(false))
+		api.GET("/subscriptions/active", handler.GetAllCurrentUserSubscriptions(true))
+		api.GET("/subscriptions", handler.GetAllCurrentUserSubscriptions(false))
 
 		//api.POST("/allsubscriptions", handler.GetAllSubscriptionServices())
 

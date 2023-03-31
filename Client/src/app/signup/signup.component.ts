@@ -53,12 +53,13 @@ export class SignupComponent implements OnInit{
       },
       error: (error: HttpErrorResponse) => {
 
-        this.dialogs.errorDialog("Error!", error["error"]["Error"]);
+        if(error.status === 504){
+          this.dialogs.errorDialog("Error Creating Account!", error.statusText + " Please try again later.");
+        }
+        else{
+          this.dialogs.errorDialog("Error Creating Account!", error["error"]["Error"]);
+        } 
       }
     });       
-  }
-
-  ngOnDestroy(){
-
   }
 }
