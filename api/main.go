@@ -66,17 +66,19 @@ func main() {
 		//Subscription Management
 
 		api.GET("/subscriptions", handler.GetAllCurrentUserSubscriptions(true))
-		// api.GET("/subscriptions/active", handler.GetAllCurrentUserSubscriptions(false))
-
-		//api.POST("/allsubscriptions", handler.GetAllSubscriptionServices())
+		api.GET("/subscriptions/all", handler.GetAllCurrentUserSubscriptions(false))
 
 		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
+
 		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
 		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
 		api.POST("/longestactivesub", handler.GetMostUsedUserSubscription(false, true))
+
+		api.POST("/avgpriceactivesub", handler.GetAvgPriceofAllCurrentUserSubscriptions(true))
+		api.POST("/avgpriceallsubs", handler.GetAvgPriceofAllCurrentUserSubscriptions(false))
 
 		//Admin Commands
 		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)

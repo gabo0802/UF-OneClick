@@ -786,6 +786,34 @@ func GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFu
 	}
 }
 
+func GetAvgPriceofAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if currentID != -1 {
+			var rows *sql.Rows
+			var err error
+			var avgPrice string
+
+			if onlyActive {
+				rows, err = currentDB.Query("SELECT AVG(PRICE) FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ? AND DateRemoved IS NULL", currentID)
+			} else {
+				rows, err = currentDB.Query("SELECT AVG(PRICE) FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ?", currentID)
+			}
+
+			if err != nil {
+				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
+			}
+
+			for rows.Next() {
+				rows.Scan(&avgPrice)
+			}
+
+			c.JSON(http.StatusBadRequest, gin.H{"AVG Price: $": "Invalid User ID"})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
+		}
+	}
+}
+
 /*func Logout(message string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		currentID = -1
