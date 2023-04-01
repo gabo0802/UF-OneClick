@@ -1,3 +1,5 @@
+
+
 .subscription-container {
     display: flex;
     justify-content: center;
@@ -61,4 +63,8 @@
 
 .mat-mdc-standard-chip.mdc-evolution-chip--disabled {
     opacity: 1;
+}
+
+.mat-mdc-paginator {
+    background-color: rgb(252, 252, 252);    
 }

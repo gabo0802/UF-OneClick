@@ -1,16 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { result } from 'cypress/types/lodash';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-subscription-list',
   templateUrl: './subscription-list.component.html',
   styleUrls: ['./subscription-list.component.css']
 })
-export class SubscriptionListComponent {
+export class SubscriptionListComponent implements AfterViewInit, OnChanges{
 
   constructor(private dialogs: DialogsService, private api: ApiService) {}
 
@@ -20,6 +21,18 @@ export class SubscriptionListComponent {
   active: boolean = true;  
   @Output() isActive = new EventEmitter<boolean>();
   @Output() isInactive = new EventEmitter<boolean>();
+
+  dataSource = new MatTableDataSource<Subscription>([]);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator = {} as MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {    
+    this.dataSource.data = changes['subscriptionList']["currentValue"];
+  }
 
   displayedColumns: string[] = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-actions'];
   
@@ -38,7 +51,6 @@ export class SubscriptionListComponent {
             this.dialogs.errorDialog("Error Adding Subscription!", "There was an error in adding your subscription. Please try again later.")
           }
         });
-
       }
     });
   }

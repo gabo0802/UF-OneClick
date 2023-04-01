@@ -9,7 +9,7 @@
       <mat-chip-option color="warn" [selected]="!active" [disabled]="!active"(click)="getInactive()">Inactive Subscriptions</mat-chip-option>
     </mat-chip-listbox>
   </div>   
-    <table mat-table id="subscriptionList" [dataSource]="subscriptionList" class="mat-elevation-z8 demo-table">
+    <table mat-table id="subscriptionList" [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
         <!-- Position Column -->
       <ng-container matColumnDef="sub-name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -57,5 +57,8 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <mat-paginator [pageSizeOptions]="[5, 10]"                 
+                 aria-label="Select page of Subscriptions">
+    </mat-paginator>
   
 </div> 
