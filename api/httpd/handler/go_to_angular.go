@@ -847,6 +847,25 @@ func DeleteUserSub(c *gin.Context) {
 			userSubscriptionData.DateRemoved = "=" + userSubscriptionData.DateRemoved
 		}
 
+		if userSubscriptionData.SubID == "" {
+			if userSubscriptionData.Name == "" {
+				c.JSON(http.StatusBadRequest, gin.H{"Error": "Missing Data!"})
+			} else {
+				sub_name, err := currentDB.Query("SELECT SubID FROM Subscriptions WHERE Name = ?;", userSubscriptionData.Name)
+
+				if err != nil {
+					c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
+				}
+
+				//Checks If Query Returns Empty Set or if the Subscription Name exists
+				if sub_name.Next() {
+					sub_name.Scan(&userSubscriptionData.SubID)
+				} else {
+					c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid Subscription Name!"})
+				}
+			}
+		}
+
 		_, err := currentDB.Exec("DELETE FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? AND DateRemoved ? LIMIT 1;", currentID, userSubscriptionData.SubID, userSubscriptionData.DateAdded, userSubscriptionData.DateRemoved)
 		if err != nil {
 			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
