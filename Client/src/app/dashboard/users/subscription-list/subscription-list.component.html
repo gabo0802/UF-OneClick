@@ -18,7 +18,7 @@
 
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
-        <td mat-cell *matCellDef="let sub"> {{'$ ' + sub.price}} </td>
+        <td mat-cell *matCellDef="let sub">{{ currency }} {{ sub.price | number:'1.2-2'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="dateadded">

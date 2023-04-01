@@ -17,16 +17,15 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   constructor(private dialogs: DialogsService, private api: ApiService) {}
 
   @Input() subscriptionList: Subscription[] = [];
-  @Output() updateSubscriptions = new EventEmitter<boolean>();
-
-  active: boolean = true;  
+  @Output() updateSubscriptions = new EventEmitter<boolean>();   
   @Output() isActive = new EventEmitter<boolean>();
   @Output() isInactive = new EventEmitter<boolean>();
+  @ViewChild(MatPaginator) paginator: MatPaginator = {} as MatPaginator;
+  @ViewChild(MatSort) sort: MatSort = {} as MatSort;
 
   dataSource = new MatTableDataSource<Subscription>([]);
-
-  @ViewChild(MatPaginator) paginator: MatPaginator = {} as MatPaginator;
-  @ViewChild(MatSort) sort: MatSort | null = null;
+  active: boolean = true;
+  currency: string = '$' ;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
