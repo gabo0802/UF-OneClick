@@ -5,6 +5,7 @@ import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-subscription-list',
@@ -25,16 +26,18 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   dataSource = new MatTableDataSource<Subscription>([]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator = {} as MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnChanges(changes: SimpleChanges): void {    
-    this.dataSource.data = changes['subscriptionList']["currentValue"];
+    this.dataSource.data = changes['subscriptionList']["currentValue"];    
   }
 
-  displayedColumns: string[] = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-actions'];
+  displayedColumns: string[] = ['name', 'price', 'dateadded', 'actions'];
   
   addSubscription(): void {
     this.dialogs.addSubscription().afterClosed().subscribe((res: {isCreated: boolean, name: string}) => {
@@ -89,13 +92,13 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
     this.isActive.emit(true);
     this.active = true;
     
-    this.displayedColumns = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-actions'];
+    this.displayedColumns = ['name', 'price', 'dateadded', 'actions'];
   }
 
   getInactive(): void {
     this.isInactive.emit(true);
     this.active = false;   
     
-    this.displayedColumns = ['sub-name', 'sub-price', 'sub-dateAdded', 'sub-dateRemoved', 'sub-actions'];
+    this.displayedColumns = ['name', 'price', 'dateadded', 'dateremoved', 'actions'];
   }
 }

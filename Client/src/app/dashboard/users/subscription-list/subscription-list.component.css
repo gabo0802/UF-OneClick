@@ -68,3 +68,7 @@
 .mat-mdc-paginator {
     background-color: rgb(252, 252, 252);    
 }
+
+::ng-deep .mat-sort-header-arrow {
+    color: #ffffff;
+}

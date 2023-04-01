@@ -9,29 +9,29 @@
       <mat-chip-option color="warn" [selected]="!active" [disabled]="!active"(click)="getInactive()">Inactive Subscriptions</mat-chip-option>
     </mat-chip-listbox>
   </div>   
-    <table mat-table id="subscriptionList" [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+    <table mat-table id="subscriptionList" [dataSource]="dataSource" matSort class="mat-elevation-z8 demo-table">
         <!-- Position Column -->
-      <ng-container matColumnDef="sub-name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
         <td mat-cell *matCellDef="let sub"> {{sub.name}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="sub-price">
-        <th mat-header-cell *matHeaderCellDef> Price </th>
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
         <td mat-cell *matCellDef="let sub"> {{'$ ' + sub.price}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="sub-dateAdded">
-        <th mat-header-cell *matHeaderCellDef> Date Added </th>
+      <ng-container matColumnDef="dateadded">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date Added </th>
         <td mat-cell *matCellDef="let sub"> {{ sub.dateadded | date:'mediumDate'}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="sub-dateRemoved" *ngIf="!active">
-        <th mat-header-cell *matHeaderCellDef> Date Removed </th>
+      <ng-container matColumnDef="dateremoved" *ngIf="!active">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date Removed </th>
         <td mat-cell *matCellDef="let sub"> {{ sub.dateremoved | date:'mediumDate'}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="sub-actions">
+      <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions</th>
         <td mat-cell *matCellDef="let row, let sub">
           <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="actions">
