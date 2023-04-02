@@ -1,24 +1,35 @@
-<h1 mat-dialog-title>Add Subscription</h1>
+<h1 mat-dialog-title>Add Active Subscription</h1>
 <div mat-dialog-content>
-    <form [formGroup]="addSubsriptionForm">
-        <div> 
+    <p id="info">Please select a default subscription or create your own custom subscription.</p>
+    <form [formGroup]="addSubscriptionForm">
+        <div class="form-field-container"> 
             <label>Name:</label>   
             <mat-form-field appearance="fill" hideRequiredMarker>
                         
-                <input matInput formControlName="name">                                   
+                <input type="text" matInput formControlName="name" [matAutocomplete]="auto" autofocus="false">
+                <mat-error *ngIf="addSubscriptionForm.get('name')?.hasError('required')">Please enter a subscription name</mat-error>
+                <mat-error *ngIf="addSubscriptionForm.get('name')?.hasError('pattern')">Please enter a valid subscription name</mat-error>
+                <mat-error *ngIf="addSubscriptionForm.get('name')?.hasError('duplicate')">Subscription Already Exists</mat-error> 
+
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onSelected($event.option)">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                      {{option.name}}              
+                    </mat-option>
+                </mat-autocomplete>                                   
             </mat-form-field>
         </div>
-        <div>
+        <div class="form-field-container">
             <label>Price:</label>
             <mat-form-field appearance="fill" hideRequiredMarker>
                         
-                <input matInput formControlName="price">                                   
+                <input type="text" matInput formControlName="price">
+                <mat-error *ngIf="addSubscriptionForm.get('price')?.hasError('required')">Please enter a price</mat-error>
+                <mat-error *ngIf="addSubscriptionForm.get('price')?.hasError('pattern')">Please enter a valid price, Example: 45 or 9.99</mat-error>                                                     
             </mat-form-field>
-        </div>
-        <p>Insert the rest of the fields here</p> 
+        </div>        
         <div mat-dialog-actions align="end">
             <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
-            <button mat-raised-button color="accent" (click)="addSubscription()">Add</button>
-        </div>
+            <button mat-raised-button color="accent" (click)="addSubscription()" [disabled]="addSubscriptionForm.invalid">Add</button>
+        </div>                
     </form>  
 </div>

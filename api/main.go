@@ -68,7 +68,7 @@ func main() {
 		api.GET("/subscriptions/active", handler.GetAllCurrentUserSubscriptions(true))
 		api.GET("/subscriptions", handler.GetAllCurrentUserSubscriptions(false))
 
-		api.POST("/allsubscriptionservices", handler.GetAllSubscriptionServices())
+		api.GET("/subscriptions/services", handler.GetAllSubscriptionServices())
 
 		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)

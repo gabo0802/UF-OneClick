@@ -6,8 +6,6 @@ import { SuccessComponent } from './dialogs/success/success.component';
 import { PasswordResetComponent } from './dialogs/password-reset/password-reset.component';
 import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.component';
 import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
-import { Subscription } from './subscription.model';
-
 
 @Injectable({
   providedIn: 'root'
@@ -60,8 +58,10 @@ export class DialogsService {
   addSubscription(): MatDialogRef<AddSubscriptionComponent> {
 
     let dialogRef = this.dialog.open(AddSubscriptionComponent, {
-      height: '650px',
-      width: '600px'
+      height: '340px',
+      width: '575px',
+      autoFocus: false,
+      disableClose: true,
     });
 
     return dialogRef;

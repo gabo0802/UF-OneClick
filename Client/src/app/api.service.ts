@@ -11,24 +11,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }  
 
-   post_request__with_data(userData: {username: string, email: string, password: string, name: string, price: string, dateadded: string, dateremoved: ""}, url:string): Observable<Array<string>>{
-      return this.http.post<{[key: string]: string, message: string}>(url, JSON.stringify(userData)).pipe(
-         map( (statusMessage) => {        
-          
-           const resultMessage: string[] = [];
-          
-           for(const key in statusMessage){
-            
-             resultMessage.push(key);
-             resultMessage.push(statusMessage[key]);
-
-           }       
-
-           return resultMessage;
-         })
-       );
-   }
-
   login(userData: {password: string, username: string}): Observable<Object>{
 
     return this.http.post('/api/login', JSON.stringify(userData));
@@ -67,9 +49,30 @@ export class ApiService {
         return userSubs;
       })
     );
-   }
+  }
 
-   getAllInactiveUserSubscriptions(): Observable<Subscription[]> {
+  //All Subscriptions
+  getAllSubscriptions(): Observable<Subscription[]> {
+
+    return this.http.get('/api/subscriptions/services').pipe(
+      map( (res: Object) => {
+
+        let userSubs: Subscription[] = [];
+
+        let data = JSON.stringify(res);
+        let subData = JSON.parse(data);
+        
+        for(const sub of subData){        
+
+          userSubs.push(sub);          
+        }
+        
+        return userSubs;
+      })
+    );
+  }
+
+  getAllInactiveUserSubscriptions(): Observable<Subscription[]> {
 
     return this.http.get('/api/subscriptions').pipe(
       map( (res: Object) => {
@@ -95,35 +98,35 @@ export class ApiService {
         return userSubs;
       })
     );
-   }
+  }
 
-   createUserSubscription(subName: string, subPrice: string): Observable<Object> {
+  createUserSubscription(subName: string, subPrice: string): Observable<Object> {
 
     let subData = {name: subName, price: subPrice};
 
     return this.http.post('api/subscriptions/createsubscription', subData);
-   }
+  }
 
-   addUserSubscription(subName: string): Observable<Object> {
+  addUserSubscription(subName: string): Observable<Object> {
 
     let subData = {name: subName};
 
     return this.http.post('api/subscriptions/addsubscription', subData);
-   }
+  }
 
-   deactivateSubscription(subName: string): Observable<Object> {
+  deactivateSubscription(subName: string): Observable<Object> {
 
     let subData = {name: subName};
 
     return this.http.post('api/subscriptions/cancelsubscription', subData);
-   }
+  }
 
-   reactivateSubscription(subName: string): Observable<Object> {
+  reactivateSubscription(subName: string): Observable<Object> {
     
     let subData = {name: subName};
 
     return this.http.post('/api/subscriptions/addsubscription', subData);
-   }
+  }
 
   updateUsername(newUsername: string): Observable<Object> {
     const newUserUsername = {username: newUsername};

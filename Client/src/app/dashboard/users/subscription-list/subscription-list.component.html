@@ -1,15 +1,15 @@
 <div class="subscription-container">
-  <div class="buttons-container">
-    <button mat-flat-button color="primary" id="add" (click)="addSubscription()">Add Subscription</button>
+  <div class="buttons-container mat-elevation-z8">
+    <button mat-raised-button color="primary" id="add" (click)="addSubscription()">Add Active Subscription</button>
   </div>
-  <div class="chips-container">
+  <div class="chips-container mat-elevation-z8">
     <span id="filter-label">Filter:</span>
     <mat-chip-listbox aria-label="Subscription selection">      
       <mat-chip-option color="primary"  [selected]="active" [disabled]="active" (click)="getActive()">Active Subscriptions</mat-chip-option>
       <mat-chip-option color="warn" [selected]="!active" [disabled]="!active"(click)="getInactive()">Inactive Subscriptions</mat-chip-option>
     </mat-chip-listbox>
   </div>   
-    <table mat-table id="subscriptionList" [dataSource]="dataSource" matSort class="mat-elevation-z8 demo-table">
+    <table mat-table id="subscriptionList" [dataSource]="dataSource" matSort class="mat-elevation-z8">
         <!-- Position Column -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
@@ -57,7 +57,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10]"                 
+    <mat-paginator class="mat-elevation-z8" [pageSizeOptions]="[5, 10]"                 
                  aria-label="Select page of Subscriptions">
     </mat-paginator>
   
