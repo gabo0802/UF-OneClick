@@ -30,6 +30,7 @@ import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.
 import { WelcomeHeaderComponent } from './dashboard/users/welcome-header/welcome-header.component';
 import { SubscriptionListComponent } from './dashboard/users/subscription-list/subscription-list.component';
 import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
+import { AddInactiveSubscriptionComponent } from './dialogs/add-inactive-subscription/add-inactive-subscription.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscri
     WelcomeHeaderComponent,
     SubscriptionListComponent,
     AddSubscriptionComponent,
+    AddInactiveSubscriptionComponent,
   ],
   imports: [
     BrowserModule,

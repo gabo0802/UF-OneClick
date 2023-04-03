@@ -6,6 +6,7 @@ import { SuccessComponent } from './dialogs/success/success.component';
 import { PasswordResetComponent } from './dialogs/password-reset/password-reset.component';
 import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.component';
 import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
+import { AddInactiveSubscriptionComponent } from './dialogs/add-inactive-subscription/add-inactive-subscription.component';
 
 @Injectable({
   providedIn: 'root'
@@ -65,5 +66,15 @@ export class DialogsService {
     });
 
     return dialogRef;
+  }
+
+  addInactiveSubscription(): void {
+
+    this.dialog.open(AddInactiveSubscriptionComponent, {
+      height: '500px',
+      width: '575px',
+      autoFocus: false,
+      disableClose: true,
+    });
   }
 }
