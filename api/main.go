@@ -83,6 +83,9 @@ func main() {
 		api.POST("/avgpriceactivesub", handler.GetAvgPriceofAllCurrentUserSubscriptions(true))
 		api.POST("/avgpriceallsubs", handler.GetAvgPriceofAllCurrentUserSubscriptions(false))
 
+		api.POST("/avgageallsubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(true))
+		api.POST("/avgagecontinuoussubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false))
+
 		//Admin Commands
 		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)
 		api.POST("/reset", handler.ResetALL)
