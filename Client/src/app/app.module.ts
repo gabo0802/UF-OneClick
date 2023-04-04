@@ -31,6 +31,7 @@ import { WelcomeHeaderComponent } from './dashboard/users/welcome-header/welcome
 import { SubscriptionListComponent } from './dashboard/users/subscription-list/subscription-list.component';
 import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
 import { AddInactiveSubscriptionComponent } from './dialogs/add-inactive-subscription/add-inactive-subscription.component';
+import { ReportComponent } from './dashboard/users/report/report.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { AddInactiveSubscriptionComponent } from './dialogs/add-inactive-subscri
     SubscriptionListComponent,
     AddSubscriptionComponent,
     AddInactiveSubscriptionComponent,
+    ReportComponent,
   ],
   imports: [
     BrowserModule,

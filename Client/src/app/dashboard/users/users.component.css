@@ -110,6 +110,7 @@ For future reference on aligning items:
     min-height: 80%;
     text-align: center;
 }
+/*
 h2 {
     padding-top: 25px;
     font-size: 2em;
@@ -129,7 +130,7 @@ h2 {
 .sub-box > mat-card > mat-card-title {
     font-weight: 500;
     font-size: 1.5em;
-}
+} */
 .TBA-features {
     text-align: center;
     min-height: 10%;
