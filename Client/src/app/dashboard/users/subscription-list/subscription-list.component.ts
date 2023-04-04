@@ -5,7 +5,8 @@ import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
+import { dateToString } from 'src/app/utils/dateToString';
 
 @Component({
   selector: 'app-subscription-list',
@@ -39,26 +40,56 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   displayedColumns: string[] = ['name', 'price', 'dateadded', 'actions'];
   
   addActiveSubscription(): void {
-    this.dialogs.addSubscription().afterClosed().subscribe((res: {isCreated: boolean, name: string}) => {
+    this.dialogs.addSubscription().afterClosed().subscribe((res: {isCreated: boolean, name: string, price: string, dateAdded: Date}) => {
 
       //successful creation of sub will fire this to add it
       if(res.isCreated === true){
 
-        this.api.addUserSubscription(res.name).subscribe({
+        let todayDate: Date = new Date();
+        
+        //Checks if date added is equal to today's date
+        if(this.dateChecker(todayDate, res.dateAdded)){
 
-          next: (res: Object) => {
-            this.updateSubscriptions.emit(true);
-          },
-          error: (error: HttpErrorResponse) => {
+          this.api.addActiveUserSubscription(res.name).subscribe({
 
-            if(error.status === 409){
-              this.dialogs.errorDialog("Error Adding Subscription!", error["error"]["Error"]);
+            next: (res: Object) => {
+              this.updateSubscriptions.emit(true);
+            },
+            error: (error: HttpErrorResponse) => {
+  
+              if(error.status === 409){
+                this.dialogs.errorDialog("Error Adding Subscription!", error["error"]["Error"]);
+              }
+              else{
+                this.dialogs.errorDialog("Error Adding Subscription!", "There was an error in adding your subscription. Please try again later.")
+              }
             }
-            else{
-              this.dialogs.errorDialog("Error Adding Subscription!", "There was an error in adding your subscription. Please try again later.")
+          });
+          
+        }
+        else { //if active sub date added is before today's date
+
+          let dateAddedString: string = dateToString(res.dateAdded);
+          const subData = {name: res.name, price: res.price, dateadded: dateAddedString, dateremoved: ""};
+
+          this.api.addOldUserSubscription(subData).subscribe({
+
+            next: (res) => {  
+              
+              this.updateSubscriptions.emit(true);  
+            },
+            error: (error: HttpErrorResponse) => {
+  
+              if(error.status == 504){
+                this.dialogs.errorDialog("Unexpected Error!", "An unexpected error occurred please try again later.");
+              }
+              else{
+                this.dialogs.errorDialog("Error Adding Subscription", error["error"]["Error"]);
+              }           
             }
-          }
-        });
+          });
+
+        }       
       }
     });
   }
@@ -109,5 +140,18 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
     this.active = false;   
     
     this.displayedColumns = ['name', 'price', 'dateadded', 'dateremoved', 'actions'];
+  }
+
+  private dateChecker(date1: Date, date2: Date): boolean {
+
+    let date1Year = date1.getFullYear();
+    let date1Month = date1.getMonth();
+    let date1Day = date1.getDate();
+
+    let date2Year = date2.getFullYear();
+    let date2Month = date2.getMonth();
+    let date2Day = date2.getDate();
+
+    return (date1Year === date2Year) && (date1Month === date2Month) && (date1Day === date2Day);
   }
 }

@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ComponentFactoryResolver, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -19,10 +19,14 @@ export class AddSubscriptionComponent implements OnInit{
 
   allSubscriptions: Subscription[] = [];
   filteredOptions: Observable<Subscription[]> = new Observable<Subscription[]>;
+
+  maxDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  minDate: Date = new Date(new Date().getFullYear()-40, new Date().getMonth(), new Date().getDate());
   
   addSubscriptionForm = new FormGroup({    
     'name': new FormControl('', [Validators.required, Validators.pattern('^[ A-z0-9()\'+]+$')]),
-    'price': new FormControl('', [Validators.required, Validators.pattern('^\\d{1,2}(.\\d\\d)?$')])
+    'price': new FormControl('', [Validators.required, Validators.pattern('^\\d{1,2}(.\\d\\d)?$')]),
+    'dateadded': new FormControl<Date>(new Date(),[Validators.required]),
   });  
   
   ngOnInit(): void {       
@@ -88,21 +92,27 @@ export class AddSubscriptionComponent implements OnInit{
   addSubscription(): void {
 
     let subName: string = '';
-    let subPrice = this.addSubscriptionForm.get('price')?.getRawValue();
+    let subPrice: string = this.addSubscriptionForm.get('price')?.getRawValue();
+    let startDate: Date = this.addSubscriptionForm.get('dateadded')?.getRawValue();
+
+    //checks to make sure there is an actual date
+    if(startDate === null && startDate === undefined){
+      startDate = new Date();
+    }
     
-    //Initial hack for checking whether it's a default sub
+    //Initial hack for checking whether it's a default sub in the list
     //checks if not object
-    if(typeof this.addSubscriptionForm.get('name')?.getRawValue() !== 'object'){
+    if(typeof this.addSubscriptionForm.get('name')?.getRawValue() !== 'object'){      
 
       subName = this.addSubscriptionForm.get('name')?.getRawValue();
 
-      if(subName != '' && subPrice != ''){
+      if(subName != '' && subPrice != '' && startDate !== null){
       
         this.api.createUserSubscription(subName, subPrice).subscribe({
   
           next: (res) => {
             
-            this.dialogRef.close({isCreated: true, name: subName});
+            this.dialogRef.close({isCreated: true, name: subName, price: subPrice, dateAdded: startDate});
           },
           error: (error: HttpErrorResponse) => {
 
@@ -119,13 +129,13 @@ export class AddSubscriptionComponent implements OnInit{
     }
     else {
       
-      //If default sub, then already valid and sends back success
+      //If default sub already in list, then already valid and sends back success
 
       let subString = JSON.stringify(this.addSubscriptionForm.get('name')?.getRawValue());
       let subObject = JSON.parse(subString);
       subName = subObject.name;
 
-      this.dialogRef.close({isCreated: true, name: subName});      
+      this.dialogRef.close({isCreated: true, name: subName, price: subPrice, dateAdded: startDate});     
     }       
   }
 

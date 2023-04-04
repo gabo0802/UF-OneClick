@@ -7,8 +7,7 @@ import { Observable, map, startWith, switchMap } from 'rxjs';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MAT_DATEPICKER_VALIDATORS } from '@angular/material/datepicker';
+import { dateToString } from 'src/app/utils/dateToString';
 
 @Component({
   selector: 'app-add-inactive-subscription',
@@ -28,7 +27,7 @@ export class AddInactiveSubscriptionComponent {
     'name': new FormControl('', [Validators.required, Validators.pattern('^[ A-z0-9()\'+]+$')]),
     'price': new FormControl('', [Validators.required, Validators.pattern('^\\d{1,2}(.\\d\\d)?$')]),
     'dateadded': new FormControl<Date | null>(null,[Validators.required, this.datesValidator()]),
-    'dateremoved': new FormControl<Date | null>(null,[Validators.nullValidator, this.datesValidator()])
+    'dateremoved': new FormControl<Date | null>(null,[Validators.required, this.datesValidator()])
   });
 
   ngOnInit(): void {       
@@ -99,12 +98,8 @@ export class AddInactiveSubscriptionComponent {
     let rawStartDate: Date = this.addInactiveSubForm.get('dateadded')?.getRawValue();
     let rawEndDate: Date = this.addInactiveSubForm.get('dateremoved')?.getRawValue();
 
-    let subStartDate = this.dateToString(rawStartDate);
-    let subEndDate = ""
-
-    if (rawEndDate != null){
-      subEndDate = this.dateToString(rawEndDate);
-    }
+    let subStartDate = dateToString(rawStartDate);
+    let subEndDate = dateToString(rawEndDate);
 
     //Initial hack for checking whether it's a default sub
     //checks if not object
@@ -112,13 +107,13 @@ export class AddInactiveSubscriptionComponent {
 
       subName = this.addInactiveSubForm.get('name')?.getRawValue();
 
-      if(subName != '' && subPrice != '' && subStartDate !== null /*&& subEndDate !== null*/){
+      if(subName != '' && subPrice != '' && subStartDate !== null && subEndDate !== null){
       
         const subData = {name: subName, price: subPrice, dateadded: subStartDate, dateremoved: subEndDate};
         
         this.api.createUserSubscription(subName, subPrice).pipe(
           switchMap( res => {
-            return this.api.addCustomUserSubscription(subData);
+            return this.api.addOldUserSubscription(subData);
           })
         ).subscribe({
           next: (res) => {
@@ -152,7 +147,7 @@ export class AddInactiveSubscriptionComponent {
 
         const subData = {name: subName, price: subPrice, dateadded: subStartDate, dateremoved: subEndDate};
 
-        this.api.addCustomUserSubscription(subData).subscribe({
+        this.api.addOldUserSubscription(subData).subscribe({
 
           next: (res) => {
 
@@ -178,32 +173,7 @@ export class AddInactiveSubscriptionComponent {
   cancel(): void {
 
     this.dialogRef.close();
-  }
-
-  private dateToString(date: Date): string {
-
-    //seconds between 10 and 60
-    let randomSecs: number = Math.floor(Math.random() * 50 + 10);
-
-    let month: string = (date.getMonth() + 1).toString();
-    let dayDate: string = date.getDate().toString();    
-
-    //if month is less than 10 adds leading zero
-    if(date.getMonth() < 10){
-
-      month = '0' + month;
-    }
-
-    //if date is less than 10 adds leading zero
-    if(date.getDate() < 10) {
-      
-      dayDate = '0' + dayDate;
-    }
-
-    let stringDate = date.getFullYear() + "-" + month + "-" + dayDate + " 12:00:" + randomSecs;
-    
-    return stringDate;
-  }
+  } 
 
   //custom validator for checking date ranges
   //still has some errors, but works on a basic level
