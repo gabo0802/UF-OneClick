@@ -64,7 +64,8 @@ const (
 var currentDB *sql.DB
 var currentID = -1
 var currentTimezone int = -400
-var allTimezones = []timezoneInfo{{"EST", "-0500UTC"}, {"EDT", "-0400UTC"}, {"CST", "-0600UTC"}, {"CDT", "-0500UTC"}, {"PST", "-0800UTC"}, {"PDT", "-0700UTC"}} //only for US at the current moment
+var allTimezones = []timezoneInfo{{"Eastern Standard Time (EST)", "-0500UTC"}, {"Eastern Daylight Time (EDT)", "-0400UTC"}, {"Central Standard Time (CST)", "-0600UTC"},
+	{"Central Daylight Time (CDT)", "-0500UTC"}, {"Pacific Standard Time (PST)", "-0800UTC"}, {"Pacific Daylight Time (PDT)", "-0700UTC"}} //only for US at the current moment
 
 func SetDB(db *sql.DB) {
 	currentDB = db
