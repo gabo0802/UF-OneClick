@@ -80,11 +80,11 @@ func main() {
 		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
 		api.POST("/longestactivesub", handler.GetMostUsedUserSubscription(false, true))
 
-		api.POST("/avgpriceactivesub", handler.GetAvgPriceofAllCurrentUserSubscriptions(true))
-		api.POST("/avgpriceallsubs", handler.GetAvgPriceofAllCurrentUserSubscriptions(false))
+		api.GET("/avgpriceactivesub", handler.GetAvgPriceofAllCurrentUserSubscriptions(true))
+		api.GET("/avgpriceallsubs", handler.GetAvgPriceofAllCurrentUserSubscriptions(false))
 
-		api.POST("/avgageallsubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(true))
-		api.POST("/avgagecontinuoussubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false))
+		api.GET("/avgageallsubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(true))
+		api.GET("/avgagecontinuoussubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false))
 
 		//Admin Commands
 		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)

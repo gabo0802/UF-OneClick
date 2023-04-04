@@ -811,7 +811,7 @@ func GetAvgPriceofAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 				rows.Scan(&avgPrice)
 			}
 
-			c.JSON(http.StatusBadRequest, gin.H{"AVG Price: $": avgPrice})
+			c.JSON(http.StatusOK, gin.H{"AVG Price: ": "$" + avgPrice})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
 		}
@@ -839,7 +839,7 @@ func GetAvgAgeofAllCurrentUserSubscriptions(mergeSame bool) gin.HandlerFunc {
 				rows.Scan(&avgAge)
 			}
 
-			c.JSON(http.StatusBadRequest, gin.H{"AVG Age: ": avgAge + " seconds"})
+			c.JSON(http.StatusOK, gin.H{"AVG Age: ": avgAge + " seconds"})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
 		}
