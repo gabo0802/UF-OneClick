@@ -23,8 +23,8 @@ label {
 
 mat-form-field {
     width: 340px;
-    margin-right: 75px;
     height: 70px;
+    margin-bottom: 9px;
 }
 
 mat-error {

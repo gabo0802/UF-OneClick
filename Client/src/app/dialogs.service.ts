@@ -71,7 +71,7 @@ export class DialogsService {
   addInactiveSubscription(): void {
 
     this.dialog.open(AddInactiveSubscriptionComponent, {
-      height: '500px',
+      height: '530px',
       width: '575px',
       autoFocus: false,
       disableClose: true,
