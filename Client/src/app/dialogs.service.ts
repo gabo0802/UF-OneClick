@@ -59,7 +59,7 @@ export class DialogsService {
   addSubscription(): MatDialogRef<AddSubscriptionComponent> {
 
     let dialogRef = this.dialog.open(AddSubscriptionComponent, {
-      height: '340px',
+      height: '440px',
       width: '575px',
       autoFocus: false,
       disableClose: true,

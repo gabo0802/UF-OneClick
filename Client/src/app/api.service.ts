@@ -107,14 +107,16 @@ export class ApiService {
     return this.http.post('api/subscriptions/createsubscription', subData);
   }
 
-  addUserSubscription(subName: string): Observable<Object> {
+  //adds active sub with todays date
+  addActiveUserSubscription(subName: string): Observable<Object> {
 
     let subData = {name: subName};
 
     return this.http.post('api/subscriptions/addsubscription', subData);
   }
 
-  addCustomUserSubscription(subData: {name: string, price: string, dateadded: string, dateremoved: string}): Observable<Object> {
+  //adds active sub with date before today, or an inactive subscription with start and end date
+  addOldUserSubscription(subData: {name: string, price: string, dateadded: string, dateremoved: string}): Observable<Object> {
     return this.http.post('api/subscriptions/addoldsubscription', subData);
   }
 

@@ -26,6 +26,20 @@
                 <mat-error *ngIf="addSubscriptionForm.get('price')?.hasError('required')">Please enter a price</mat-error>
                 <mat-error *ngIf="addSubscriptionForm.get('price')?.hasError('pattern')">Please enter a valid price, Example: 45 or 9.99</mat-error>                                                     
             </mat-form-field>
+        </div>
+        <div class="form-field-container">
+            <label>Start Date:</label>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                <mat-label>Choose a start date</mat-label>
+                    <input matInput [matDatepicker]="dateaddedPicker" [min]="minDate" [max]="maxDate" formControlName="dateadded">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="dateaddedPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dateaddedPicker></mat-datepicker>
+                    <mat-error *ngIf="addSubscriptionForm.get('dateadded')?.hasError('required')">Please enter a date</mat-error>
+                    <mat-error *ngIf="addSubscriptionForm.get('dateadded')?.hasError('matDatepickerMin')">Date exceeds minimum date allowed</mat-error>
+                    <mat-error *ngIf="addSubscriptionForm.get('dateadded')?.hasError('matDatepickerMax')">Date exceeds maximum date allowed</mat-error>                                                                  
+                    <mat-error *ngIf="addSubscriptionForm.get('dateadded')?.hasError('range')">Date is after end date</mat-error>
+            </mat-form-field>
         </div>        
         <div mat-dialog-actions align="end">
             <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>

@@ -18,13 +18,13 @@ label {
     display: flex;
     align-items: center;
     margin-right: 10px;
-    width: 55px;
+    width: 95px;
 }
 
 mat-form-field {
-    width: 340px;
-    margin-right: 75px;
+    width: 340px;    
     height: 70px;
+    margin-bottom: 8px;
 }
 
 mat-error {
