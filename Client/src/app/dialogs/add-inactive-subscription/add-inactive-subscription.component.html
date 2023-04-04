@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Add Inactive Subscription</h1>
+<h1 mat-dialog-title>Add Past Subscription</h1>
 <div mat-dialog-content>
     <p id="info">Please select a default subscription or create your own custom subscription.</p>
     <form [formGroup]="addInactiveSubForm">
@@ -44,7 +44,7 @@
         <div class="form-field-container">
             <label>End Date:</label>
             <mat-form-field appearance="fill" hideRequiredMarker>
-                <mat-label>Choose an end date</mat-label>
+                <mat-label>Choose an end date (optional)</mat-label>
                     <input matInput [matDatepicker]="dateremovedpicker" [min]="minDate" [max]="maxDate" formControlName="dateremoved">
                     <mat-hint>MM/DD/YYYY</mat-hint>
                     <mat-datepicker-toggle matIconSuffix [for]="dateremovedpicker"></mat-datepicker-toggle>

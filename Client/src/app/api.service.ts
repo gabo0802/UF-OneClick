@@ -114,7 +114,7 @@ export class ApiService {
     return this.http.post('api/subscriptions/addsubscription', subData);
   }
 
-  addOldUserSubscription(subData: {name: string, price: string, dateadded: string, dateremoved: string}): Observable<Object> {
+  addCustomUserSubscription(subData: {name: string, price: string, dateadded: string, dateremoved: string}): Observable<Object> {
     return this.http.post('api/subscriptions/addoldsubscription', subData);
   }
 

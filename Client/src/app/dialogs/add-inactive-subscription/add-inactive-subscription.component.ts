@@ -28,7 +28,7 @@ export class AddInactiveSubscriptionComponent {
     'name': new FormControl('', [Validators.required, Validators.pattern('^[ A-z0-9()\'+]+$')]),
     'price': new FormControl('', [Validators.required, Validators.pattern('^\\d{1,2}(.\\d\\d)?$')]),
     'dateadded': new FormControl<Date | null>(null,[Validators.required, this.datesValidator()]),
-    'dateremoved': new FormControl<Date | null>(null,[Validators.required, this.datesValidator()])
+    'dateremoved': new FormControl<Date | null>(null,[Validators.nullValidator, this.datesValidator()])
   });
 
   ngOnInit(): void {       
@@ -100,21 +100,25 @@ export class AddInactiveSubscriptionComponent {
     let rawEndDate: Date = this.addInactiveSubForm.get('dateremoved')?.getRawValue();
 
     let subStartDate = this.dateToString(rawStartDate);
-    let subEndDate = this.dateToString(rawEndDate);
-    
+    let subEndDate = ""
+
+    if (rawEndDate != null){
+      subEndDate = this.dateToString(rawEndDate);
+    }
+
     //Initial hack for checking whether it's a default sub
     //checks if not object
     if(typeof this.addInactiveSubForm.get('name')?.getRawValue() !== 'object'){
 
       subName = this.addInactiveSubForm.get('name')?.getRawValue();
 
-      if(subName != '' && subPrice != '' && subStartDate !== null && subEndDate !== null){
+      if(subName != '' && subPrice != '' && subStartDate !== null /*&& subEndDate !== null*/){
       
         const subData = {name: subName, price: subPrice, dateadded: subStartDate, dateremoved: subEndDate};
         
         this.api.createUserSubscription(subName, subPrice).pipe(
           switchMap( res => {
-            return this.api.addOldUserSubscription(subData);
+            return this.api.addCustomUserSubscription(subData);
           })
         ).subscribe({
           next: (res) => {
@@ -148,7 +152,7 @@ export class AddInactiveSubscriptionComponent {
 
         const subData = {name: subName, price: subPrice, dateadded: subStartDate, dateremoved: subEndDate};
 
-        this.api.addOldUserSubscription(subData).subscribe({
+        this.api.addCustomUserSubscription(subData).subscribe({
 
           next: (res) => {
 
