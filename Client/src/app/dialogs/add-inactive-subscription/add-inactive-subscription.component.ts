@@ -78,7 +78,7 @@ export class AddInactiveSubscriptionComponent {
     this.addInactiveSubForm.controls['price'].disable();    
   }
 
-  populateDefaults(): void {
+  private populateDefaults(): void {
 
     this.filteredOptions = this.addInactiveSubForm.controls['name'].valueChanges.pipe(
       startWith(''),
@@ -93,13 +93,14 @@ export class AddInactiveSubscriptionComponent {
 
   addSubscription(): void {
 
+    
     let subName: string = '';
     let subPrice = this.addInactiveSubForm.get('price')?.getRawValue();
     let rawStartDate: Date = this.addInactiveSubForm.get('dateadded')?.getRawValue();
     let rawEndDate: Date = this.addInactiveSubForm.get('dateremoved')?.getRawValue();
 
-    let subStartDate = rawStartDate.getFullYear() + "-" + (rawStartDate.getMonth()+1) + "-" + rawStartDate.getDate() + " 00:00:00";
-    let subEndDate = rawEndDate.getFullYear() + "-" + (rawEndDate.getMonth()+1) + "-" + rawEndDate.getDate() + " 00:00:00"; 
+    let subStartDate = this.dateToString(rawStartDate);
+    let subEndDate = this.dateToString(rawEndDate);
     
     //Initial hack for checking whether it's a default sub
     //checks if not object
@@ -126,12 +127,12 @@ export class AddInactiveSubscriptionComponent {
       }
       
     }
-    else {
+    else {  
       
-      //If default sub, then already valid and sends back success
 
       let subString = JSON.stringify(this.addInactiveSubForm.get('name')?.getRawValue());
       let subObject = JSON.parse(subString);
+      console.log(subObject);
       subName = subObject.name;
       subPrice = subObject.price;
 
@@ -162,9 +163,34 @@ export class AddInactiveSubscriptionComponent {
     this.dialogRef.close();
   }
 
+  private dateToString(date: Date): string {
+
+    //seconds between 10 and 60
+    let randomSecs: number = Math.floor(Math.random() * 50 + 10);
+
+    let month: string = (date.getMonth() + 1).toString();
+    let dayDate: string = date.getDate().toString();    
+
+    //if month is less than 10 adds leading zero
+    if(date.getMonth() < 10){
+
+      month = '0' + month;
+    }
+
+    //if date is less than 10 adds leading zero
+    if(date.getDate() < 10) {
+      
+      dayDate = '0' + dayDate;
+    }
+
+    let stringDate = date.getFullYear() + "-" + month + "-" + dayDate + " 12:00:" + randomSecs;
+    
+    return stringDate;
+  }
+
   //custom validator for checking date ranges
   //still has some errors, but works on a basic level
-  datesValidator(): ValidatorFn {
+  private datesValidator(): ValidatorFn {
 
     return (group:AbstractControl) : ValidationErrors | null => {
   
