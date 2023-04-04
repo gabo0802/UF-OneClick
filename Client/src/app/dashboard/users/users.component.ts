@@ -4,6 +4,7 @@ import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
 import { MatAccordion } from '@angular/material/expansion';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -24,34 +25,22 @@ export class UsersComponent implements OnInit{
 
   ngOnInit(): void {
 
-    this.api.getUserInfo().subscribe({
+    forkJoin({
+      userInfo: this.api.getUserInfo(),
+      activeSubs: this.api.getActiveUserSubscriptions(),
+    }).subscribe({
 
-      next: (res: Object) => {
-
-        let data = JSON.stringify(res);
+      next: (res) => {
+        this.subscriptionList = res.activeSubs;
+        
+        let data = JSON.stringify(res.userInfo);
         let userData = JSON.parse(data);
-
         this.username = userData.username;
       },
       error: (error: HttpErrorResponse) => {
-
-        this.dialogs.errorDialog("Unexpected Error getting user data!", "Please try again later.");
+        this.dialogs.errorDialog("Unexpected Error!", "Please try again later " + error["error"]["Error"]);
       }
-    });
-
-    this.api.getActiveUserSubscriptions().subscribe({
-      
-      next: (res: Subscription[]) => {       
-
-        this.subscriptionList = res;
-        
-      },
-      error: (error: HttpErrorResponse) => {
-
-        this.dialogs.errorDialog("Unexpected Error!", error["error"]["Error"] + " Please try again later.");
-      }
-    });
-    
+    });    
   }
 
   updateActiveSubscriptions(update: boolean): void {
