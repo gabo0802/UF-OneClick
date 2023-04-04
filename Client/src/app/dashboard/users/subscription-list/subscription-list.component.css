@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width: 100%;    
+    width: 100%;
 }
 
 .buttons-container {
@@ -28,10 +28,15 @@
     color: #fff;
 }
 
-#add {
+.add {
     border-radius: 9px;
     padding: 8px;
-    background-color: #1a51b3
+    background-color: #1a51b3;
+    margin: 3px;
+}
+
+.add:first-of-type {
+    margin-right: 5px;
 }
 
 #warning {

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Observable, map, startWith } from 'rxjs';
+import { Observable, map, startWith, switchMap } from 'rxjs';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
@@ -111,28 +111,36 @@ export class AddInactiveSubscriptionComponent {
       if(subName != '' && subPrice != '' && subStartDate !== null && subEndDate !== null){
       
         const subData = {name: subName, price: subPrice, dateadded: subStartDate, dateremoved: subEndDate};
-
-        this.api.addOldUserSubscription(subData).subscribe({
-
+        
+        this.api.createUserSubscription(subName, subPrice).pipe(
+          switchMap( res => {
+            return this.api.addOldUserSubscription(subData);
+          })
+        ).subscribe({
           next: (res) => {
-
-            console.log("addedOld worked");
-
+            console.log("New custom subscription added!");
+            
           },
           error: (error: HttpErrorResponse) => {
-
-            this.dialogs.errorDialog("Error Adding Old Subscription", error["error"]["Error"]);
+            
+            if(error.status == 504){
+              this.dialogs.errorDialog("Unexpected Error!", "An unexpected error occurred please try again later.");
+            }
+            else{
+              this.dialogs.errorDialog("Error Adding Inactive Subscription", error["error"]["Error"]);
+            }
           }
-        })       
-      }
-      
+        });
+
+        this.dialogRef.close();
+      }      
     }
     else {  
       
-
+      //default sub should already be added;
       let subString = JSON.stringify(this.addInactiveSubForm.get('name')?.getRawValue());
       let subObject = JSON.parse(subString);
-      console.log(subObject);
+      
       subName = subObject.name;
       subPrice = subObject.price;
 
@@ -149,9 +157,14 @@ export class AddInactiveSubscriptionComponent {
           },
           error: (error: HttpErrorResponse) => {
 
-            this.dialogs.errorDialog("Error Adding Old Subscription", error["error"]["Error"]);
+            if(error.status == 504){
+              this.dialogs.errorDialog("Unexpected Error!", "An unexpected error occurred please try again later.");
+            }
+            else{
+              this.dialogs.errorDialog("Error Adding Inactive Subscription", error["error"]["Error"]);
+            }           
           }
-        })
+        });
       }
 
       this.dialogRef.close();      
