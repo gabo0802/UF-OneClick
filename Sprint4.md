@@ -6,3 +6,4 @@ Front-End
 * Added paginator functionality to subscription list table
 * Added sorting functionality to subscription list table
 * Added autocompletion for add active subscription and improved error handling
+* Added functionality for adding inactive subscription
