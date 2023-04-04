@@ -42,6 +42,7 @@ type newsLetterInfo struct {
 }
 
 type timezoneInfo struct {
+	TimezoneName       string `json:"timezonename"`
 	TimezoneDifference string `json:"timezonedifference"`
 }
 
@@ -62,10 +63,22 @@ const (
 // Global Variables:
 var currentDB *sql.DB
 var currentID = -1
-var currentTimezone int = -500
+var currentTimezone int = -400
+var allTimezones = []timezoneInfo{{"EST", "-0500UTC"}, {"EDT", "-0400UTC"}, {"CST", "-0600UTC"}, {"CDT", "-0500UTC"}, {"PST", "-0800UTC"}, {"PDT", "-0700UTC"}} //only for US at the current moment
 
 func SetDB(db *sql.DB) {
 	currentDB = db
+}
+
+func GetAllTimezones(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"All Timezones": allTimezones})
+}
+
+func ChangeTimezone(c *gin.Context) {
+	var newTimezone timezoneInfo
+	c.BindJSON(&newTimezone)
+
+	currentTimezone, _ = strconv.Atoi(newTimezone.TimezoneDifference)
 }
 
 func convert_timezone(timeString string, toUTC bool) (string, time.Time) {
@@ -397,13 +410,6 @@ func VerifyEmail(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusTemporaryRedirect, "/login")
-}
-
-func ChangeTimezone(c *gin.Context) {
-	var newTimezone timezoneInfo
-	c.BindJSON(&newTimezone)
-
-	currentTimezone, _ = strconv.Atoi(newTimezone.TimezoneDifference)
 }
 
 /*func start2FA() {

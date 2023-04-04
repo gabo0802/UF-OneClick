@@ -7,7 +7,7 @@ import { Observable, map, startWith, switchMap } from 'rxjs';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
-import { dateToString } from 'src/app/utils/dateToString';
+import { dateToString, dateToStringOffset } from 'src/app/utils/dateToString';
 
 @Component({
   selector: 'app-add-inactive-subscription',
@@ -98,8 +98,12 @@ export class AddInactiveSubscriptionComponent {
     let rawStartDate: Date = this.addInactiveSubForm.get('dateadded')?.getRawValue();
     let rawEndDate: Date = this.addInactiveSubForm.get('dateremoved')?.getRawValue();
 
-    let subStartDate = dateToString(rawStartDate);
+    let subStartDate = dateToStringOffset(rawStartDate, 1);
     let subEndDate = dateToString(rawEndDate);
+
+    console.log(subStartDate)
+    console.log(subEndDate)
+
 
     //Initial hack for checking whether it's a default sub
     //checks if not object

@@ -538,10 +538,14 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		}
 	}
 
-	currentTime := time.Now()
+	currentTime := time.Now().UTC()
 	if int(currentTime.Month()) == 2 && currentTime.Day() == 29 {
 		currentTime = time.Date(currentTime.Year(), time.March, 1, currentTime.Hour(), currentTime.Minute(), currentTime.Second(), 0, time.Local) //No Leap Days
 	}
+
+	println(currentTime.String())
+	println(dateAddedTime.String())
+	println(dateCanceledTime.String())
 
 	if dateCanceledTime.After(currentTime) || dateAddedTime.After(currentTime) {
 		//fmt.Println("Error: Can't Add or Cancel Subscription in Future (After Now)!")
