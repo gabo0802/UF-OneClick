@@ -40,7 +40,7 @@ export class ApiService {
         for(const sub of subData){
           
           //Converts to a javascript date Object
-          //Provisional as of now for easier displaying of date added in subscription table
+          //Provisional as of now for easier displaying of date added in subscription table        
           sub.dateadded = new Date(sub.dateadded);
 
           userSubs.push(sub);          
@@ -66,7 +66,7 @@ export class ApiService {
 
           userSubs.push(sub);          
         }
-        
+
         return userSubs;
       })
     );
@@ -112,6 +112,10 @@ export class ApiService {
     let subData = {name: subName};
 
     return this.http.post('api/subscriptions/addsubscription', subData);
+  }
+
+  addOldUserSubscription(subData: {name: string, price: string, dateadded: string, dateremoved: string}): Observable<Object> {
+    return this.http.post('api/subscriptions/addoldsubscription', subData);
   }
 
   deactivateSubscription(subName: string): Observable<Object> {

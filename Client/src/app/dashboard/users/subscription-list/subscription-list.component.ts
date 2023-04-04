@@ -38,7 +38,7 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
 
   displayedColumns: string[] = ['name', 'price', 'dateadded', 'actions'];
   
-  addSubscription(): void {
+  addActiveSubscription(): void {
     this.dialogs.addSubscription().afterClosed().subscribe((res: {isCreated: boolean, name: string}) => {
 
       //successful creation of sub will fire this to add it
@@ -61,6 +61,10 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         });
       }
     });
+  }
+
+  addInactiveSubscription(): void {
+    this.dialogs.addInactiveSubscription();
   }
 
   deactivateSub(subName: string): void {

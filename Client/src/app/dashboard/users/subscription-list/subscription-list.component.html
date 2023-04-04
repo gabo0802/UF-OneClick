@@ -1,6 +1,7 @@
 <div class="subscription-container">
   <div class="buttons-container mat-elevation-z8">
-    <button mat-raised-button color="primary" id="add" (click)="addSubscription()">Add Active Subscription</button>
+    <button mat-raised-button color="primary" class="add" (click)="addActiveSubscription()">Add Active Subscription</button>
+    <button mat-raised-button color="primary" class="add" (click)="addInactiveSubscription()">Add Inactive Subscription</button>
   </div>
   <div class="chips-container mat-elevation-z8">
     <span id="filter-label">Filter:</span>
@@ -57,7 +58,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    <mat-paginator class="mat-elevation-z8" [pageSizeOptions]="[5, 10]"                 
+    <mat-paginator class="mat-elevation-z8" [pageSizeOptions]="[10, 20]"                 
                  aria-label="Select page of Subscriptions">
     </mat-paginator>
   

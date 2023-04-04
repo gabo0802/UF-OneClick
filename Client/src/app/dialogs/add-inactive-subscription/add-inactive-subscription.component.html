@@ -1,0 +1,63 @@
+<h1 mat-dialog-title>Add Inactive Subscription</h1>
+<div mat-dialog-content>
+    <p id="info">Please select a default subscription or create your own custom subscription.</p>
+    <form [formGroup]="addInactiveSubForm">
+        <div class="form-field-container"> 
+            <label>Name:</label>   
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                        
+                <input type="text" matInput formControlName="name" [matAutocomplete]="auto" autofocus="false">
+                <mat-error *ngIf="addInactiveSubForm.get('name')?.hasError('required')">Please enter a subscription name</mat-error>
+                <mat-error *ngIf="addInactiveSubForm.get('name')?.hasError('pattern')">Please enter a valid subscription name</mat-error>
+                <mat-error *ngIf="addInactiveSubForm.get('name')?.hasError('duplicate')">Subscription Already Exists</mat-error> 
+
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onSelected($event.option)">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                      {{option.name}}              
+                    </mat-option>
+                </mat-autocomplete>                                   
+            </mat-form-field>
+        </div>
+        <div class="form-field-container">
+            <label>Price:</label>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                        
+                <input type="text" matInput formControlName="price">
+                <mat-error *ngIf="addInactiveSubForm.get('price')?.hasError('required')">Please enter a price</mat-error>
+                <mat-error *ngIf="addInactiveSubForm.get('price')?.hasError('pattern')">Please enter a valid price, Example: 45 or 9.99</mat-error>                                                     
+            </mat-form-field>
+        </div>
+        <div class="form-field-container">
+            <label>Start Date:</label>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                <mat-label>Choose a start date</mat-label>
+                    <input matInput [matDatepicker]="dateaddedPicker" [min]="minDate" [max]="maxDate" formControlName="dateadded">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="dateaddedPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dateaddedPicker></mat-datepicker>
+                    <mat-error *ngIf="addInactiveSubForm.get('dateadded')?.hasError('required')">Please enter a date</mat-error>
+                    <mat-error *ngIf="addInactiveSubForm.get('dateadded')?.hasError('matDatepickerMin')">Date exceeds minimum date allowed</mat-error>
+                    <mat-error *ngIf="addInactiveSubForm.get('dateadded')?.hasError('matDatepickerMax')">Date exceeds maximum date allowed</mat-error>                                                                  
+                    <mat-error *ngIf="addInactiveSubForm.get('dateadded')?.hasError('range')">Date is after end date</mat-error>
+            </mat-form-field>
+        </div>        
+        <div class="form-field-container">
+            <label>End Date:</label>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                <mat-label>Choose an end date</mat-label>
+                    <input matInput [matDatepicker]="dateremovedpicker" [min]="minDate" [max]="maxDate" formControlName="dateremoved">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="dateremovedpicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dateremovedpicker></mat-datepicker>
+                    <mat-error *ngIf="addInactiveSubForm.get('dateremoved')?.hasError('required')">Please enter a date</mat-error>
+                    <mat-error *ngIf="addInactiveSubForm.get('dateremoved')?.hasError('matDatepickerMin')">Date exceeds minimum date allowed</mat-error>
+                    <mat-error *ngIf="addInactiveSubForm.get('dateremoved')?.hasError('matDatepickerMax')">Date exceeds maximum date allowed</mat-error>
+                    <mat-error *ngIf="addInactiveSubForm.get('dateremoved')?.hasError('range') && !addInactiveSubForm.get('dateremoved')?.hasError('required')">Date is before start date</mat-error>
+            </mat-form-field>
+        </div>
+        <div mat-dialog-actions align="end">
+            <button mat-raised-button color="primary" (click)="cancel()">Cancel</button>
+            <button mat-raised-button color="accent" (click)="addSubscription()" [disabled]="addInactiveSubForm.invalid">Add</button>
+        </div>                
+    </form>  
+</div>
