@@ -26,7 +26,7 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
 
   dataSource = new MatTableDataSource<Subscription>([]);
   active: boolean = true;
-  currency: string = '$' ;
+  currency: string = '$';
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;

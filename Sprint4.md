@@ -7,3 +7,4 @@ Front-End
 * Added sorting functionality to subscription list table
 * Added autocompletion for add active subscription and improved error handling
 * Added functionality for adding inactive subscription
+* Added delete functionality for inactive subscriptions
