@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { MatAccordion } from '@angular/material/expansion';
@@ -12,6 +12,9 @@ import { MatAccordion } from '@angular/material/expansion';
 })
 
 export class ReportComponent {
+
+@Input() username: string = '';
+
   @ViewChild(MatAccordion) accordion: MatAccordion;
 
   constructor(private api: ApiService, private dialogs: DialogsService) {
