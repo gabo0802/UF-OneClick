@@ -112,9 +112,9 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
     })
   }
 
-  deleteSub(subID: string){
+  deleteSub(userSubID: string){
     
-    this.api.deleteUserSubscription(subID).subscribe({
+    this.api.deleteUserSubscription(userSubID).subscribe({
 
       next: (res) => {        
         this.getInactive();

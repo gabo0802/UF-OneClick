@@ -128,8 +128,8 @@ export class ApiService {
   }
 
   //deletes a specific inactive user subscription
-  deleteUserSubscription(subID: string): Observable<Object> {
-    return this.http.delete(`api/subscriptions/${subID}`);
+  deleteUserSubscription(userSubID: string): Observable<Object> {
+    return this.http.delete(`api/subscriptions/${userSubID}`);
   }
 
   reactivateSubscription(subName: string): Observable<Object> {
