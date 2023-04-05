@@ -71,7 +71,7 @@ func SetUpTables(db *sql.DB) {
 	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price float NOT NULL, UNIQUE(Name), PRIMARY KEY(SubID));")
 
 	//Individual user subscriptions
-	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
+	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserSubID int NOT NULL AUTO_INCREMENT, UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, PRIMARY KEY(UserSubID), FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
 
 	//Email Verification
 	db.Exec("CREATE TABLE IF NOT EXISTS Verification (UserID int NOT NULL, ExpireDate DATETIME NOT NULL, Code varchar(255) NOT NULL, Type varchar(255) NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID))")
@@ -543,9 +543,9 @@ func AddOldUserSub(db *sql.DB, userID int, subscriptionName string, dateAdded st
 		currentTime = time.Date(currentTime.Year(), time.March, 1, currentTime.Hour(), currentTime.Minute(), currentTime.Second(), 0, time.Local) //No Leap Days
 	}
 
-	println(currentTime.String())
-	println(dateAddedTime.String())
-	println(dateCanceledTime.String())
+	//println(currentTime.String())
+	//println(dateAddedTime.String())
+	//println(dateCanceledTime.String())
 
 	if dateCanceledTime.After(currentTime) || dateAddedTime.After(currentTime) {
 		//fmt.Println("Error: Can't Add or Cancel Subscription in Future (After Now)!")
@@ -643,6 +643,26 @@ func CancelUserSub(db *sql.DB, userID int, subscriptionName string) int {
 
 	//Update UserSub Data
 	result, _ := db.Exec("UPDATE UserSubs SET DateRemoved = ? WHERE UserID = ? AND SubID = ? AND DateRemoved IS NULL;", currentTime, userID, CurrentSubID)
+
+	//Tests to see if function worked
+	numRows, err := result.RowsAffected()
+
+	if err != nil {
+		log.Fatal(err)
+		return -502
+	}
+
+	//fmt.Println("Rows Affected:", numRows)
+	return int(numRows)
+}
+
+func CancelUserSubID(db *sql.DB, userSubID int) int {
+	//Gets the current time and formats it into YYYY-MM-DD hh:mm:ss
+	currentTime := time.Now()
+	currentTime.Format("2006-01-02 15:04:05")
+
+	//Update UserSub Data
+	result, _ := db.Exec("UPDATE UserSubs SET DateRemoved = ? WHERE UserSubID = ?;", currentTime, userSubID)
 
 	//Tests to see if function worked
 	numRows, err := result.RowsAffected()

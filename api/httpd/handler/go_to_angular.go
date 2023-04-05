@@ -28,6 +28,7 @@ type userData struct {
 	SubID       string `json:"subid"`
 	Name        string `json:"name"`
 	Price       string `json:"price"`
+	UserSubID   string `json:"usersubid"`
 	DateAdded   string `json:"dateadded"`
 	DateRemoved string `json:"dateremoved"`
 	Timezone    string `json:"timezone"`
@@ -277,7 +278,7 @@ func SendAllReminders() int {
 		return -502
 	}
 
-	if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Day Left)") {
+	if rows.Next() && !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Day Left)") {
 		return -401
 	}
 
@@ -287,7 +288,7 @@ func SendAllReminders() int {
 		return -502
 	}
 
-	if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Week Left)") {
+	if rows.Next() && !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Week Left)") {
 		return -401
 	}
 
@@ -670,9 +671,9 @@ func GetAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 			var rows *sql.Rows
 
 			if onlyActive {
-				rows, err = currentDB.Query("SELECT Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved is NULL ORDER BY DateAdded ASC", currentID)
+				rows, err = currentDB.Query("SELECT UserSubID, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved is NULL ORDER BY DateAdded ASC", currentID)
 			} else {
-				rows, err = currentDB.Query("SELECT Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? ORDER BY DateAdded ASC", currentID)
+				rows, err = currentDB.Query("SELECT UserSubID, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? ORDER BY DateAdded ASC", currentID)
 			}
 			//can order by anything
 
@@ -683,7 +684,7 @@ func GetAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 			var index = 0
 			for rows.Next() {
 				var newUserSub userData
-				rows.Scan(&newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
+				rows.Scan(&newUserSub.UserSubID, &newUserSub.SubID, &newUserSub.Name, &newUserSub.Price, &newUserSub.DateAdded, &newUserSub.DateRemoved)
 
 				newUserSub.DateAdded, _ = convert_timezone(newUserSub.DateAdded, false)
 				if newUserSub.DateRemoved != "" {
@@ -919,6 +920,23 @@ func DeleteUserSub(c *gin.Context) {
 		}
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
+	}
+}
+
+func DeleteUserSubID(c *gin.Context) {
+	var userSubscriptionData userData
+	c.BindJSON(&userSubscriptionData)
+
+	result, err := currentDB.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", userSubscriptionData.UserSubID)
+	if err != nil {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 1 {
+		c.JSON(http.StatusAccepted, gin.H{"Success": "User Subscription Deleted!"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "User Subscription Doesn't Exist!"})
 	}
 }
 
@@ -1269,6 +1287,7 @@ func GetAllUserData() gin.HandlerFunc {
 			var allUserData = []userData{}
 			var id int
 			var subid int
+			var usersubid int
 
 			rows, err := currentDB.Query("SELECT SubID, Name, Price FROM Subscriptions;")
 
@@ -1300,7 +1319,7 @@ func GetAllUserData() gin.HandlerFunc {
 				allUserData = append(allUserData, newData)
 			}
 
-			rows, err = currentDB.Query("SELECT UserSubs.UserID, Username, Password, Email, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID;")
+			rows, err = currentDB.Query("SELECT UserSubID, UserSubs.UserID, Username, Password, Email, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID;")
 
 			if err != nil {
 				c.AbortWithStatusJSON(http.StatusBadGateway, gin.H{"message": "Error"})
@@ -1308,8 +1327,9 @@ func GetAllUserData() gin.HandlerFunc {
 
 			for rows.Next() {
 				var newData userData
-				rows.Scan(&id, &newData.Username, &newData.Password, &newData.Email, &subid, &newData.Name, &newData.Price, &newData.DateAdded, &newData.DateRemoved)
+				rows.Scan(&usersubid, &id, &newData.Username, &newData.Password, &newData.Email, &subid, &newData.Name, &newData.Price, &newData.DateAdded, &newData.DateRemoved)
 
+				newData.UserSubID = strconv.Itoa(usersubid)
 				newData.UserID = strconv.Itoa(id)
 				newData.SubID = strconv.Itoa(subid)
 				newData.DateAdded, _ = convert_timezone(newData.DateAdded, false)

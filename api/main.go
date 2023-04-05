@@ -76,7 +76,8 @@ func main() {
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
-		api.DELETE("/subscriptions/deletesubscription", handler.DeleteUserSub)
+		api.DELETE("/subscriptions/deletesubscriptionnoid", handler.DeleteUserSub)
+		api.DELETE("/subscriptions/deletesubscription", handler.DeleteUserSubID)
 
 		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
 		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
@@ -92,6 +93,7 @@ func main() {
 		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)
 		api.POST("/reset", handler.ResetALL)
 		api.POST("/alldata", handler.GetAllUserData())
+		api.GET("/alldata", handler.GetAllUserData()) //testing
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000
