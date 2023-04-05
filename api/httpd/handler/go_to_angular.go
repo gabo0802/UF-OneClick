@@ -182,7 +182,7 @@ func sendReminders(rows *sql.Rows, message string, header string) bool {
 	}
 
 	//fmt.Println(userMessage)
-	if currentEmail != "" {
+	if currentEmail != "" && userMessage != "" {
 		emailSent = sendEmail(currentEmail, header, userMessage)
 	}
 
@@ -821,9 +821,9 @@ func GetAvgPriceofAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 			var avgPrice string
 
 			if onlyActive {
-				rows, err = currentDB.Query("SELECT AVG(PRICE) FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ? AND DateRemoved IS NULL", currentID)
+				rows, err = currentDB.Query("SELECT AVG(PRICE) FROM (SELECT DISTINCT NAME, PRICE FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ? AND DateRemoved IS NULL) AS T1", currentID)
 			} else {
-				rows, err = currentDB.Query("SELECT AVG(PRICE) FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ?", currentID)
+				rows, err = currentDB.Query("SELECT AVG(PRICE) FROM (SELECT DISTINCT NAME, PRICE FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID = ?) AS T1", currentID)
 			}
 
 			if err != nil {
@@ -843,17 +843,21 @@ func GetAvgPriceofAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 	}
 }
 
-func GetAvgAgeofAllCurrentUserSubscriptions(mergeSame bool) gin.HandlerFunc {
+func GetAvgAgeofAllCurrentUserSubscriptions(mergeSame bool, onlyActive bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if currentID != -1 {
 			var rows *sql.Rows
 			var err error
 			var avgAge string
 
-			if mergeSame {
-				rows, err = currentDB.Query("SELECT AVG(FinalTotalUsageTimeSeconds) AS AVGUsageTimeSeconds FROM (SELECT Name, SUM(TotalUsageTimeSeconds) AS FinalTotalUsageTimeSeconds FROM (SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, DateRemoved) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NOT NULL UNION ALL SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, NOW()) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NULL) AS t1 GROUP BY NAME ORDER BY SUM(TotalUsageTimeSeconds) DESC) as t2;", currentID, currentID)
+			if !onlyActive {
+				if mergeSame {
+					rows, err = currentDB.Query("SELECT AVG(FinalTotalUsageTimeSeconds) AS AVGUsageTimeSeconds FROM (SELECT Name, SUM(TotalUsageTimeSeconds) AS FinalTotalUsageTimeSeconds FROM (SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, DateRemoved) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NOT NULL UNION ALL SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, NOW()) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NULL) AS t1 GROUP BY NAME ORDER BY SUM(TotalUsageTimeSeconds) DESC) as t2;", currentID, currentID)
+				} else {
+					rows, err = currentDB.Query("SELECT AVG(TotalUsageTimeSeconds) AS AVGUsageTimeSeconds FROM (SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, DateRemoved) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NOT NULL UNION ALL SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, NOW()) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NULL) AS t1", currentID, currentID)
+				}
 			} else {
-				rows, err = currentDB.Query("SELECT AVG(TotalUsageTimeSeconds) AS AVGUsageTimeSeconds FROM (SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, DateRemoved) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NOT NULL UNION ALL SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, NOW()) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NULL) AS t1", currentID, currentID)
+				rows, err = currentDB.Query("SELECT AVG(TotalUsageTimeSeconds) AS AVGUsageTimeSeconds FROM (SELECT Name, TIMESTAMPDIFF(SECOND, DateAdded, NOW()) AS TotalUsageTimeSeconds FROM UserSubs INNER JOIN subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved IS NULL) AS t1", currentID)
 			}
 
 			if err != nil {

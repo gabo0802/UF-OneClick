@@ -80,8 +80,9 @@ func main() {
 		api.GET("/avgpriceactivesub", handler.GetAvgPriceofAllCurrentUserSubscriptions(true))
 		api.GET("/avgpriceallsubs", handler.GetAvgPriceofAllCurrentUserSubscriptions(false))
 
-		api.GET("/avgageallsubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(true))
-		api.GET("/avgagecontinuoussubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false))
+		api.GET("/avgageallsubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(true, false))
+		api.GET("/avgageactivesubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false, false))
+		api.GET("/avgagecontinuoussubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false, false))
 
 		//Admin Commands:
 		api.POST("/news", handler.NewsLetter)
