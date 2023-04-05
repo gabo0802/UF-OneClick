@@ -259,7 +259,7 @@ func SendEmailToAllUsers(emailSubject string, emailMessage string) bool {
 
 func SendAllReminders() int {
 	currentTime := time.Now()
-	currentDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()-1, 11, 59, 59, 0, time.Local)
+	currentDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()-1, 11, 59, 59, 0, time.UTC)
 
 	currentMonth := strconv.Itoa(int(currentTime.Month()))
 	if len(currentMonth) < 2 {
@@ -267,8 +267,8 @@ func SendAllReminders() int {
 	}
 	currentYear := strconv.Itoa(currentTime.Year())
 
-	nextDayDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 11, 59, 59, 0, time.Local)
-	nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+7, 11, 59, 59, 0, time.Local)
+	nextDayDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 11, 59, 59, 0, time.UTC)
+	nextWeekDate := time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+7, 11, 59, 59, 0, time.UTC)
 
 	SQLStringYearMonth := currentYear + "-" + currentMonth + "-%d 00:00:00"
 
@@ -298,7 +298,7 @@ func SendAllReminders() int {
 		return -401
 	}*/
 
-	//currentDate = time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 0, 0, 0, 0, time.Local)
+	//currentDate = time.Date(currentTime.Year(), currentTime.Month(), currentTime.Day()+1, 0, 0, 0, 0, time.UTC)
 	rows, err = currentDB.Query("SELECT Email, Name, Price, DATE_FORMAT(DateAdded, ?), DateAdded FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email, DATE_FORMAT(DateAdded, ?), UserSubs.SubID;", SQLStringYearMonth, SQLStringYearMonth, currentDate, nextWeekDate, SQLStringYearMonth)
 	if err != nil {
 		return -502
