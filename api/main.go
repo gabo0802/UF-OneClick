@@ -40,46 +40,42 @@ func main() {
 
 	api := r.Group("/api")
 	{
-		//Background
+		//Background:
 		//api.GET("/remind", handler.DailyReminder)
 		//api.POST("/remind", handler.DailyReminder)
 
-		//Account Management
-		api.GET("/alltimezones", handler.GetAllTimezones)
-
-		api.GET("/alluserinfo", handler.GetAllCurrentUserInfo)
-		//api.POST("/userinfo", handler.GetUserInfo)        //remove if above function works
-		//api.POST("/currenttimezone", handler.GetTimezone) //remove if above function works
+		//Login and Verification:
 		api.POST("/login", handler.TryLogin)
+		api.GET("/verify/:code", handler.VerifyEmail)
 		//api.GET("/2FA")
 		//api.GET("/2FA/:userCode", handler.TwoFactorAuthentication) //testing
 		//api.POST("/2FA", handler.TwoFactorAuthentication()) //need to agree on how to send POST request
+
+		//Account Management:
 		api.POST("/accountcreation", handler.NewUser)
+		api.GET("/alluserinfo", handler.GetAllCurrentUserInfo)
 		api.PUT("/changepassword", handler.ChangeUserPassword)
 		api.PUT("/changeusername", handler.ChangeUserUsername)
 		api.PUT("/changeemail", handler.ChangeUserEmail)
-		api.POST("/deleteuser", handler.DeleteUser)
 		api.DELETE("/deleteuser", handler.DeleteUser)
-		api.GET("/verify/:code", handler.VerifyEmail)
+
+		api.GET("/alltimezones", handler.GetAllTimezones)
 		api.PUT("/changetimezone", handler.ChangeTimezone)
-		//api.GET("/logout/:valid", handler.Logout(""))
-		//api.POST("/logout", handler.Logout(""))
 
-		//Subscription Management
-
+		//Subscription Management:
 		api.GET("/subscriptions/active", handler.GetAllCurrentUserSubscriptions(true))
 		api.GET("/subscriptions", handler.GetAllCurrentUserSubscriptions(false))
 		api.GET("/subscriptions/services", handler.GetAllSubscriptionServices())
+
 		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
-		// api.DELETE("/subscriptions/deletesubscriptionnoid", handler.DeleteUserSub)
 		api.DELETE("/subscriptions/:id", handler.DeleteUserSubID)
 
-		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
-		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
-		api.POST("/longestactivesub", handler.GetMostUsedUserSubscription(false, true))
+		api.GET("/longestsub", handler.GetMostUsedUserSubscription(false, false))
+		api.GET("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))
+		api.GET("/longestactivesub", handler.GetMostUsedUserSubscription(false, true))
 
 		api.GET("/avgpriceactivesub", handler.GetAvgPriceofAllCurrentUserSubscriptions(true))
 		api.GET("/avgpriceallsubs", handler.GetAvgPriceofAllCurrentUserSubscriptions(false))
@@ -87,10 +83,10 @@ func main() {
 		api.GET("/avgageallsubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(true))
 		api.GET("/avgagecontinuoussubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false))
 
-		//Admin Commands
-		api.POST("/news", handler.NewsLetter) //need to agree on how to get user input (for now name is message)
+		//Admin Commands:
+		api.POST("/news", handler.NewsLetter)
 		api.POST("/reset", handler.ResetALL)
-		api.POST("/alldata", handler.GetAllUserData())
+		api.GET("/alldata", handler.GetAllUserData())
 	}
 
 	r.Run("0.0.0.0:5000") //http://127.0.0.1:5000

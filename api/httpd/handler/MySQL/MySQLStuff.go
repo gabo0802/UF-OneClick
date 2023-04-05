@@ -67,13 +67,13 @@ func SetUpTables(db *sql.DB) {
 	//Users
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Email varchar(255) NOT NULL, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), UNIQUE(Email), PRIMARY KEY(UserID));")
 
-	//All available subscriptions
+	//All available subscription services
 	db.Exec("CREATE TABLE IF NOT EXISTS Subscriptions (SubID int NOT NULL AUTO_INCREMENT, Name varchar(255) NOT NULL, Price float NOT NULL, UNIQUE(Name), PRIMARY KEY(SubID));")
 
 	//Individual user subscriptions
 	db.Exec("CREATE TABLE IF NOT EXISTS UserSubs (UserSubID int NOT NULL AUTO_INCREMENT, UserID int NOT NULL, SubID int NOT NULL, DateAdded DATETIME NOT NULL, DateRemoved DATETIME, PRIMARY KEY(UserSubID), FOREIGN KEY(UserID) REFERENCES Users(UserID), FOREIGN KEY(SubID) REFERENCES Subscriptions(SubID))")
 
-	//Email Verification
+	//Email Verification and Two-Factor Authentication
 	db.Exec("CREATE TABLE IF NOT EXISTS Verification (UserID int NOT NULL, ExpireDate DATETIME NOT NULL, Code varchar(255) NOT NULL, Type varchar(255) NOT NULL, FOREIGN KEY(UserID) REFERENCES Users(UserID))")
 }
 
@@ -675,23 +675,6 @@ func CancelUserSubID(db *sql.DB, userSubID int) int {
 	//fmt.Println("Rows Affected:", numRows)
 	return int(numRows)
 }
-
-// Deletes entry based on username and password from MySQL table called "Users"
-/*func DeleteUser(db *sql.DB, username string, password string) {
-    result, err := db.Exec("DELETE FROM Users WHERE Username = ? AND Password = ?;", username, password)
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    numRows, err := result.RowsAffected()
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    fmt.Println("Rows Affected:", numRows)
-}*/
 
 // Deletes entry based on UserID from MySQL table called "Users"
 func DeleteUser(db *sql.DB, ID int) {

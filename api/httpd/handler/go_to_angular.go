@@ -47,6 +47,7 @@ type timezoneInfo struct {
 	TimezoneDifference string `json:"timezonedifference"`
 }
 
+// Constants
 const (
 	emailHost = "smtp.gmail.com"
 	emailPort = "587"
@@ -106,6 +107,7 @@ func convert_timezone(timeString string, toUTC bool) (string, time.Time) {
 	return string(convertedTime.String()[0 : len(convertedTime.String())-10]), convertedTime
 }
 
+// Email Sending:
 func getReminderMessage(subName string, subPrice string, dateRenew string, dateAdded string) string {
 	var userMessage string = ""
 
@@ -296,7 +298,6 @@ func SendAllReminders() int {
 	return 1
 }
 
-// GET and POST Functions:
 func DailyReminder(c *gin.Context) {
 	_, err := c.Cookie("didReminder")
 
@@ -819,6 +820,8 @@ func GetAvgPriceofAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 				rows.Scan(&avgPrice)
 			}
 
+			roundedPrice, _ := strconv.ParseFloat(avgPrice, 64)
+			avgPrice = fmt.Sprintf("%.2f", roundedPrice)
 			c.JSON(http.StatusOK, gin.H{"AVG Price: ": "$" + avgPrice})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
@@ -847,80 +850,18 @@ func GetAvgAgeofAllCurrentUserSubscriptions(mergeSame bool) gin.HandlerFunc {
 				rows.Scan(&avgAge)
 			}
 
-			c.JSON(http.StatusOK, gin.H{"AVG Age: ": avgAge + " seconds"})
+			ageSeconds, _ := strconv.ParseFloat(avgAge, 64)
+			c.JSON(http.StatusOK, gin.H{"AVG Age: ": convertSecondstoTimeString(int(ageSeconds))})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
 		}
 	}
 }
 
-/*func Logout(message string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		currentID = -1
-		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
-
-		//c.SetCookie("logoutOutput", "Logged Out!"+message, 60, "/", "localhost", false, false)
-		//c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
-
-		if c.Param("valid") != "" { //Test if GET Request or Not
-			c.Redirect(http.StatusTemporaryRedirect, "/login")
-		} else {
-			c.JSON(http.StatusOK, gin.H{"Success": "Logged Out" + message})
-		}
-	}
-}*/
-
 func DeleteUser(c *gin.Context) {
 	MySQL.DeleteUser(currentDB, currentID)
 	c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 	currentID = -1
-}
-
-func DeleteUserSub(c *gin.Context) {
-	if currentID != -1 {
-		var userSubscriptionData userData
-		var err error
-		var result sql.Result
-		c.BindJSON(&userSubscriptionData)
-
-		if userSubscriptionData.SubID == "" {
-			if userSubscriptionData.Name == "" {
-				c.JSON(http.StatusBadRequest, gin.H{"Error": "Missing SubID or Name!"})
-			} else {
-				sub_name, err := currentDB.Query("SELECT SubID FROM Subscriptions WHERE Name = ?;", userSubscriptionData.Name)
-
-				if err != nil {
-					c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
-				}
-
-				//Checks If Query Returns Empty Set or if the Subscription Name exists
-				if sub_name.Next() {
-					sub_name.Scan(&userSubscriptionData.SubID)
-				} else {
-					c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid Subscription Name!"})
-				}
-			}
-		}
-
-		if userSubscriptionData.DateRemoved != "" {
-			result, err = currentDB.Exec("DELETE FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? AND DateRemoved = ? LIMIT 1;", currentID, userSubscriptionData.SubID, userSubscriptionData.DateAdded, userSubscriptionData.DateRemoved)
-		} else {
-			result, err = currentDB.Exec("DELETE FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? AND DateRemoved IS NULL LIMIT 1;", currentID, userSubscriptionData.SubID, userSubscriptionData.DateAdded)
-		}
-
-		if err != nil {
-			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
-		}
-
-		rowsAffected, _ := result.RowsAffected()
-		if rowsAffected == 1 {
-			c.JSON(http.StatusAccepted, gin.H{"Success": "User Subscription Deleted!"})
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"Error": "User Subscription Doesn't Exist!"})
-		}
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
-	}
 }
 
 func DeleteUserSubID(c *gin.Context) {
@@ -1222,46 +1163,6 @@ func GetAllCurrentUserInfo(c *gin.Context) {
 		c.JSON(http.StatusOK, outputUserData)
 	}
 }
-
-/*func GetUserInfo(c *gin.Context) {
-	cookie, err := c.Cookie("currentUserID")
-	if err == nil {
-		currentID, _ = strconv.Atoi(cookie)
-	} else {
-		currentID = -1
-	}
-
-	if currentID != -1 {
-		username := MySQL.GetUsername(currentDB, currentID)
-		email := MySQL.GetEmail(currentDB, currentID)
-		c.JSON(http.StatusOK, gin.H{username: email})
-	} else {
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
-	}
-} //remove if above function works
-
-func GetTimezone(c *gin.Context) {
-	//c.JSON(http.StatusOK, gin.H{"CurrentTimezone": currentTimezone})
-	fmt.Println(currentTimezone)
-	timezoneString := strconv.Itoa(currentTimezone)
-
-	if currentTimezone < 0 {
-		timezoneString = strings.ReplaceAll(timezoneString, "-", "")
-		for len(timezoneString) < 4 {
-			timezoneString = "0" + timezoneString
-		}
-		timezoneString = "-" + timezoneString
-	} else {
-		for len(timezoneString) < 4 {
-			timezoneString = "0" + timezoneString
-		}
-
-		timezoneString = "+" + timezoneString
-	}
-
-	c.JSON(http.StatusOK, gin.H{"CurrentTimezone": timezoneString})
-
-} //remove if above function works*/
 
 func ResetALL(c *gin.Context) {
 	if currentID == 1 {
