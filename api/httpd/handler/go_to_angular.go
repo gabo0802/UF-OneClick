@@ -116,7 +116,7 @@ func getReminderMessage(subName string, subPrice string, dateRenew string, dateA
 		dateAddedTime, _ := time.Parse(reference, dateAdded)
 		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
 
-		fmt.Println("Yearly ", subName)
+		//fmt.Println("Yearly ", subName)
 		//fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
 
 		if int(dateRenewTime.Month()) == int(dateAddedTime.Month()) {
@@ -127,14 +127,14 @@ func getReminderMessage(subName string, subPrice string, dateRenew string, dateA
 		dateAddedTime, _ := time.Parse(reference, dateAdded)
 		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
 
-		fmt.Println("3 Months ", subName)
+		//fmt.Println("3 Months ", subName)
 		//fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
 
 		if (int(dateRenewTime.Month())-int(dateAddedTime.Month()))%3 == 0 {
 			userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
 		}
 	} else {
-		fmt.Println("Monthly ", subName)
+		//fmt.Println("Monthly ", subName)
 
 		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
 		userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
@@ -146,7 +146,7 @@ func getReminderMessage(subName string, subPrice string, dateRenew string, dateA
 func sendReminders(rows *sql.Rows, message string, header string) bool {
 	var currentEmail string = ""
 	var userMessage string = ""
-	var emailSent bool = true
+	var issueWithEmailSending bool = true
 
 	for rows.Next() {
 		var newEmail string
@@ -161,32 +161,36 @@ func sendReminders(rows *sql.Rows, message string, header string) bool {
 
 		if currentEmail == "" {
 			currentEmail = newEmail
-			userMessage = message + "\n"
 			userMessage += getReminderMessage(subName, subPrice, dateRenew, dateAdded)
+			//fmt.Println("1 Test:" + userMessage + "!")
 
 		} else if newEmail == currentEmail {
 			userMessage += getReminderMessage(subName, subPrice, dateRenew, dateAdded)
+			//fmt.Println("2 Test:" + userMessage + "!")
 
 		} else {
-			emailSent = sendEmail(currentEmail, header, userMessage)
-			//fmt.Println(userMessage)
+			if userMessage != "" {
+				userMessage = message + "\n" + userMessage
+				issueWithEmailSending = sendEmail(currentEmail, header, userMessage)
+			}
+			//fmt.Println("3 Test:" + userMessage + "!")
 
-			if !emailSent {
+			if !issueWithEmailSending {
 				return false
 			}
 
 			currentEmail = newEmail
-			userMessage = message + "\n"
-			userMessage += getReminderMessage(subName, subPrice, dateRenew, dateAdded)
+			userMessage = getReminderMessage(subName, subPrice, dateRenew, dateAdded)
 		}
 	}
 
-	//fmt.Println(userMessage)
+	//fmt.Println("4 Test:" + userMessage + "!")
 	if currentEmail != "" && userMessage != "" {
-		emailSent = sendEmail(currentEmail, header, userMessage)
+		userMessage = message + "\n" + userMessage
+		issueWithEmailSending = sendEmail(currentEmail, header, userMessage)
 	}
 
-	return emailSent
+	return issueWithEmailSending
 }
 
 func sendEmail(toEmail string, emailSubject string, emailMessage string) bool {
@@ -274,10 +278,10 @@ func SendAllReminders() int {
 
 	stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
 
-	fmt.Println(currentDate)
+	/*fmt.Println(currentDate)
 	fmt.Println(nextDayDate)
 	fmt.Println(nextWeekDate)
-	fmt.Println(SQLStringYearMonth)
+	fmt.Println(SQLStringYearMonth)*/
 
 	rows, err := currentDB.Query("SELECT Email, Name, Price, DATE_FORMAT(DateAdded, ?), DateAdded FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID INNER JOIN Users ON UserSubs.UserID = Users.UserID WHERE UserSubs.UserID > 1 AND DateRemoved IS NULL AND DATE_FORMAT(DateAdded, ?) BETWEEN ? AND ? ORDER By Email, DATE_FORMAT(DateAdded, ?), UserSubs.SubID;", SQLStringYearMonth, SQLStringYearMonth, currentDate, nextDayDate, SQLStringYearMonth)
 	if err != nil {
