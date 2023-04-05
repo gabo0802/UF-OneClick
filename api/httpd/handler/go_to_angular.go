@@ -884,7 +884,7 @@ func DeleteUserSub(c *gin.Context) {
 
 		if userSubscriptionData.SubID == "" {
 			if userSubscriptionData.Name == "" {
-				c.JSON(http.StatusBadRequest, gin.H{"Error": "Missing Data!"})
+				c.JSON(http.StatusBadRequest, gin.H{"Error": "Missing SubID or Name!"})
 			} else {
 				sub_name, err := currentDB.Query("SELECT SubID FROM Subscriptions WHERE Name = ?;", userSubscriptionData.Name)
 
