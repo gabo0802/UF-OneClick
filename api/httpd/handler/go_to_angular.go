@@ -878,13 +878,9 @@ func DeleteUser(c *gin.Context) {
 func DeleteUserSub(c *gin.Context) {
 	if currentID != -1 {
 		var userSubscriptionData userData
+		var err error
+		var result sql.Result
 		c.BindJSON(&userSubscriptionData)
-
-		if userSubscriptionData.DateRemoved == "" {
-			userSubscriptionData.DateRemoved = "IS NULL"
-		} else {
-			userSubscriptionData.DateRemoved = "=" + userSubscriptionData.DateRemoved
-		}
 
 		if userSubscriptionData.SubID == "" {
 			if userSubscriptionData.Name == "" {
@@ -905,11 +901,21 @@ func DeleteUserSub(c *gin.Context) {
 			}
 		}
 
-		_, err := currentDB.Exec("DELETE FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? AND DateRemoved ? LIMIT 1;", currentID, userSubscriptionData.SubID, userSubscriptionData.DateAdded, userSubscriptionData.DateRemoved)
+		if userSubscriptionData.DateRemoved != "" {
+			result, err = currentDB.Exec("DELETE FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? AND DateRemoved = ? LIMIT 1;", currentID, userSubscriptionData.SubID, userSubscriptionData.DateAdded, userSubscriptionData.DateRemoved)
+		} else {
+			result, err = currentDB.Exec("DELETE FROM UserSubs WHERE UserID = ? AND SubID = ? AND DateAdded = ? AND DateRemoved IS NULL LIMIT 1;", currentID, userSubscriptionData.SubID, userSubscriptionData.DateAdded)
+		}
+
 		if err != nil {
 			c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
-		} else {
+		}
+
+		rowsAffected, _ := result.RowsAffected()
+		if rowsAffected == 1 {
 			c.JSON(http.StatusAccepted, gin.H{"Success": "User Subscription Deleted!"})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "User Subscription Doesn't Exist!"})
 		}
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Invalid User ID"})
