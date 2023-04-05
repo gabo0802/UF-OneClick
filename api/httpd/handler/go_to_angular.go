@@ -1224,7 +1224,7 @@ func GetAllCurrentUserInfo(c *gin.Context) {
 	}
 }
 
-func GetUserInfo(c *gin.Context) {
+/*func GetUserInfo(c *gin.Context) {
 	cookie, err := c.Cookie("currentUserID")
 	if err == nil {
 		currentID, _ = strconv.Atoi(cookie)
@@ -1262,7 +1262,7 @@ func GetTimezone(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"CurrentTimezone": timezoneString})
 
-} //remove if above function worksf
+} //remove if above function works*/
 
 func ResetALL(c *gin.Context) {
 	if currentID == 1 {

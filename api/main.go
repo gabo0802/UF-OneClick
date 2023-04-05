@@ -48,8 +48,8 @@ func main() {
 		api.GET("/alltimezones", handler.GetAllTimezones)
 
 		api.GET("/alluserinfo", handler.GetAllCurrentUserInfo)
-		api.POST("/userinfo", handler.GetUserInfo)        //remove if above function works
-		api.POST("/currenttimezone", handler.GetTimezone) //remove if above function works
+		//api.POST("/userinfo", handler.GetUserInfo)        //remove if above function works
+		//api.POST("/currenttimezone", handler.GetTimezone) //remove if above function works
 		api.POST("/login", handler.TryLogin)
 		//api.GET("/2FA")
 		//api.GET("/2FA/:userCode", handler.TwoFactorAuthentication) //testing
