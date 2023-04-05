@@ -26,115 +26,15 @@
             (isActive)="updateActiveSubscriptions($event)"
             (isInactive)="updateInactiveSubscriptions($event)"></app-subscription-list>
         </div>
-    </div>
-
-    <!-- <button type="submit" mat-raised-button color="primary" (click)="doLogout()">Logout</button>
-    <button type="submit" mat-raised-button color="primary"  (click)="getUserSubscriptions()" [hidden]="adminButtonVisible">See Your Subscriptions</button>
-    <button type="submit" mat-raised-button color="primary"  (click)="getUserData()" [hidden]="adminButtonVisible">Get All User Data</button>
-    <button type="submit" mat-raised-button color="primary" (click)="resetAll()" [hidden]="adminButtonVisible">Reset All</button> -->
-    
-    <!-- Vladimir Code
-    <mat-card class="create-unknown-sub">
-        <mat-card-content >
-            <form [formGroup]="createSubServiceForm" (ngSubmit)="newSubscription()">                    
-                <mat-form-field appearance="fill">
-                    <mat-label>New Subscription Name</mat-label>            
-                    <input matInput formControlName="name">
-                    <mat-error *ngIf="createSubServiceForm.get('name')?.getError">Please enter a valid name</mat-error>                        
-                </mat-form-field>
-
-                <mat-form-field appearance="fill">
-                    <mat-label>New Subscription Price</mat-label>            
-                    <input matInput formControlName="price">
-                    <mat-error *ngIf="createSubServiceForm.get('price')?.getError">Please enter a valid price ($_.99)</mat-error>                        
-                </mat-form-field>
-
-                <mat-card-actions>
-                    <button type="submit" mat-raised-button color="primary" [disabled]="createSubServiceForm.invalid">Create Custom Subscription</button>
-                </mat-card-actions>
-
-                <br><br>
-            </form>
-        </mat-card-content>   
-    </mat-card>
-
-    <mat-card class="create-known-sub">
-        <mat-card-content>
-            <form [formGroup]="createUserSubForm" (ngSubmit)="newUserSubscription()">                    
-                <mat-form-field appearance="fill">
-                    <mat-label>Subscription Name</mat-label>            
-                    <input matInput formControlName="name">
-                    <mat-error *ngIf="createUserSubForm.get('name')?.getError">Please enter a valid name</mat-error>                        
-                </mat-form-field>
-
-                <mat-card-actions>
-                    <button type="submit" mat-raised-button color="primary" [disabled]="createUserSubForm.invalid">Add Subscription (Today)</button>
-                </mat-card-actions>
-
-                <br><br>
-            </form>
-        </mat-card-content>         
-    </mat-card>
-
-    <mat-card class="get-sub">
-        <mat-card-content>
-            <form [formGroup]="createCustomUserSubForm" (ngSubmit)="customUserSubscription()">                    
-                <mat-form-field appearance="fill">
-                    <mat-label>Subscription Name</mat-label>            
-                    <input matInput formControlName="name">
-                    <mat-error *ngIf="createCustomUserSubForm.get('name')?.getError">Please enter a valid name</mat-error>                        
-                </mat-form-field>
-
-                <mat-form-field appearance="fill">
-                    <mat-label>Date Added</mat-label>            
-                    <input matInput formControlName="dateadded">
-                    <mat-error *ngIf="createCustomUserSubForm.get('dateadded')?.getError">yyyy-mm-dd hh:mm:ss</mat-error>                        
-                    
-                </mat-form-field>
-
-                <mat-form-field appearance="fill">
-                    <mat-label>Date Removed</mat-label>            
-                    <input matInput formControlName="dateremoved">
-                    <mat-error *ngIf="createCustomUserSubForm.get('dateremoved')?.getError">yyyy-mm-dd hh:mm:ss</mat-error>                        
-                </mat-form-field>
-
-                <mat-card-actions>
-                    <button type="submit" mat-raised-button color="primary" [disabled]="createCustomUserSubForm.invalid">Add Subscription</button>
-                </mat-card-actions>
-
-                <br><br>
-            </form>
-        </mat-card-content> 
-    </mat-card>   
-
-    <mat-card class="delete-sub">
-        <mat-card-content >
-            <form [formGroup]="removeUserSubForm" (ngSubmit)="removeUserSubscription()">                    
-                <mat-form-field appearance="fill">
-                    <mat-label>Subscription Name</mat-label>            
-                    <input matInput formControlName="name">
-                    <mat-error *ngIf="removeUserSubForm.get('name')?.getError">Please enter a valid name</mat-error>                        
-                </mat-form-field>
-
-                <mat-card-actions>
-                    <button type="submit" mat-raised-button color="primary" [disabled]="removeUserSubForm.invalid">Cancel Subscription</button>
-                </mat-card-actions>
-            </form>
-            
-            <br><br>
-        </mat-card-content>      
-    </mat-card>  
--->
+    </div>    
 </div>
 
 <div class="subscription-report">
-
-    <app-report></app-report>
+    <app-report [username]="username"></app-report>
     <!--Done so the background moves naturally with the accordion-->
     <div class="report-spacer">
         <br><br><br><br><br><br><br><Br>
-    </div>
-  
+    </div>  
 </div>
 
 <div class="graph-display">
