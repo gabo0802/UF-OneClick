@@ -11,7 +11,8 @@ Front-End
 
 Back-End
 * Added UserSubID to MySQL table UserSubs
-* Added Delete Functionality by value UserSubID
-* Fixed Bugs in Reminder Sending, Delete Functionality, and Date Function (Angular)
-* Added Timezones
-* Avg Price of Subscriptions and Avg Age of Subscriptions Queries Added
+* Added DeleteUserSub by value UserSubID functionality
+* Fixed Bugs in SendAllReminders, DeleteUserSub, and dateToString Function (Angular)
+* Added Specific Timezones
+* Average Price of Subscriptions and Average Age of Subscriptions Queries Added
+* Code cleanup
