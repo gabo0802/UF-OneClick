@@ -69,13 +69,13 @@ func main() {
 
 		api.GET("/subscriptions/active", handler.GetAllCurrentUserSubscriptions(true))
 		api.GET("/subscriptions", handler.GetAllCurrentUserSubscriptions(false))
-
+		api.GET("/subscriptions/services", handler.GetAllSubscriptionServices())
 		api.POST("/subscriptions/createsubscription", handler.NewSubscriptionService)
 		api.POST("/subscriptions/addsubscription", handler.NewUserSubscription)
 		api.POST("/subscriptions/addoldsubscription", handler.NewPreviousUserSubscription)
 		api.POST("/subscriptions/cancelsubscription", handler.CancelSubscriptionService)
-		api.DELETE("/subscriptions/deletesubscriptionnoid", handler.DeleteUserSub)
-		api.DELETE("/subscriptions/deletesubscription", handler.DeleteUserSubID)
+		// api.DELETE("/subscriptions/deletesubscriptionnoid", handler.DeleteUserSub)
+		api.DELETE("/subscriptions/:id", handler.DeleteUserSubID)
 
 		api.POST("/longestsub", handler.GetMostUsedUserSubscription(false, false))
 		api.POST("/longestcontinoussub", handler.GetMostUsedUserSubscription(true, false))

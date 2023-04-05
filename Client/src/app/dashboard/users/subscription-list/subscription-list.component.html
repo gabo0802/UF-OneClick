@@ -43,7 +43,7 @@
               <mat-icon id="reactivate">check_circle</mat-icon>
               <span>Reactivate</span>
             </button>            
-            <button mat-menu-item *ngIf="!active">
+            <button mat-menu-item (click)="deleteSub(sub.usersubid)" *ngIf="!active">
               <mat-icon id="warning">delete</mat-icon>
               <span>Delete</span>
             </button>            

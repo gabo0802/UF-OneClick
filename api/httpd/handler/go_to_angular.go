@@ -924,10 +924,9 @@ func DeleteUserSub(c *gin.Context) {
 }
 
 func DeleteUserSubID(c *gin.Context) {
-	var userSubscriptionData userData
-	c.BindJSON(&userSubscriptionData)
+	var subID = c.Param("id")
 
-	result, err := currentDB.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", userSubscriptionData.UserSubID)
+	result, err := currentDB.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", subID)
 	if err != nil {
 		c.JSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue!"})
 	}

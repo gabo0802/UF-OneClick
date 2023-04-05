@@ -78,7 +78,7 @@ export class ApiService {
       map( (res: Object) => {
 
         let userSubs: Subscription[] = [];
-
+        
         let data = JSON.stringify(res);
         let subData = JSON.parse(data);
         
@@ -87,7 +87,7 @@ export class ApiService {
           //Converts to a javascript date Object
           //Provisional as of now for easier displaying of date added in subscription table
           sub.dateadded = new Date(sub.dateadded);
-
+          
           //checks to see if they have been removed, which means inactive
           if(sub.dateremoved !== ""){
             sub.dateremoved = new Date(sub.dateremoved);
@@ -125,6 +125,11 @@ export class ApiService {
     let subData = {name: subName};
 
     return this.http.post('api/subscriptions/cancelsubscription', subData);
+  }
+
+  //deletes a specific inactive user subscription
+  deleteUserSubscription(subID: string): Observable<Object> {
+    return this.http.delete(`api/subscriptions/${subID}`);
   }
 
   reactivateSubscription(subName: string): Observable<Object> {

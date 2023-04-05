@@ -22,7 +22,7 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   @Output() isActive = new EventEmitter<boolean>();
   @Output() isInactive = new EventEmitter<boolean>();
   @ViewChild(MatPaginator) paginator: MatPaginator = {} as MatPaginator;
-  @ViewChild(MatSort) sort: MatSort = {} as MatSort;
+  @ViewChild(MatSort) sort: MatSort = new MatSort;
 
   dataSource = new MatTableDataSource<Subscription>([]);
   active: boolean = true;
@@ -110,6 +110,19 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         this.dialogs.errorDialog("Error Deleting Subscription!", "There was an error deleting your subscription. Please try again later.");
       }
     })
+  }
+
+  deleteSub(subID: string){
+    
+    this.api.deleteUserSubscription(subID).subscribe({
+
+      next: (res) => {        
+        this.getInactive();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.dialogs.errorDialog("Error Deleting Subscription!", "An error occured while trying to delete your subscription. Please try again later.");
+      }
+    });
   }
 
   reactivateSub(subName: string): void {
