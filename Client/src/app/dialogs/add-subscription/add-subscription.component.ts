@@ -26,7 +26,7 @@ export class AddSubscriptionComponent implements OnInit{
   addSubscriptionForm = new FormGroup({    
     'name': new FormControl('', [Validators.required, Validators.pattern('^[ A-z0-9()\'+]+$')]),
     'price': new FormControl('', [Validators.required, Validators.pattern('^\\d{1,2}(.\\d\\d)?$')]),
-    'dateadded': new FormControl<Date>(new Date(),[Validators.required]),
+    'dateadded': new FormControl<Date>(this.maxDate,[Validators.required]),
   });  
   
   ngOnInit(): void {       
@@ -97,7 +97,7 @@ export class AddSubscriptionComponent implements OnInit{
 
     //checks to make sure there is an actual date
     if(startDate === null && startDate === undefined){
-      startDate = new Date();
+      startDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
     }
     
     //Initial hack for checking whether it's a default sub in the list
