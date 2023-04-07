@@ -1,63 +1,49 @@
-<!-- Main Code Starts-->
-<div class="intro">
+<mat-sidenav-container>
+    <mat-sidenav opened="true" mode="side" disableClose="true">
+        <mat-nav-list>
+            <a mat-list-item [class.active]="displaySubscriptions" class="e" (click)="displaySubscriptions()"><span class="nav-item">Subscriptions</span></a>
+            <a mat-list-item (click)="displayReport()"><span class="nav-item">Report</span></a>
+        </mat-nav-list>
 
-    <!-- Header breaks -->
-    <div><br><br><br></div>
-
-    <mat-card class="title-card" >
-        <mat-card-header class="title-header">
-            <h1 class="title">Welcome {{username}} to the UF-OneClick Subscription Manager!</h1>
-        </mat-card-header>
-        <mat-card-content>
-            
-        </mat-card-content>
-    </mat-card>
-
-</div>
-
-<div class="subscription-manager" align="center" >
-
- <h2>Subscription List:</h2>
-    <div class="users-container">
-        <div class="content-container">
-            <app-welcome-header [username]="username"></app-welcome-header>
-            <app-subscription-list [subscriptionList]="subscriptionList" 
-            (updateSubscriptions)="updateActiveSubscriptions($event)"
-            (isActive)="updateActiveSubscriptions($event)"
-            (isInactive)="updateInactiveSubscriptions($event)"></app-subscription-list>
+    </mat-sidenav>
+    <mat-sidenav-content id="content">
+        <div class="subscription-manager" align="center" *ngIf="activeSubscriptions">
+            <mat-card id="table">
+                <mat-card-header>
+                <mat-card-title id="title">
+                    <div>
+                        <h3>{{ todayDate | date: 'longDate'}}</h3>
+                    </div>
+                    <div>
+                        <h3>{{ username }}'s Subscription List</h3>
+                    </div>
+                    
+                </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>                      
+                       <app-subscription-list [subscriptionList]="subscriptionList" 
+                       (updateSubscriptions)="updateActiveSubscriptions($event)"
+                       (isActive)="updateActiveSubscriptions($event)"
+                       (isInactive)="updateInactiveSubscriptions($event)"></app-subscription-list>
+                </mat-card-content>
+            </mat-card>                  
         </div>
-    </div>    
-</div>
-
-<div class="subscription-report">
-    <app-report [username]="username"></app-report>
-    <!--Done so the background moves naturally with the accordion-->
-    <div class="report-spacer">
-        <br><br><br><br><br><br><br><Br>
-    </div>  
-</div>
-
-<div class="graph-display">
-
-</div>
+        <div class="subscription-report" *ngIf="activeReport">
+            <app-report [username]="username"></app-report>
+            <!--Done so the background moves naturally with the accordion-->
+            <div class="report-spacer">
+                <br><br><br><br><br><br><br><Br>
+            </div>  
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
 
 
-<div class="TBA-features">
+<!-- <div class="graph-display">
+
+</div> -->
+
+
+<!-- <div class="TBA-features">
     <h1>More Features TBA</h1>
-</div>
-
-  <!-- <mat-card-content>
-        <form [formGroup]="newsLetterForm" (ngSubmit)="newsLetter()" [hidden]="adminButtonVisible">                   
-            <textarea type="text" id="newslettermessage" name="name" rows="6" cols="50">Enter Message For Newsletter</textarea>
-
-            <mat-card-actions>
-                <button type="submit" mat-raised-button color="primary">Send Newsletter</button>
-            </mat-card-actions>
-        </form>
-    </mat-card-content>   -->
-    <!-- Vladimir Code
-    <div id="allSubs"></div> 
-    <div id="longestSub"></div> 
-    <button type="submit" mat-raised-button color="primary" (click) ="left()"> ← </button>
-    <button type="submit" mat-raised-button color="primary" (click) ="right()"> → </button>
--->
+</div> -->

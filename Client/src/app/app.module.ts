@@ -27,7 +27,6 @@ import { PasswordFieldComponent } from './profile/input-fields/password-field/pa
 import { PasswordResetComponent } from './dialogs/password-reset/password-reset.component';
 import { TimezoneFieldComponent } from './profile/input-fields/timezone-field/timezone-field.component';
 import { DeleteAccountComponent } from './dialogs/delete-account/delete-account.component';
-import { WelcomeHeaderComponent } from './dashboard/users/welcome-header/welcome-header.component';
 import { SubscriptionListComponent } from './dashboard/users/subscription-list/subscription-list.component';
 import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
 import { AddInactiveSubscriptionComponent } from './dialogs/add-inactive-subscription/add-inactive-subscription.component';
@@ -53,7 +52,6 @@ import { ReportComponent } from './dashboard/users/report/report.component';
     PasswordResetComponent,
     TimezoneFieldComponent,
     DeleteAccountComponent,
-    WelcomeHeaderComponent,
     SubscriptionListComponent,
     AddSubscriptionComponent,
     AddInactiveSubscriptionComponent,
