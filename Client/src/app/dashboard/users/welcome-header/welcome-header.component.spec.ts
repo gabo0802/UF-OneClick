@@ -29,7 +29,7 @@ describe('WelcomeHeaderComponent', () => {
 
   it('currentDate should be today', () => {
 
-    let todayDate: Date = new Date();
+    let todayDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
     expect(component.currentDate).toEqual(todayDate);
   });

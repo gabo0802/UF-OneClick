@@ -7,6 +7,7 @@ import { SubscriptionListComponent } from './subscription-list/subscription-list
 
 import { UsersComponent } from './users.component';
 import { WelcomeHeaderComponent } from './welcome-header/welcome-header.component';
+import { ReportComponent } from './report/report.component';
 
 describe('UsersComponent', () => {
   let component: UsersComponent;
@@ -18,6 +19,7 @@ describe('UsersComponent', () => {
         UsersComponent,
         SubscriptionListComponent,
         WelcomeHeaderComponent,
+        ReportComponent
        ],
        imports: [
         HttpClientModule, 
