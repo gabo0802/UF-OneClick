@@ -72,7 +72,7 @@ export class AddInactiveSubscriptionComponent {
     return sub && sub.name ? sub.name : '';
   }
 
-  onSelected(option: MatOption) {  
+  onSelected(option: MatOption): void {  
     this.addInactiveSubForm.controls['price'].setValue(option.value.price);
     this.addInactiveSubForm.controls['price'].disable();    
   }
@@ -100,10 +100,6 @@ export class AddInactiveSubscriptionComponent {
 
     let subStartDate = dateToStringOffset(rawStartDate, 1);
     let subEndDate = dateToString(rawEndDate);
-
-    console.log(subStartDate)
-    console.log(subEndDate)
-
 
     //Initial hack for checking whether it's a default sub
     //checks if not object

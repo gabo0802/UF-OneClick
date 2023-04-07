@@ -20,13 +20,22 @@ describe('SubscriptionListComponent', () => {
       })
     })
 
-    it('Add Subscription Button has text Add Subscription', () => {
+    it('Add Active Subscription Button has text Add Active Subscription', () => {
         cy.mount(SubscriptionListComponent, {
           imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],         
           providers: [ApiService, AuthGuard, AuthService, Router]
         })
 
-        cy.get('[class="buttons-container"]').get('button').should('have.text', 'Add Subscription')
+        cy.get('[class="buttons-container mat-elevation-z3"]').get('button').first().should('have.text', 'Add Active Subscription')
     })
+
+    it('Add Inactive Subscription Button has text Add Inactive Subscription', () => {
+      cy.mount(SubscriptionListComponent, {
+        imports: [HttpClientModule, MaterialDesignModule, BrowserAnimationsModule, BrowserModule, AppRoutingModule],         
+        providers: [ApiService, AuthGuard, AuthService, Router]
+      })
+
+      cy.get('[class="buttons-container mat-elevation-z3"]').get('button').next().should('have.text', 'Add Inactive Subscription')
+  })
 
 })
