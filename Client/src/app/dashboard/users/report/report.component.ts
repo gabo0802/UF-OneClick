@@ -4,6 +4,8 @@ import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { MatAccordion } from '@angular/material/expansion';
 import { forkJoin } from 'rxjs';
+import { Subscription } from 'src/app/subscription.model';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @Component({
@@ -15,12 +17,20 @@ import { forkJoin } from 'rxjs';
 export class ReportComponent implements OnInit{
 
   @Input() username: string = '';
-
+  @Input() subscriptionList: Subscription[] = [];
   @ViewChild(MatAccordion) accordion: MatAccordion;
+  
+  //Input for all of the queries
+  longestSub = new MatTableDataSource<Subscription>([]);
+  avgPrice = new MatTableDataSource<Subscription>([]);
+  subAge = new MatTableDataSource<Subscription>([]);
+
+  table1 : boolean = false;
+
 
   constructor(private api: ApiService, private dialogs: DialogsService) {
     this.accordion = new MatAccordion()
-    this.accordion.openAll()
+    this.accordion.closeAll()
   }
 
   ngOnInit(): void {    
@@ -39,4 +49,16 @@ export class ReportComponent implements OnInit{
     // });
   }
 
+  // Placeholder functions for the queries
+  calculateLongestSub(): void {
+
+  }
+
+  calculateAvgPrice(): void {
+
+  }
+
+  calculateAvgSubAge(): void {
+
+  }
 }

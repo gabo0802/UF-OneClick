@@ -20,15 +20,23 @@
                   </mat-expansion-panel-header>
               
                   <!-- put longest subscription code here -->
-                  <mat-form-field appearance="fill">
-                    <mat-label>First name</mat-label>
-                    <input matInput>
-                  </mat-form-field>
-              
-                  <mat-form-field appearance="fill">
-                    <mat-label>Age</mat-label>
-                    <input matInput type="number" min="1">
-                  </mat-form-field>
+                  <!-- change the css so it follows flex spacing for the table
+                    Should we do a single subscriptionList array that changes based on the state of the accordion?
+                    or a different subscription list for each table that we show?
+                  -->
+                  <table>
+                    <tr>
+                      <th> Name </th>
+                      <th> Price </th>
+                      <th>Date Added</th>
+                    </tr>
+                    <tr *ngFor="let i of subscriptionList ">
+                      <td>{{i.name}} </td>
+                      <td>{{i.price}}</td>
+                      <td>{{i.dateadded}}</td>
+                    </tr>
+                </table>
+                  
                 </mat-expansion-panel>
 
                 <mat-expansion-panel disabled>
