@@ -47,6 +47,20 @@ export class ReportComponent implements OnInit{
     //     //process errors here
     //   }
     // });
+
+    this.api.subQueries(0).subscribe({
+
+      next: (res: Subscription[]) => {
+
+        this.subscriptionList = res;
+      },
+      error: (error: HttpErrorResponse) => {
+        
+        this.dialogs.errorDialog("ERR", "Failed to fetch query");
+      }
+    });
+    
+
   }
 
   // Placeholder functions for the queries
