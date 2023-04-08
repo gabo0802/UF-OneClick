@@ -167,7 +167,7 @@ export class ApiService {
   State is a number that determines which query we are looking for in the report:
   You can read the cases there
   */
-  subQueries(state: number): Observable<Subscription[]> {
+  subQueries(state: number): Observable<String[]> {
 
     var URL = ""
     switch(state) {
@@ -203,18 +203,13 @@ export class ApiService {
     return this.http.get(URL).pipe(
       map( (res: Object) => {
 
-        let userSubs: Subscription[] = [];
-
         let data = JSON.stringify(res);
-        let subData = JSON.parse(data);
-        
-        for(const sub of subData){        
 
-          sub.dateadded = new Date(sub.dateadded);
-          userSubs.push(sub);          
-        }
+        data = data.substring(1, data.length -1);
+        data = data.replaceAll("\"", "");
+        data = data.replace(": ", " ");
 
-        return userSubs;
+        return data.split(":");
       })
     );
   }

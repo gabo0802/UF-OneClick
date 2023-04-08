@@ -16,14 +16,12 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class ReportComponent implements OnInit{
 
-  @Input() username: string = '';
+  @Input() username: String = '';
   @Input() subscriptionList: Subscription[] = [];
   @ViewChild(MatAccordion) accordion: MatAccordion;
   
   //Input for all of the queries
-  longestSub = new MatTableDataSource<Subscription>([]);
-  avgPrice = new MatTableDataSource<Subscription>([]);
-  subAge = new MatTableDataSource<Subscription>([]);
+  longestSub : String[] = [];
 
   table1 : boolean = false;
 
@@ -50,16 +48,16 @@ export class ReportComponent implements OnInit{
 
     this.api.subQueries(0).subscribe({
 
-      next: (res: Subscription[]) => {
+      next: (res: String[]) => {
 
-        this.subscriptionList = res;
+        this.longestSub = res;
       },
       error: (error: HttpErrorResponse) => {
         
         this.dialogs.errorDialog("ERR", "Failed to fetch query");
       }
     });
-    
+
 
   }
 
