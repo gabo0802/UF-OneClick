@@ -162,4 +162,56 @@ export class ApiService {
   deleteUserAccount(): Observable<Object> {
     return this.http.delete('api/deleteuser');
   }
+
+  /*
+  State is a number that determines which query we are looking for in the report:
+  You can read the cases there
+  */
+  subQueries(state: number): Observable<String[]> {
+
+    var URL = ""
+    switch(state) {
+      case 0:
+        URL = "/api/longestsub";
+        break;
+      case 1:
+        URL = "/api/longestcontinoussub";
+        break;
+      case 2:
+        URL = "/api/longestactivesub";
+        break;
+      case 3:
+        URL = "/api/avgpriceactivesub";
+        break;
+      case 4:
+        URL = "/api/avgpriceallsubs";
+        break;
+      case 5:
+        URL = "/api/avgageallsubs";
+        break;
+      case 6:
+        URL = "/api/avgageactivesubs";
+        break;
+      case 7:
+        URL = "/api/avgagecontinuoussubs";
+        break;
+      default:
+        URL = "/api/longestusb";
+
+    }
+
+    return this.http.get(URL).pipe(
+      map( (res: Object) => {
+
+        let data = JSON.stringify(res);
+
+        data = data.substring(1, data.length -1);
+        data = data.replaceAll("\"", "");
+        data = data.replace(": ", " ");
+
+        return data.split(":");
+      })
+    );
+  }
+
 }

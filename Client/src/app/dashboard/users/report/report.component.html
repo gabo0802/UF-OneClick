@@ -8,7 +8,8 @@
                 <button mat-button (click)="accordion.closeAll()">Collapse All</button>
               </div>
               <mat-accordion class="accordion-headers-align" multi>
-                <mat-expansion-panel>
+                <!-- change the css so the [expanded] variable doesn't mess with font color -->
+                <mat-expansion-panel  [expanded]="panelOpenState" disabled>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
                       Longest Subscriptions
@@ -24,22 +25,16 @@
                     Should we do a single subscriptionList array that changes based on the state of the accordion?
                     or a different subscription list for each table that we show?
                   -->
-                  <table>
-                    <tr>
-                      <th> Name </th>
-                      <th> Price </th>
-                      <th>Date Added</th>
-                    </tr>
-                    <tr *ngFor="let i of subscriptionList ">
-                      <td>{{i.name}} </td>
-                      <td>{{i.price}}</td>
-                      <td>{{i.dateadded}}</td>
-                    </tr>
-                </table>
+                  <mat-card>
+                    <mat-card-content>
+                      this is a test
+                    </mat-card-content>
+                  </mat-card>
+                  
                   
                 </mat-expansion-panel>
 
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
                       Avg Price
@@ -51,7 +46,7 @@
                   </mat-expansion-panel-header>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Age
@@ -63,7 +58,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query
@@ -75,7 +70,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query
@@ -87,7 +82,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query
@@ -99,7 +94,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query
@@ -111,7 +106,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query
@@ -123,7 +118,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query
@@ -135,7 +130,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query
@@ -147,7 +142,7 @@
                     </mat-expansion-panel-header>
                   </mat-expansion-panel>
                   
-                <mat-expansion-panel disabled>
+                <mat-expansion-panel [expanded]="panelOpenState" disabled>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         Query

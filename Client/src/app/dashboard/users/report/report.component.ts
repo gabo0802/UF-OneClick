@@ -16,21 +16,19 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class ReportComponent implements OnInit{
 
-  @Input() username: string = '';
+  @Input() username: String = '';
   @Input() subscriptionList: Subscription[] = [];
   @ViewChild(MatAccordion) accordion: MatAccordion;
   
   //Input for all of the queries
-  longestSub = new MatTableDataSource<Subscription>([]);
-  avgPrice = new MatTableDataSource<Subscription>([]);
-  subAge = new MatTableDataSource<Subscription>([]);
+  longestSub : String[] = [];
 
-  table1 : boolean = false;
+  panelOpenState : boolean = true;
 
 
   constructor(private api: ApiService, private dialogs: DialogsService) {
     this.accordion = new MatAccordion()
-    this.accordion.closeAll()
+    this.accordion.openAll()
   }
 
   ngOnInit(): void {    
@@ -47,6 +45,20 @@ export class ReportComponent implements OnInit{
     //     //process errors here
     //   }
     // });
+
+    this.api.subQueries(0).subscribe({
+
+      next: (res: String[]) => {
+
+        this.longestSub = res;
+      },
+      error: (error: HttpErrorResponse) => {
+        
+        this.dialogs.errorDialog("ERR", "Failed to fetch query");
+      }
+    });
+
+
   }
 
   // Placeholder functions for the queries
