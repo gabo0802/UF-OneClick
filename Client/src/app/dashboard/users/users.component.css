@@ -1,5 +1,5 @@
 #content {
-    height: 100vh;
+    height: 100%;
 }
 
 #table {
@@ -27,10 +27,6 @@
 .nav-item {
     color: white;
 }
-a.mat-list-item:active {
-    background-color: pink;
- }
-
 
 /* 
 For future reference on aligning items: 
@@ -49,7 +45,7 @@ For future reference on aligning items:
     height: 100%;
     padding: 4%;
     padding-left: 2%;
-    min-height: 70%;
+    min-height: 100vh;
 }
 
 
@@ -74,7 +70,7 @@ For future reference on aligning items:
     width: 100%;
     height: 100%;
     padding: 1%;
-    min-height: 80%;
+    min-height: 100vh;
     text-align: center;
 }
 
