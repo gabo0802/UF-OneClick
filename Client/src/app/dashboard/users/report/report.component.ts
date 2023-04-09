@@ -23,12 +23,12 @@ export class ReportComponent implements OnInit{
   //Input for all of the queries
   longestSub : String[] = [];
 
-  table1 : boolean = false;
+  panelOpenState : boolean = true;
 
 
   constructor(private api: ApiService, private dialogs: DialogsService) {
     this.accordion = new MatAccordion()
-    this.accordion.closeAll()
+    this.accordion.openAll()
   }
 
   ngOnInit(): void {
