@@ -8,6 +8,7 @@
                 <button mat-button (click)="accordion.closeAll()">Collapse All</button>
               </div>
               <mat-accordion class="accordion-headers-align" multi>
+                <!-- change the css so the [expanded] variable doesn't mess with font color -->
                 <mat-expansion-panel  [expanded]="panelOpenState" disabled>
                   <mat-expansion-panel-header>
                     <mat-panel-title>
