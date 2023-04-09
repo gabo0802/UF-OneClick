@@ -1,7 +1,6 @@
 
-.intro {
-  margin-top: 60px;
-  height: 75%;
+.intro {  
+  height: 85%;
   width: 100%;
   content: "";
   background: var(--background-image);

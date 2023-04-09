@@ -31,7 +31,7 @@ export class ReportComponent implements OnInit{
     this.accordion.openAll()
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     
     // forkJoin({
     //   NameHere: apicallhere,

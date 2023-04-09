@@ -1,63 +1,35 @@
-.intro {
-    margin-top: 60px;  
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-image: var(--background-image3);
-    background-color: rgba(241, 237, 237, 0.925);
-    /*display: flex;
-    justify-content: left;
-    align-items: center;  
-    color: white;
-    border-bottom: solid 5px var(--UF-Orange);
-  */
+#content {
+    height: 100vh;
 }
-.title-card {
-    background-color: var(--UF-Orange);
-    margin-top: 10rem;
-    margin-left: 50px;
-    margin-right: 50px;
+
+#table {
+    width: 80%;
+    padding: 10px;
+    height: max-content;
 }
-.title-header {
-    margin: auto;
-}
-.title {
-    font-weight: bold;
+
+#title {
     display: flex;
-    background-color: var(--UF-Orange);
-    font-size: 3rem;
-    color: white;
-    text-align: center;
-  }
-  
-.create-unknown-sub {
-    background-color: transparent;
+    justify-content: space-between;
+    padding-top: 5px;
+    margin-bottom: 5px;    
 }
 
-.create-unknown-sub > .mat-card-content {
+.mat-mdc-card-header {
     display: block;
-    margin: auto;
+    margin-bottom: 10px;
 }
 
-.create-known-sub {
-    background-color: transparent;
-
+.mat-drawer {
+    background-color: #1978e4;
 }
 
-.get-sub {
-    background-color: transparent;
-
+.nav-item {
+    color: white;
 }
-
-.delete-sub {
-    background-color: transparent;
-
-}
-.content-container {
-    max-width: 975px;
-    width: 100%;
-}
+a.mat-list-item:active {
+    background-color: pink;
+ }
 
 
 /* 
@@ -66,25 +38,20 @@ For future reference on aligning items:
     2. The properties "align" and "layout-align" seem to work best
     with angular materials stuff.
 */
-.subscription-manager {
-    border-top: solid 5px var(--UF-Orange);
+.subscription-manager {    
     /*min-height: 100%;
     min-width: 100%; */
     background-color: rgba(121, 219, 252, 0.774);
-
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
-    height: auto;
-    padding: 1%;
+    height: 100%;
+    padding: 4%;
+    padding-left: 2%;
     min-height: 70%;
 }
 
-
-.users-container {
-    padding: 4rem;
-}
 
 .graph-display {
     background-color: rgba(121, 219, 252, 0.774);
@@ -105,7 +72,7 @@ For future reference on aligning items:
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
-    height: auto;
+    height: 100%;
     padding: 1%;
     min-height: 80%;
     text-align: center;

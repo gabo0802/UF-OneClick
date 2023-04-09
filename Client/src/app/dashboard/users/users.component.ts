@@ -22,6 +22,9 @@ export class UsersComponent implements OnInit{
 
   username: string = '';
   subscriptionList: Subscription[] = [];
+  todayDate: Date = new Date();
+  activeSubscriptions: boolean = true;
+  activeReport: boolean = false;
 
   ngOnInit(): void {
 
@@ -79,5 +82,17 @@ export class UsersComponent implements OnInit{
         }
       });
     }
+  }
+
+  displayReport(): void {
+
+    this.activeSubscriptions = false;
+    this.activeReport = true;
+  }
+
+  displaySubscriptions(): void {
+
+    this.activeSubscriptions = true;
+    this.activeReport = false;
   }
 }
