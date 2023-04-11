@@ -196,7 +196,7 @@ export class ApiService {
         URL = "/api/avgagecontinuoussubs";
         break;
       default:
-        URL = "/api/longestusb";
+        URL = "/api/longestsub";
 
     }
 

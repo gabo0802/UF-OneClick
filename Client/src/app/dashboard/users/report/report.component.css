@@ -1,8 +1,4 @@
-h2 {
-  padding-top: 25px;
-  font-size: 2em;
-  margin-bottom: -50px;
-}
+
 .sub-box {
   background-color: white;
  position: relative;
@@ -19,3 +15,13 @@ h2 {
   font-weight: 500;
   font-size: 1.5em;
 }
+
+mat-card-title {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+/* This won't work, not sure how to fix it */
+/* mat-expansion-panel > mat-panel-description{
+  color: black;
+  font-weight: 700;
+} */
