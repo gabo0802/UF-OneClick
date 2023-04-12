@@ -168,8 +168,8 @@ export class ApiService {
   You can read the cases there
   */
   subQueries(state: number): Observable<String[]> {
-
     var URL = ""
+    
     switch(state) {
       case 0:
         URL = "/api/longestsub";
@@ -197,7 +197,7 @@ export class ApiService {
         break;
       default:
         URL = "/api/longestsub";
-
+        break;
     }
 
     return this.http.get(URL).pipe(
