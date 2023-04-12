@@ -1,9 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { Subscription } from 'src/app/subscription.model';
-import { MatAccordion } from '@angular/material/expansion';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -13,18 +12,13 @@ import { forkJoin } from 'rxjs';
 })
 export class UsersComponent implements OnInit{
 
-  @ViewChild(MatAccordion) accordion: MatAccordion;
-
-  constructor(private api: ApiService, private dialogs: DialogsService) {
-    this.accordion = new MatAccordion()
-    this.accordion.openAll();
-  }
+  constructor(private api: ApiService, private dialogs: DialogsService) { }
 
   username: string = '';
   subscriptionList: Subscription[] = [];
   todayDate: Date = new Date();
-  activeSubscriptions: boolean = true;
-  activeReport: boolean = false;
+  displaySubscriptions: boolean = true;
+  displayReport: boolean = false;
 
   ngOnInit(): void {
 
@@ -84,15 +78,25 @@ export class UsersComponent implements OnInit{
     }
   }
 
-  displayReport(): void {
+  showReport(): void {
 
-    this.activeSubscriptions = false;
-    this.activeReport = true;
+    if(this.displayReport !== true){
+
+      this.displaySubscriptions = false;
+      this.displayReport = true;
+    }
   }
 
-  displaySubscriptions(): void {
+  showSubscriptions(): void {
 
-    this.activeSubscriptions = true;
-    this.activeReport = false;
+    //makes sure subscriptions aren't already displaying
+    if(this.displaySubscriptions !== true){
+
+      this.displaySubscriptions = true;
+      this.displayReport = false;
+
+      this.updateActiveSubscriptions(true);
+    }
+    
   }
 }
