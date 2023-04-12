@@ -60,6 +60,9 @@ const (
 	oneDayInSeconds    = (24 * 60 * 60)
 	oneHourInSeconds   = (60 * 60)
 	oneMinuteInSeconds = 60
+
+	loginTime = 60 * 60 * 10
+	//10 hours
 )
 
 // Global Variables:
@@ -327,7 +330,7 @@ func DailyReminder(c *gin.Context) {
 		} else if errorCode == -401 {
 			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"Error": "Emails Not Sent"})
 		} else {
-			c.SetCookie("didReminder", "yes", 60*60*24, "/", "localhost", false, true)
+			c.SetCookie("didReminder", "yes", 60*60*24, "/", "localhost", false, true) //cookie lasts 24 hours
 			c.JSON(http.StatusOK, gin.H{"Success": "Emails Were Sent!"})
 		}
 	} else {
@@ -569,7 +572,7 @@ func TryLogin(c *gin.Context) { // gin.Context parameter.
 		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"Error": "Database Connection Issue"})
 
 	} else {
-		c.SetCookie("currentUserID", strconv.Itoa(currentID), 60*60, "/", "localhost", false, false)
+		c.SetCookie("currentUserID", strconv.Itoa(currentID), loginTime, "/", "localhost", false, false)
 		c.JSON(http.StatusOK, gin.H{"Success": "Logged In"})
 
 		//start2FA()
