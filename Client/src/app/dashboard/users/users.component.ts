@@ -16,7 +16,7 @@ export class UsersComponent implements OnInit{
 
   username: string = '';
   subscriptionList: Subscription[] = [];
-  todayDate: Date = new Date();
+  todayDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
   displaySubscriptions: boolean = true;
   displayReport: boolean = false;
 
