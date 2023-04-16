@@ -107,7 +107,7 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         this.updateSubscriptions.emit(true);
       },
       error: (error: HttpErrorResponse) => {
-        this.dialogs.errorDialog("Error Deleting Subscription!", "There was an error deleting your subscription. Please try again later.");
+        this.dialogs.errorDialog("Error Deactivating Subscription!", "There was an error deactivating your subscription. Please try again later.");
       }
     })
   }
@@ -135,8 +135,8 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         console.log("Reactivation success");
       },
       error: (error: HttpErrorResponse) => {
-
-        this.dialogs.errorDialog("Error Adding Subscription", "Error adding!");
+        
+        this.dialogs.errorDialog("Error Adding Subscription", "Error adding! " + error["error"]["Error"]);
       }
     })
   }
