@@ -1272,3 +1272,20 @@ func GetAllUserData() gin.HandlerFunc {
 		}
 	}
 }
+
+type dateInfo struct {
+	Month int `json:"month"`
+	Year  int `json:"year"`
+}
+
+func GetTotalPriceForMonth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var monthyearInfo dateInfo
+		c.BindJSON(&monthyearInfo)
+
+		monthNum := monthyearInfo.Month
+		yearNum := monthyearInfo.Year
+
+		c.IndentedJSON(http.StatusOK, gin.H{"Total Cost": "$" + MySQL.GetPriceForMonth(currentDB, currentID, monthNum, yearNum)})
+	}
+}
