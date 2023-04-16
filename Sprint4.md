@@ -47,6 +47,41 @@ Add-Inactive Subscription Component:
 * end date entered beyond maximimum limit throws maxDate error
 * start date entered below minimum limit throws minDate error
 
+Users Component:
+* displaySubscriptions initial value should be true
+* displayReport initial value should be false
+* todayDate should be today
+* When subscriptions displayed, clicking Report side nav should set displaySubscriptions to false
+* When subscriptions displayed, clicking Report side nav should set displayReport to true
+* UpdateActiveSubscriptions should be called when switching to Subscriptions
+* user with username dragon should have username dragon
+
+Api Service:
+* can GET user information from getUserInfo
+* can GET user active Subscriptions from getActiveUserSubscriptions
+* can GET user all Subscriptions (Services) from getAllSubscriptions
+* can GET user all inactive Subscriptions from getAllInactiveUserSubscriptions
+* can POST user information to login
+* can POST user information to signup
+* can POST user subscription information to createUserSubscription
+* can POST user subscription name to addActiveUserSubscription
+* can POST user subscription info to addOldUserSubscription
+* can POST user subscription info to deactivateSubscription
+* can DELETE user subscription to deactivateSubscription
+* can POST user subscription info to reactivateSubscription
+* can PUT username info to updateUsername
+* can PUT user email info to updateUserEmail
+* can PUT user passwords info to updateUserPassword
+* can PUT user passwords info to updateTimezone
+* can DELETE user account to deleteUserAccount
+
+Subscription list Component:
+* subscription table should have initial column values
+* getActive should change table display columns
+* getActive should change active to true
+* getInactive should change table display columns
+* getInactive should change active to false
+
 **Cypress tests:**
 
 Subscription-list Component:
