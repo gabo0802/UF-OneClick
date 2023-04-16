@@ -163,6 +163,11 @@ export class ApiService {
     return this.http.delete('api/deleteuser');
   }
 
+  comparePrice(monthNumber: number, yearNumber: number): Observable<Object> {
+    let dateData = {month: monthNumber, year: yearNumber};
+    return this.http.post('api/getprice', dateData);
+  } 
+
   /*
   State is a number that determines which query we are looking for in the report:
   You can read the cases there

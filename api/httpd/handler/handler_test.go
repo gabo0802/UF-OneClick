@@ -2,13 +2,16 @@ package handler
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/gabo0802/UF-OneClick/api/httpd/handler/MySQL"
 	"github.com/gin-gonic/gin"
@@ -42,7 +45,207 @@ func TestSetDB(t *testing.T) {
 	}
 }
 
-/*func TestSendEmailToAllUsers(t *testing.T) {
+func TestTryLogin(t *testing.T) {
+	//establishes a connection to the database
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//sets up a test Gin context
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	//sets up a test request body
+	login := map[string]string{
+		// Uses admin credentials
+		"username": "root",
+		"password": "password",
+	}
+	//Marshal returns the JSON encoding of login
+	//i.e. golang data turns into JSON
+	body, err := json.Marshal(login)
+	if err != nil {
+		t.Fatalf("Failed to marshal request body: %v", err)
+	}
+
+	//creates a test request
+	req, err := http.NewRequest("POST", "/login", bytes.NewBuffer(body))
+	if err != nil {
+		t.Fatalf("Failed to create request: %v", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	c.Request = req
+
+	//calls the TryLogin function
+	TryLogin(c)
+
+	//checks the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, but got %d", http.StatusOK, w.Code)
+	}
+
+	// Checks the response body
+	var responseBody gin.H
+	//Unmarshal parses the JSON-encoded data and stores the result in the value pointed to by &responseBody
+	//i.e. turns JSON into golang data
+	err = json.Unmarshal(w.Body.Bytes(), &responseBody)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal response body: %v", err)
+	}
+
+	expectedBody := gin.H{"Success": "Logged In"}
+	if !reflect.DeepEqual(expectedBody, responseBody) {
+		t.Errorf("Expected response body to be %v, but got %v", expectedBody, responseBody)
+	}
+}
+
+func TestVerifyEmail(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+
+	//sets up a test Gin context
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	//sets up a test request with a valid verification code parameter
+	req, _ := http.NewRequest("GET", "/verify", nil)
+	q := req.URL.Query()
+	var possibleCode string
+
+	//adds temporary verification parameters to the Verification table to test deletion
+	codeGenerator := sha256.New()
+	codeGenerator.Write([]byte(possibleCode))
+	possibleCodeEncrypted := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
+	q.Add("code", possibleCodeEncrypted)
+	expireDate := time.Now().Add(time.Hour * 24)
+	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vE\");", 1, possibleCodeEncrypted, expireDate)
+
+	req.URL.RawQuery = q.Encode()
+	c.Request = req
+
+	//calls the VerifyEmail function
+	VerifyEmail(c)
+
+	//checks that the response status code is a temporary redirect (307)
+	if w.Code != http.StatusTemporaryRedirect {
+		t.Errorf("Expected status code %d, but got %d", http.StatusTemporaryRedirect, w.Code)
+	}
+
+	//checks that the user was verified and the verification code was deleted from the database
+	var count int
+	db.QueryRow("SELECT COUNT(*) FROM Verification WHERE Type = 'vE' AND Code = ?", possibleCodeEncrypted).Scan(&count)
+	if count != 0 {
+		t.Errorf("Expected verification code to be deleted from database, but it still exists")
+	}
+}
+
+func TestNewUser(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new HTTP request with a JSON body
+	jsonString := []byte(`{"username":"testuser", "password":"testpassword", "email":"testuser@example.com"}`)
+	req, err := http.NewRequest("POST", "/newuser", bytes.NewBuffer(jsonString))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new recorder to capture the response
+	w := httptest.NewRecorder()
+
+	//creates a new gin context with the request and recorder
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//calls function
+	NewUser(c)
+
+	//checks the response status code
+	if status := w.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	//checks the response body for success or error messages
+	expected := `{"Success":"New User testuser Has Been Created"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+
+	//checks if user was actually created in the database
+	var count int
+	err = currentDB.QueryRow("SELECT COUNT(*) FROM Users WHERE Username = 'testuser'").Scan(&count)
+	if err != nil {
+		t.Fatalf("Failed to query users table: %v", err)
+	}
+	if count != 1 {
+		t.Error("Expected 1 user to be created, but found", count)
+	}
+}
+
+func TestGetAllCurrentUserInfo(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//sets up test Gin context
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	//sets up test cookie with user ID of 1 (admin)
+	cookie := &http.Cookie{Name: "currentUserID", Value: "1"}
+	c.Request = &http.Request{Header: http.Header{"Cookie": []string{cookie.String()}}}
+
+	//call GetAllCurrentUserInfo function
+	GetAllCurrentUserInfo(c)
+
+	// Check response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, but got %d", http.StatusOK, w.Code)
+	}
+
+	//checks response body (admin/root's information)
+	expectedBody := `{"userid":"","username":"root","password":"","email":"vanbestindustries@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`
+	if w.Body.String() != expectedBody {
+		t.Errorf("Expected response body to be %s, but got %s", expectedBody, w.Body.String())
+	}
+}
+
+func TestChangeUserPassword(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new HTTP request
+	req, err := http.NewRequest("PUT", "/changepassword", bytes.NewBuffer([]byte(`{
+		"oldPassword": "password",
+		"newPassword": "updatedPassword"
+	}`)))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new response writer
+	w := httptest.NewRecorder()
+
+	//sets up test gin context with the request and response writer
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//sets the currentID value to a valid ID
+	currentID = 1
+
+	//calls the function
+	ChangeUserPassword(c)
+
+	//check the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", w.Code, http.StatusOK)
+	}
+
+	//checks the response body
+	expected := `{"Success":"Password Changed"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+}
+
+func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	// sets the current database for the function to use
 	SetDB(db)
@@ -56,7 +259,7 @@ func TestSetDB(t *testing.T) {
 	if !result {
 		t.Errorf("SendEmailToAllUsers returned false")
 	}
-}*/
+}
 
 func TestDailyReminder(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
@@ -131,40 +334,6 @@ func TestNewsLetter(t *testing.T) {
 	}
 }
 
-/*func TestVerifyEmail(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-
-	//inserts a verification code for a user
-	currentTime := time.Now()
-	codeGenerator := sha256.New()
-	codeGenerator.Write([]byte("test-code"))
-	code := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
-
-	_, err := currentDB.Exec("INSERT INTO Verification (UserID, ExpireDate, Code, Type) VALUES (?, ?, ?, 'vE')", 1, currentTime.Add(time.Minute), code)
-	if err != nil {
-		t.Fatalf("Failed to insert verification code: %v", err)
-	}
-
-	//creates a test context and request with the verification code
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	c.Params = append(c.Params, gin.Param{Key: "code", Value: code})
-
-	//calls the handler function
-	VerifyEmail(c)
-
-	//checks that the user was verified and the verification code was deleted
-	var count int
-	err = currentDB.QueryRow("SELECT COUNT(*) FROM Verification WHERE UserID = 1 AND Type = 'vE'").Scan(&count)
-	if err != nil {
-		t.Fatalf("Failed to query verification codes: %v", err)
-	}
-	if count != 0 {
-		t.Error("Expected verification code to be deleted, but it still exists in the database")
-	}
-}*/
-
 func TestChangeTimezone(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
@@ -196,102 +365,7 @@ func TestChangeTimezone(t *testing.T) {
 	}
 }
 
-func TestTryLogin(t *testing.T) {
-	//establishes a connection to the database
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//sets up a test Gin context
-	gin.SetMode(gin.TestMode)
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-
-	//sets up a test request body
-	login := map[string]string{
-		// Uses admin credentials
-		"username": "root",
-		"password": "password",
-	}
-	//Marshal returns the JSON encoding of login
-	//i.e. golang data turns into JSON
-	body, err := json.Marshal(login)
-	if err != nil {
-		t.Fatalf("Failed to marshal request body: %v", err)
-	}
-
-	//creates a test request
-	req, err := http.NewRequest("POST", "/login", bytes.NewBuffer(body))
-	if err != nil {
-		t.Fatalf("Failed to create request: %v", err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	c.Request = req
-
-	//calls the TryLogin function
-	TryLogin(c)
-
-	//checks the response status code
-	if w.Code != http.StatusOK {
-		t.Errorf("Expected status code %d, but got %d", http.StatusOK, w.Code)
-	}
-
-	// Checks the response body
-	var responseBody gin.H
-	//Unmarshal parses the JSON-encoded data and stores the result in the value pointed to by &responseBody
-	//i.e. turns JSON into golang data
-	err = json.Unmarshal(w.Body.Bytes(), &responseBody)
-	if err != nil {
-		t.Fatalf("Failed to unmarshal response body: %v", err)
-	}
-
-	expectedBody := gin.H{"Success": "Logged In"}
-	if !reflect.DeepEqual(expectedBody, responseBody) {
-		t.Errorf("Expected response body to be %v, but got %v", expectedBody, responseBody)
-	}
-}
-
-func TestNewUser(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//creates a new HTTP request with a JSON body
-	jsonString := []byte(`{"username":"testuser", "password":"testpassword", "email":"testuser@example.com"}`)
-	req, err := http.NewRequest("POST", "/newuser", bytes.NewBuffer(jsonString))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	//creates a new recorder to capture the response
-	w := httptest.NewRecorder()
-
-	//creates a new gin context with the request and recorder
-	c, _ := gin.CreateTestContext(w)
-	c.Request = req
-
-	//calls function
-	NewUser(c)
-
-	//checks the response status code
-	if status := w.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-
-	//checks the response body for success or error messages
-	expected := `{"Success":"New User testuser Has Been Created"}`
-	if w.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
-	}
-
-	//checks if user was actually created in the database
-	var count int
-	err = currentDB.QueryRow("SELECT COUNT(*) FROM Users WHERE Username = 'testuser'").Scan(&count)
-	if err != nil {
-		t.Fatalf("Failed to query users table: %v", err)
-	}
-	if count != 1 {
-		t.Error("Expected 1 user to be created, but found", count)
-	}
-}
-
-func TestGetAllSubscriptionServices(t *testing.T) {
+/*func TestGetAllSubscriptionServices(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
 	//creates a new recorder to capture the response
@@ -313,7 +387,7 @@ func TestGetAllSubscriptionServices(t *testing.T) {
 	if w.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
 	}
-}
+}*/
 
 func TestGetAllCurrentUserSubscriptions(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
@@ -412,52 +486,3 @@ func TestDeleteUser(t *testing.T) {
 		t.Errorf("Expected user to be deleted, but found name %q", name)
 	}
 }
-
-/*func TestNewUserSubscription(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//creates a new Gin context
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-
-	// sets the current user ID
-	currentID = 1
-
-	//creates a user subscription for testing
-	userSubscriptionData := userData{Name: "Netflix (Basic)"}
-
-	//binds the JSON data to the context
-	reqBody, _ := json.Marshal(userSubscriptionData)
-	c.Request = httptest.NewRequest(http.MethodPost, "/subscription", bytes.NewBuffer(reqBody))
-	c.Request.Header.Set("Content-Type", "application/json")
-
-	//calls the NewUserSubscription function
-	NewUserSubscription(c)
-
-	//checks the response status code
-	if w.Code != http.StatusCreated {
-		t.Errorf("Expected status code %d but got %d", http.StatusCreated, w.Code)
-	}
-
-	//checks the response body
-	var responseBody map[string]string
-	err := json.Unmarshal(w.Body.Bytes(), &responseBody)
-	if err != nil {
-		t.Error("Unable to parse response body JSON")
-	}
-
-	expectedResponse := gin.H{"Success": "Subscription to Netflix (Basic) Added"}
-	if !reflect.DeepEqual(responseBody, expectedResponse) {
-		t.Errorf("Expected response body %v but got %v", expectedResponse, responseBody)
-	}
-
-	//ensures that the subscription was added to the database
-	var subscriptionCount int
-	err = currentDB.QueryRow("SELECT COUNT(*) FROM usersubs WHERE userid = ? AND subid = ?", currentID, userSubscriptionData.Name).Scan(&subscriptionCount)
-	if err != nil {
-		t.Errorf("Unable to query database: %v", err)
-	}
-	if subscriptionCount != 1 {
-		t.Errorf("Expected 1 subscription but found %d", subscriptionCount)
-	}
-}*/

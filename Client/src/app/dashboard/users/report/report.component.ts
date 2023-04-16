@@ -6,7 +6,7 @@ import { MatAccordion } from '@angular/material/expansion';
 import { forkJoin } from 'rxjs';
 import { Subscription } from 'src/app/subscription.model';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-report',
@@ -17,14 +17,14 @@ import { MatTableDataSource } from '@angular/material/table';
 export class ReportComponent implements OnInit{
 
   @Input() username: String = '';
+  cost: String = '$0.00';
   @Input() subscriptionList: Subscription[] = [];
   @ViewChild(MatAccordion) accordion: MatAccordion;
   
   //Input for all of the queries
   myQueries : String[] = [];
-
   panelOpenState : boolean = true;
-
+  comparePriceForm: FormGroup = {} as FormGroup;
 
   constructor(private api: ApiService, private dialogs: DialogsService) {
     this.accordion = new MatAccordion()
@@ -49,6 +49,30 @@ export class ReportComponent implements OnInit{
       });
     }
 
+    this.comparePriceForm = new FormGroup({
+      'month': new FormControl(null, [Validators.required, Validators.pattern('^[0-9]{2}$')]),
+      'year': new FormControl(null, [Validators.required, Validators.pattern('^[0-9]{4}$')]),
+    });
+  }
+
+  onSubmit(){
+    var monthString:string = this.comparePriceForm.get('month')?.value;
+    var yearString:string = this.comparePriceForm.get('year')?.value;
+
+    console.log(monthString)
+    console.log(yearString)
+
+    var monthNumber: number = +monthString
+    var yearNumber: number = +yearString
+
+    console.log(yearNumber)
+    console.log(monthNumber)
+
+    this.api.comparePrice(monthNumber, yearNumber).subscribe({  
+      next: (res) => {
+        this.cost = JSON.stringify(res);
+      }
+    })
   }
 
   // Order of queries (for reference purposes), each query outputs a string array of length 2, the query title and output /  output name and description.

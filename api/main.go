@@ -84,6 +84,8 @@ func main() {
 		api.GET("/avgageactivesubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false, false))
 		api.GET("/avgagecontinuoussubs", handler.GetAvgAgeofAllCurrentUserSubscriptions(false, false))
 
+		api.POST("/getprice", handler.GetTotalPriceForMonth())
+
 		//Admin Commands:
 		api.POST("/news", handler.NewsLetter)
 		api.POST("/reset", handler.ResetALL)
