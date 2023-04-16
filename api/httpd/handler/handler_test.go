@@ -181,6 +181,70 @@ func TestNewUser(t *testing.T) {
 	}
 }
 
+func TestGetAllCurrentUserInfo(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//sets up test Gin context
+	gin.SetMode(gin.TestMode)
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	//sets up test cookie with user ID of 1 (admin)
+	cookie := &http.Cookie{Name: "currentUserID", Value: "1"}
+	c.Request = &http.Request{Header: http.Header{"Cookie": []string{cookie.String()}}}
+
+	//call GetAllCurrentUserInfo function
+	GetAllCurrentUserInfo(c)
+
+	// Check response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, but got %d", http.StatusOK, w.Code)
+	}
+
+	//checks response body (admin/root's information)
+	expectedBody := `{"userid":"","username":"root","password":"","email":"vanbestindustries@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`
+	if w.Body.String() != expectedBody {
+		t.Errorf("Expected response body to be %s, but got %s", expectedBody, w.Body.String())
+	}
+}
+
+func TestChangeUserPassword(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new HTTP request
+	req, err := http.NewRequest("PUT", "/changepassword", bytes.NewBuffer([]byte(`{
+		"oldPassword": "password",
+		"newPassword": "updatedPassword"
+	}`)))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new response writer
+	w := httptest.NewRecorder()
+
+	//sets up test gin context with the request and response writer
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//sets the currentID value to a valid ID
+	currentID = 1
+
+	//calls the function
+	ChangeUserPassword(c)
+
+	//check the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", w.Code, http.StatusOK)
+	}
+
+	//checks the response body
+	expected := `{"Success":"Password Changed"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+}
+
 func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	// sets the current database for the function to use
