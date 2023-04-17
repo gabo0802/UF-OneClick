@@ -211,7 +211,7 @@ func TestGetAllCurrentUserInfo(t *testing.T) {
 func TestChangeUserPassword(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	//creates a new HTTP request
+	//creates a new HTTP request with a test JSON payload to satisfy "c.BindJSON(&passwordInfo)" in ChangeUserPassword()
 	req, err := http.NewRequest("PUT", "/changepassword", bytes.NewBuffer([]byte(`{
 		"oldPassword": "password",
 		"newPassword": "updatedPassword"
@@ -227,7 +227,7 @@ func TestChangeUserPassword(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
 
-	//sets the currentID value to a valid ID
+	//sets the currentID value to a valid ID (admin)
 	currentID = 1
 
 	//calls the function
@@ -242,6 +242,155 @@ func TestChangeUserPassword(t *testing.T) {
 	expected := `{"Success":"Password Changed"}`
 	if w.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+}
+
+func TestChangeUserUsername(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new HTTP request with a test JSON payload
+	req, err := http.NewRequest("PUT", "/changeusername", bytes.NewBuffer([]byte(`{"userid":"","username":"newUser","password":"","email":"vanbestindustries@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new response writer
+	w := httptest.NewRecorder()
+
+	//sets up test gin context with the request and response writer
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//sets the currentID value to a valid ID (admin)
+	currentID = 1
+
+	//calls the function
+	ChangeUserUsername(c)
+
+	//check the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", w.Code, http.StatusOK)
+	}
+
+	//checks the response body (should not return anything if successful)
+	expected := ""
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+}
+
+func TestChangeUserEmail(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new HTTP request with a test JSON payload
+	req, err := http.NewRequest("PUT", "/changeemail", bytes.NewBuffer([]byte(`{"userid":"1","username":"root","password":"","email":"vanbestindustries@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new response writer
+	w := httptest.NewRecorder()
+
+	//sets up test gin context with the request and response writer
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//sets the currentID value to a valid ID (admin)
+	currentID = 1
+
+	//calls the function
+	ChangeUserEmail(c)
+
+	//check the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", w.Code, http.StatusOK)
+	}
+
+	//checks the response body (should not return anything if successful)
+	expected := ""
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+}
+
+func TestDeleteUser(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//sets up a test Gin context
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	//sets the current user ID to 1 for testing
+	currentID = 1
+
+	//calls function
+	DeleteUser(c)
+
+	//checks that the current user ID was set to -1
+	if currentID != -1 {
+		t.Errorf("currentID should be -1 but got %d", currentID)
+	}
+
+	//checks the database to see if the user was deleted
+	var name string
+	err := currentDB.QueryRow("SELECT username FROM users WHERE userid=?", 1).Scan(&name)
+	if err != sql.ErrNoRows {
+		t.Errorf("Expected user to be deleted, but found name %q", name)
+	}
+}
+
+func TestGetAllTimezones(t *testing.T) {
+	// create a new mocked gin.Context object
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	// call the GetAllTimezones function with the mocked gin.Context
+	GetAllTimezones(c)
+
+	// check the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("Unexpected status code: got %v, expected %v", w.Code, http.StatusOK)
+	}
+
+	// check the response body
+	var testAllTimezones = []timezoneInfo{{"Eastern Standard Time (EST)", "-0500UTC"}, {"Eastern Daylight Time (EDT)", "-0400UTC"}, {"Central Standard Time (CST)", "-0600UTC"},
+		{"Central Daylight Time (CDT)", "-0500UTC"}, {"Pacific Standard Time (PST)", "-0800UTC"}, {"Pacific Daylight Time (PDT)", "-0700UTC"}}
+	expectedBody := gin.H{"All Timezones": testAllTimezones}
+	actualBody := gin.H{"All Timezones": allTimezones}
+
+	if !reflect.DeepEqual(expectedBody, actualBody) {
+		t.Errorf("Unexpected response body:\n\texpected: %v\n\tactual: %v", expectedBody, actualBody)
+	}
+}
+
+func TestChangeTimezone(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a mock context
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	// creates a test JSON payload
+	//This request payload is important information in a data block that clients send to the server in the body
+	//of an HTTP POST, PUT or PATCH message that contains important information about the request.
+	jsonPayload := `{"timezoneDifference": "4"}`
+
+	//sets the request body
+	req := httptest.NewRequest("PUT", "/changetimezone", strings.NewReader(jsonPayload))
+	req.Header.Set("Content-Type", "application/json")
+	c.Request = req
+
+	//calls function
+	ChangeTimezone(c)
+
+	//checks response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %v but got %v", http.StatusOK, w.Code)
+	}
+
+	//checks if timezone was updated
+	if currentTimezone != 4 {
+		t.Errorf("Expected timezone to be %v but got %v", 4, currentTimezone)
 	}
 }
 
@@ -331,37 +480,6 @@ func TestNewsLetter(t *testing.T) {
 	}
 	if !reflect.DeepEqual(expectedResponse, actualResponse) {
 		t.Errorf("Expected response %v but got %v", expectedResponse, actualResponse)
-	}
-}
-
-func TestChangeTimezone(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//creates a mock context
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-
-	// creates a test JSON payload
-	//This request payload is important information in a data block that clients send to the server in the body
-	//of an HTTP POST, PUT or PATCH message that contains important information about the request.
-	jsonPayload := `{"timezoneDifference": "4"}`
-
-	//sets the request body
-	req := httptest.NewRequest("POST", "/changetimezone", strings.NewReader(jsonPayload))
-	req.Header.Set("Content-Type", "application/json")
-	c.Request = req
-
-	//calls function
-	ChangeTimezone(c)
-
-	//checks response status code
-	if w.Code != http.StatusOK {
-		t.Errorf("Expected status code %v but got %v", http.StatusOK, w.Code)
-	}
-
-	//checks if timezone was updated
-	if currentTimezone != 4 {
-		t.Errorf("Expected timezone to be %v but got %v", 4, currentTimezone)
 	}
 }
 
@@ -458,31 +576,5 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
 			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
 		}
-	}
-}
-
-func TestDeleteUser(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//sets up a test Gin context
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-
-	//sets the current user ID to 1 for testing
-	currentID = 1
-
-	//calls function
-	DeleteUser(c)
-
-	//checks that the current user ID was set to -1
-	if currentID != -1 {
-		t.Errorf("currentID should be -1 but got %d", currentID)
-	}
-
-	//checks the database to see if the user was deleted
-	var name string
-	err := currentDB.QueryRow("SELECT username FROM users WHERE userid=?", 1).Scan(&name)
-	if err != sql.ErrNoRows {
-		t.Errorf("Expected user to be deleted, but found name %q", name)
 	}
 }
