@@ -1,0 +1,60 @@
+<mat-card>
+    <mat-card-header>
+    <mat-card-title>       
+        <span><h3>Insert Title Here</h3></span>
+    </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="container">
+            <div [formGroup]="datesForm" class="form-container">
+                <div class="labels"><label>Start Date:</label></div>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                <mat-label>Month</mat-label>
+                <mat-select formControlName="startMonth" required>              
+                <mat-option *ngFor="let month of months" [value]="month.value">
+                    {{month.name}}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="datesForm.get('startMonth')?.hasError('required')">Please select a month</mat-error>
+                <mat-error *ngIf="datesForm.get('startMonth')?.hasError('range')">Incorrect Date Range</mat-error>                          
+            </mat-form-field>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                <mat-label>Year</mat-label>            
+                <input matInput formControlName="startYear">
+                <mat-error *ngIf="datesForm.get('startYear')?.hasError('required')">Please enter a year</mat-error>
+                <mat-error *ngIf="datesForm.get('startYear')?.hasError('pattern')">Please enter a valid year</mat-error>
+                <mat-error *ngIf="datesForm.get('startYear')?.hasError('range') && !datesForm.get('startYear')?.hasError('pattern')">Incorrect Date Range</mat-error>                          
+            </mat-form-field>
+            <div class="labels"><label>End Date:</label></div>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                <mat-label>Month</mat-label>
+                <mat-select formControlName="endMonth" required>              
+                <mat-option *ngFor="let month of months" [value]="month.value">
+                    {{month.name}}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="datesForm.get('endMonth')?.hasError('required')">Please select a month</mat-error>
+                <mat-error *ngIf="datesForm.get('endMonth')?.hasError('range')">Incorrect Date Range</mat-error>                             
+            </mat-form-field>
+            <mat-form-field appearance="fill" hideRequiredMarker>
+                <mat-label>Year</mat-label>            
+                <input matInput formControlName="endYear">
+                <mat-error *ngIf="datesForm.get('endYear')?.hasError('required')">Please enter a year</mat-error>
+                <mat-error *ngIf="datesForm.get('endYear')?.hasError('pattern')">Please enter a valid year</mat-error>
+                <mat-error *ngIf="datesForm.get('endYear')?.hasError('range') && !datesForm.get('endYear')?.hasError('pattern')">Incorrect Date Range</mat-error>                         
+            </mat-form-field>
+            <button mat-raised-button color="primary" [disabled]="datesForm.invalid" (click)="getData()">Get Data</button>
+        </div>
+        
+        <div id="canvas-container">                       
+            <canvas baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [plugins]="barChartPlugins"
+            [legend]="barChartLegend"
+            [type]="'line'" *ngIf="initialState">
+            </canvas>                       
+        </div>                    
+        </div>     
+    </mat-card-content>
+</mat-card>

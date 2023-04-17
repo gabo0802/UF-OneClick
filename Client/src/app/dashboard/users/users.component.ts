@@ -19,6 +19,7 @@ export class UsersComponent implements OnInit{
   todayDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
   displaySubscriptions: boolean = true;
   displayReport: boolean = false;
+  displayGraph: boolean = false;
 
   ngOnInit(): void {
 
@@ -84,6 +85,7 @@ export class UsersComponent implements OnInit{
 
       this.displaySubscriptions = false;
       this.displayReport = true;
+      this.displayGraph = false;
     }
   }
 
@@ -94,9 +96,20 @@ export class UsersComponent implements OnInit{
 
       this.displaySubscriptions = true;
       this.displayReport = false;
+      this.displayGraph = false;
 
       this.updateActiveSubscriptions(true);
+    }    
+  }
+
+  showGraph(): void {
+
+    //makes sure graph isn't already displaying
+    if(this.displayGraph !== true){
+
+      this.displayGraph = true;
+      this.displaySubscriptions = false;
+      this.displayReport = false;
     }
-    
   }
 }

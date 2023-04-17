@@ -31,6 +31,8 @@ import { SubscriptionListComponent } from './dashboard/users/subscription-list/s
 import { AddSubscriptionComponent } from './dialogs/add-subscription/add-subscription.component';
 import { AddInactiveSubscriptionComponent } from './dialogs/add-inactive-subscription/add-inactive-subscription.component';
 import { ReportComponent } from './dashboard/users/report/report.component';
+import { GraphComponent } from './dashboard/users/graph/graph.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import { ReportComponent } from './dashboard/users/report/report.component';
     AddSubscriptionComponent,
     AddInactiveSubscriptionComponent,
     ReportComponent,
+    GraphComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,7 +68,8 @@ import { ReportComponent } from './dashboard/users/report/report.component';
     HttpClientModule,
     BrowserAnimationsModule,
    
-    MaterialDesignModule
+    MaterialDesignModule,
+        NgChartsModule
   ],
   providers: [AuthService, AuthGuard, ApiService, LogInGuard, DialogsService],
   bootstrap: [AppComponent]
