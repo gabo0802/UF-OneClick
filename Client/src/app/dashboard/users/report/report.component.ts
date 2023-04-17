@@ -3,11 +3,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { DialogsService } from 'src/app/dialogs.service';
 import { MatAccordion } from '@angular/material/expansion';
-import { Observable, forkJoin } from 'rxjs';
-import { Subscription } from 'src/app/subscription.model';
-import { MatTableDataSource } from '@angular/material/table';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-report',
@@ -18,16 +14,12 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 export class ReportComponent implements OnInit{
 
   @Input() username: String = '';
-  cost: String = '$0.00';
-  @Input() subscriptionList: Subscription[] = [];
   @ViewChild(MatAccordion) accordion: MatAccordion;
   
   //Input for all of the queries
   myQueries : String[] = [];
   isLoading = true;
-
   panelOpenState : boolean = true;
-  comparePriceForm: FormGroup = {} as FormGroup;
 
   constructor(private api: ApiService, private dialogs: DialogsService) {
     this.accordion = new MatAccordion()

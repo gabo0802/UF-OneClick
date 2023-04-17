@@ -3,6 +3,7 @@
         <mat-nav-list>
             <a mat-list-item [class.active]="displaySubscriptions" class="e" (click)="showSubscriptions()"><span class="nav-item">Subscriptions</span></a>
             <a mat-list-item (click)="showReport()"><span class="nav-item">Report</span></a>
+            <a mat-list-item (click)="showGraph()"><span class="nav-item">Graph</span></a>
         </mat-nav-list>
 
     </mat-sidenav>
@@ -35,15 +36,9 @@
                 <br><br><br><br><br><br><br><Br>
             </div>  
         </div>
+        <div class="subscription-report" *ngIf="displayGraph">
+            <app-graph></app-graph> 
+        </div>
+
     </mat-sidenav-content>
 </mat-sidenav-container>
-
-
-<!-- <div class="graph-display">
-
-</div> -->
-
-
-<!-- <div class="TBA-features">
-    <h1>More Features TBA</h1>
-</div> -->

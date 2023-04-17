@@ -1308,7 +1308,7 @@ func GetAllPricesInRange() gin.HandlerFunc {
 		endMonthNum := monthyearInfo.EndMonth
 		endYearNum := monthyearInfo.EndYear
 
-		if currentMonthNum > endMonthNum && currentYearNum >= endMonthNum {
+		if (currentMonthNum > endMonthNum && currentYearNum == endYearNum) || currentYearNum > endYearNum {
 			c.IndentedJSON(http.StatusBadRequest, "Start Date Greater than End Date")
 			return
 		}
