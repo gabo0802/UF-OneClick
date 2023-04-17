@@ -5,6 +5,11 @@
     width: 100%;    
 }
 
+mat-progress-spinner ::ng-deep {
+    margin: auto;
+    margin-top: 45px;
+    margin-bottom: 45px;
+}
 .buttons-container {
     width: 100%;
     background-color: rgb(223, 220, 220);

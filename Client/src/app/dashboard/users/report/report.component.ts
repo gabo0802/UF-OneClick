@@ -7,6 +7,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { Subscription } from 'src/app/subscription.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-report',
@@ -23,6 +24,7 @@ export class ReportComponent implements OnInit{
   
   //Input for all of the queries
   myQueries : String[] = [];
+  isLoading = true;
 
   panelOpenState : boolean = true;
   comparePriceForm: FormGroup = {} as FormGroup;
@@ -79,6 +81,8 @@ export class ReportComponent implements OnInit{
         x = subQuery8
         this.myQueries.push(x[0])
         this.myQueries.push(x[1])
+
+        this.isLoading = false
         
         error: (error: HttpErrorResponse) => {
         this.dialogs.errorDialog("ERR", "Failed to fetch query");

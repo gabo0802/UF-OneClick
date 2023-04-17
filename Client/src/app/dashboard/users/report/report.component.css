@@ -42,6 +42,9 @@ mat-accordion ::ng-deep .mat-expansion-panel-header-description.custom-accordion
   justify-content: space-between; /* or any other value for horizontal alignment */
 }
 
+mat-progress-spinner ::ng-deep {
+  max-height: 30px;
+}
 .query-title {
   font-weight: 500;
   font-size: 18px;

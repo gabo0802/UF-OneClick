@@ -10,6 +10,8 @@
       <mat-chip-option color="warn" [selected]="!active" [disabled]="!active"(click)="getInactive()">Inactive Subscriptions</mat-chip-option>
     </mat-chip-listbox>
   </div>   
+  <mat-progress-spinner *ngIf="isLoading" mode="indeterminate"></mat-progress-spinner>
+  <div class="table-stuff" *ngIf="!isLoading">
     <table mat-table id="subscriptionList" [dataSource]="dataSource" matSort class="mat-elevation-z5">
         <!-- Position Column -->
       <ng-container matColumnDef="name">
@@ -61,5 +63,5 @@
     <mat-paginator class="mat-elevation-z5" [pageSizeOptions]="[10, 20]"                 
                  aria-label="Select page of Subscriptions">
     </mat-paginator>
-  
+  </div>
 </div> 
