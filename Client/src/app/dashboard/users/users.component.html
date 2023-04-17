@@ -25,7 +25,9 @@
                        <app-subscription-list [subscriptionList]="subscriptionList" 
                        (updateSubscriptions)="updateActiveSubscriptions($event)"
                        (isActive)="updateActiveSubscriptions($event)"
-                       (isInactive)="updateInactiveSubscriptions($event)"></app-subscription-list>
+                       (isInactive)="updateInactiveSubscriptions($event)"
+                       [isLoading]="isLoading">
+                        </app-subscription-list>
                 </mat-card-content>
             </mat-card>                  
         </div>

@@ -20,6 +20,7 @@ export class UsersComponent implements OnInit{
   displaySubscriptions: boolean = true;
   displayReport: boolean = false;
   displayGraph: boolean = false;
+  isLoading: boolean = true;
 
   ngOnInit(): void {
 
@@ -29,11 +30,14 @@ export class UsersComponent implements OnInit{
     }).subscribe({
 
       next: (res) => {
+        
         this.subscriptionList = res.activeSubs;
         
         let data = JSON.stringify(res.userInfo);
         let userData = JSON.parse(data);
         this.username = userData.username;
+        
+        this.isLoading = false;
       },
       error: (error: HttpErrorResponse) => {
         this.dialogs.errorDialog("Unexpected Error!", "Please try again later " + error["error"]["Error"]);
@@ -44,13 +48,13 @@ export class UsersComponent implements OnInit{
   updateActiveSubscriptions(update: boolean): void {
 
     if(update){
-
+      this.isLoading = true;
       this.api.getActiveUserSubscriptions().subscribe({
       
         next: (res: Subscription[]) => {       
   
           this.subscriptionList = res;
-          
+          this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
   
@@ -63,13 +67,13 @@ export class UsersComponent implements OnInit{
   updateInactiveSubscriptions(update: boolean): void {
 
     if(update){
-
+      this.isLoading = true;
       this.api.getAllInactiveUserSubscriptions().subscribe({
       
         next: (res: Subscription[]) => {       
   
           this.subscriptionList = res;
-          
+          this.isLoading = false;
         },
         error: (error: HttpErrorResponse) => {
   

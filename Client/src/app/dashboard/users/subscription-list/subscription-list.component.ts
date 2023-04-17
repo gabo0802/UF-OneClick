@@ -18,6 +18,7 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   constructor(private dialogs: DialogsService, private api: ApiService) {}
 
   @Input() subscriptionList: Subscription[] = [];
+  @Input() isLoading: boolean = true;
   @Output() updateSubscriptions = new EventEmitter<boolean>();   
   @Output() isActive = new EventEmitter<boolean>();
   @Output() isInactive = new EventEmitter<boolean>();
@@ -26,8 +27,7 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
 
   dataSource = new MatTableDataSource<Subscription>([]);
   active: boolean = true;
-  currency: string = '$';
-  isLoading = true;
+  currency: string = '$';  
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -35,9 +35,10 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {  
-    this.isLoading = true  
-    this.dataSource.data = changes['subscriptionList']["currentValue"]
-    this.isLoading = false 
+       
+    if(changes['subscriptionList'] !== undefined){
+      this.dataSource.data = changes['subscriptionList']["currentValue"]
+    }    
   }
 
   displayedColumns: string[] = ['name', 'price', 'dateadded', 'actions'];
