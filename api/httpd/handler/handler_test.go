@@ -394,6 +394,105 @@ func TestChangeTimezone(t *testing.T) {
 	}
 }
 
+func TestGetAllCurrentUserSubscriptions(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//adds usersubs to test with the admin user
+	MySQL.AddOldUserSub(db, 1, "Disney+ (Basic)", "2023-02-15 01:18:56", "2023-03-02 11:45:53")
+	//MySQL.AddOldUserSub(db, 1, "Hulu (Student)", "2022-02-01 09:28:33", "2023-01-01 11:48:53")
+	// Creates a test context and request
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	//sets the user ID cookie to 1 (admin)
+	cookie := &http.Cookie{Name: "currentUserID", Value: "1"}
+	c.Request = httptest.NewRequest("GET", "/subscriptions", nil)
+	c.Request.AddCookie(cookie)
+
+	//calls the handler function with onlyActive set to false
+	GetAllCurrentUserSubscriptions(false)(c)
+
+	//checks that the response status code is 200
+	if w.Code != http.StatusOK {
+		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
+	}
+
+	//TODO: the function outputs the entirety of the userData struct and is an indented json,
+	//so need to separate and convert it into only the necessary sub info
+	// Checks that the response body contains the expected JSON
+	/*expected := `[{"Name":"Disney+ (Basic)","Price":"$12.99","DateAdded":"2023-02-15 01:18:56","DateRemoved":"2023-03-02 11:45:53"}]`
+	if w.Body.String() != expected {
+		t.Errorf("expected body %q but got %q", expected, w.Body.String())
+	}*/
+}
+
+func TestGetAllSubscriptionServices(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+
+	// Creates a test context and request
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.Request = httptest.NewRequest("GET", "/subscriptions/services", nil)
+
+	// Calls the handler function
+	GetAllSubscriptionServices()(c)
+
+	// Checks that the response status code is 200
+	if w.Code != http.StatusOK {
+		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
+	}
+
+	// Checks that the response body contains the expected JSON
+	/*expected := `[]`
+	if w.Body.String() != expected {
+		t.Errorf("expected body %q but got %q", expected, w.Body.String())
+	}*/
+}
+
+func TestNewSubscriptionService(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	currentID = 1
+	//creates a new HTTP request with a JSON body
+	jsonString := []byte(`{"name":"AppleTV", "price":"4.99"}`)
+	req, err := http.NewRequest("POST", "/subscriptions/createsubscription", bytes.NewBuffer(jsonString))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new recorder to capture the response
+	w := httptest.NewRecorder()
+
+	//creates a new gin context with the request and recorder
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//calls function
+	NewSubscriptionService(c)
+
+	//checks the response status code
+	if status := w.Code; status != http.StatusCreated {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	//checks the response body for success or error messages
+	expected := `{"Success":"Subscription to AppleTV Created"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+
+	//checks if subscription was actually created in the database
+	var count int
+	err = currentDB.QueryRow("SELECT COUNT(*) FROM Subscriptions WHERE Name = 'AppleTV'").Scan(&count)
+	if err != nil {
+		t.Fatalf("Failed to query subscriptions table: %v", err)
+	}
+	if count != 1 {
+		t.Error("Expected 1 subscription to be created, but found", count)
+	}
+}
+
 func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	// sets the current database for the function to use
@@ -506,38 +605,6 @@ func TestNewsLetter(t *testing.T) {
 		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
 	}
 }*/
-
-func TestGetAllCurrentUserSubscriptions(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//adds usersubs to test with the admin user
-	MySQL.AddOldUserSub(db, 1, "Disney+ (Basic)", "2023-02-15 01:18:56", "2023-03-02 11:45:53")
-	//MySQL.AddOldUserSub(db, 1, "Hulu (Student)", "2022-02-01 09:28:33", "2023-01-01 11:48:53")
-	// Creates a test context and request
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-
-	//sets the user ID cookie to 1 (admin)
-	cookie := &http.Cookie{Name: "currentUserID", Value: "1"}
-	c.Request = httptest.NewRequest("GET", "/subscriptions", nil)
-	c.Request.AddCookie(cookie)
-
-	//calls the handler function with onlyActive set to false
-	GetAllCurrentUserSubscriptions(false)(c)
-
-	//checks that the response status code is 200
-	if w.Code != http.StatusOK {
-		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
-	}
-
-	//TODO: the function outputs the entirety of the userData struct and is an indented json,
-	//so need to separate and convert it into only the necessary sub info
-	// Checks that the response body contains the expected JSON
-	/*expected := `[{"Name":"Disney+ (Basic)","Price":"$12.99","DateAdded":"2023-02-15 01:18:56","DateRemoved":"2023-03-02 11:45:53"}]`
-	if w.Body.String() != expected {
-		t.Errorf("expected body %q but got %q", expected, w.Body.String())
-	}*/
-}
 
 func TestGetMostUsedUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
