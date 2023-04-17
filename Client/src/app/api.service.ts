@@ -175,48 +175,49 @@ export class ApiService {
   subQueries(state: number): Observable<String[]> {
     var URL = ""
     
-    switch(state) {
-      case 0:
-        URL = "/api/longestsub";
-        break;
-      case 1:
-        URL = "/api/longestcontinoussub";
-        break;
-      case 2:
-        URL = "/api/longestactivesub";
-        break;
-      case 3:
-        URL = "/api/avgpriceactivesub";
-        break;
-      case 4:
-        URL = "/api/avgpriceallsubs";
-        break;
-      case 5:
-        URL = "/api/avgageallsubs";
-        break;
-      case 6:
-        URL = "/api/avgageactivesubs";
-        break;
-      case 7:
-        URL = "/api/avgagecontinuoussubs";
-        break;
-      default:
-        URL = "/api/longestsub";
-        break;
+      switch(state) {
+        case 0:
+          URL = "/api/longestsub";
+          break;
+        case 1:
+          URL = "/api/longestcontinoussub";
+          break;
+        case 2:
+          URL = "/api/longestactivesub";
+          break;
+        case 3:
+          URL = "/api/avgpriceactivesub";
+          break;
+        case 4:
+          URL = "/api/avgpriceallsubs";
+          break;
+        case 5:
+          URL = "/api/avgageallsubs";
+          break;
+        case 6:
+          URL = "/api/avgageactivesubs";
+          break;
+        case 7:
+          URL = "/api/avgagecontinuoussubs";
+          break;
+        default:
+          URL = "/api/longestsub";
+          break;
+      }
+  
+      return this.http.get(URL).pipe(
+        map( (res: Object) => {
+  
+          let data = JSON.stringify(res);
+  
+          data = data.substring(1, data.length -1);
+          data = data.replaceAll("\"", "");
+          data = data.replace(": ", " ");
+  
+          return data.split(":");
+        })
+      );
+  
     }
-
-    return this.http.get(URL).pipe(
-      map( (res: Object) => {
-
-        let data = JSON.stringify(res);
-
-        data = data.substring(1, data.length -1);
-        data = data.replaceAll("\"", "");
-        data = data.replace(": ", " ");
-
-        return data.split(":");
-      })
-    );
-  }
 
 }
