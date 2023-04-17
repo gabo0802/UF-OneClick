@@ -49,8 +49,8 @@ body {
   /* Credit to Roberto Nickson in pexels.com*/ /*Dog in Room with Netflix*/
   --background-image7: url(https://images.pexels.com/photos/2659629/pexels-photo-2659629.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
  
-  /* Credit to Roberto Nickson in pexels.com*/ /*Dog in Room with Netflix*/
-  --background-image8: url(https://images.pexels.com/photos/2659629/pexels-photo-2659629.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+  /* Credit to Ellie Burgin in pexels.com*/ /*Bed and Netflix*/
+  --background-image8: url(https://images.pexels.com/photos/4057890/pexels-photo-4057890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
 
    /* CSS Textures, credit to: https://codepen.io/bitmap/pen/AzowBq */
   --texture1: repeating-linear-gradient(-26deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 2px, transparent 3px, transparent 7px);
