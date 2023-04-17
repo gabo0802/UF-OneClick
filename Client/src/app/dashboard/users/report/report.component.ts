@@ -36,6 +36,34 @@ export class ReportComponent implements OnInit{
 
   ngOnInit(): void {    
 
+    // Order of queries (for reference purposes), each query outputs a string array of length 2, the query title and output /  output name and description.
+  /*
+      case 0:
+        URL = "/api/longestsub";
+        break;
+      case 1:
+        URL = "/api/longestcontinoussub";
+        break;
+      case 2:
+        URL = "/api/longestactivesub";
+        break;
+      case 3:
+        URL = "/api/avgpriceactivesub";
+        break;
+      case 4:
+        URL = "/api/avgpriceallsubs";
+        break;
+      case 5:
+        URL = "/api/avgageallsubs";
+        break;
+      case 6:
+        URL = "/api/avgageactivesubs";
+        break;
+      case 7:
+        URL = "/api/avgagecontinuoussubs";
+        break;
+  */
+ 
     const obs = [
       this.api.subQueries(0),
       this.api.subQueries(1),
@@ -90,57 +118,32 @@ export class ReportComponent implements OnInit{
       })
       console.log(this.myQueries)
 
-    this.comparePriceForm = new FormGroup({
-      'month': new FormControl(null, [Validators.required, Validators.pattern('^[0-9]{2}$')]),
-      'year': new FormControl(null, [Validators.required, Validators.pattern('^[0-9]{4}$')]),
-    });
+    // this.comparePriceForm = new FormGroup({
+    //   'month': new FormControl(null, [Validators.required, Validators.pattern('^[0-9]{2}$')]),
+    //   'year': new FormControl(null, [Validators.required, Validators.pattern('^[0-9]{4}$')]),
+    // });
   }
 
-  onSubmit(){
-    var monthString:string = this.comparePriceForm.get('month')?.value;
-    var yearString:string = this.comparePriceForm.get('year')?.value;
+  // Vladimir Code for graph Stuff
+  // onSubmit(){
+  //   var monthString:string = this.comparePriceForm.get('month')?.value;
+  //   var yearString:string = this.comparePriceForm.get('year')?.value;
 
-    console.log(monthString)
-    console.log(yearString)
+  //   console.log(monthString)
+  //   console.log(yearString)
 
-    var monthNumber: number = +monthString
-    var yearNumber: number = +yearString
+  //   var monthNumber: number = +monthString
+  //   var yearNumber: number = +yearString
 
-    console.log(yearNumber)
-    console.log(monthNumber)
+  //   console.log(yearNumber)
+  //   console.log(monthNumber)
 
-    this.api.comparePrice(monthNumber, yearNumber).subscribe({  
-      next: (res) => {
-        this.cost = JSON.stringify(res);
-      }
-    })
-  }
+  //   this.api.comparePrice(monthNumber, yearNumber).subscribe({  
+  //     next: (res) => {
+  //       this.cost = JSON.stringify(res);
+  //     }
+  //   })
+  // }
 
-  // Order of queries (for reference purposes), each query outputs a string array of length 2, the query title and output /  output name and description.
-  /*
-      case 0:
-        URL = "/api/longestsub";
-        break;
-      case 1:
-        URL = "/api/longestcontinoussub";
-        break;
-      case 2:
-        URL = "/api/longestactivesub";
-        break;
-      case 3:
-        URL = "/api/avgpriceactivesub";
-        break;
-      case 4:
-        URL = "/api/avgpriceallsubs";
-        break;
-      case 5:
-        URL = "/api/avgageallsubs";
-        break;
-      case 6:
-        URL = "/api/avgageactivesubs";
-        break;
-      case 7:
-        URL = "/api/avgagecontinuoussubs";
-        break;
-  */
+  
 }
