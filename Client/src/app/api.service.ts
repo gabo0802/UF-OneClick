@@ -163,9 +163,10 @@ export class ApiService {
     return this.http.delete('api/deleteuser');
   }
 
-  comparePrice(monthNumber: number, yearNumber: number): Observable<Object> {
-    let dateData = {month: monthNumber, year: yearNumber};
-    return this.http.post('api/getprice', dateData);
+  graphPrices(startMonth: number, startYear: number, endMonth: number, endYear: number): Observable<Object> {
+
+    let dateData = {startMonth: startMonth, startYear: startYear, endMonth: endMonth, endYear: endYear};
+    return this.http.post('api/getallprices', dateData);
   } 
 
   /*
@@ -218,6 +219,6 @@ export class ApiService {
         })
       );
   
-    }
+  }
 
 }

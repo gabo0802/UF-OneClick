@@ -189,33 +189,3 @@
               
         </mat-card>
     </div>
-
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <h1>{{cost}}</h1>
-    <mat-card-content>
-      <form [formGroup]="comparePriceForm" (ngSubmit)="onSubmit()">                   
-          <mat-form-field appearance="fill">
-            <mat-label>Month</mat-label>            
-            <input matInput formControlName="month">
-            <mat-error *ngIf="comparePriceForm.get('month')?.getError">Please enter a valid month</mat-error>                        
-          </mat-form-field>
-
-        <mat-form-field appearance="fill">
-            <mat-label>Year</mat-label>            
-            <input matInput formControlName="year">
-            <mat-error *ngIf="comparePriceForm.get('year')?.getError">Please enter a valid year</mat-error>                        
-        </mat-form-field>
-
-        <mat-card-actions>
-            <button type="submit" mat-raised-button color="primary" [disabled]="comparePriceForm.invalid">Get Price</button>
-        </mat-card-actions>
-      </form>
-  </mat-card-content>

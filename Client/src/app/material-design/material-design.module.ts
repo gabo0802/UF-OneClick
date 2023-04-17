@@ -24,6 +24,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { MatListModule } from '@angular/material/list';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatSelectModule
   ]
 })
 export class MaterialDesignModule { }
