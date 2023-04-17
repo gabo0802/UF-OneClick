@@ -59,6 +59,18 @@ export class GraphComponent {
 
   barChartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
+    scales: {
+      y: {
+        display: true,
+        title: {
+          display: true,
+          text: 'Cost Per Month',
+          font: {
+            size: 16,
+          }
+        }
+      }
+    }
   };
   
   getData(): void {
