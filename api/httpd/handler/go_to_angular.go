@@ -1273,19 +1273,63 @@ func GetAllUserData() gin.HandlerFunc {
 	}
 }
 
-type dateInfo struct {
-	Month int `json:"month"`
-	Year  int `json:"year"`
+type dateCostInfo struct {
+	Month int     `json:"month"`
+	Year  int     `json:"year"`
+	Cost  float64 `json:"cost"`
 }
 
-func GetTotalPriceForMonth() gin.HandlerFunc {
+type dateRange struct {
+	StartMonth int `json:"startmonth"`
+	StartYear  int `json:"startyear"`
+	EndMonth   int `json:"endmonth"`
+	EndYear    int `json:"endyear"`
+}
+
+func GetPriceForMonth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var monthyearInfo dateInfo
+		var monthyearInfo dateCostInfo
 		c.BindJSON(&monthyearInfo)
 
 		monthNum := monthyearInfo.Month
 		yearNum := monthyearInfo.Year
 
 		c.IndentedJSON(http.StatusOK, gin.H{"Total Cost": "$" + MySQL.GetPriceForMonth(currentDB, currentID, monthNum, yearNum)})
+	}
+}
+
+func GetAllPricesInRange() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var monthyearInfo dateRange
+		c.BindJSON(&monthyearInfo)
+
+		currentMonthNum := monthyearInfo.StartMonth
+		currentYearNum := monthyearInfo.StartYear
+		endMonthNum := monthyearInfo.EndMonth
+		endYearNum := monthyearInfo.EndYear
+
+		if currentMonthNum > endMonthNum && currentYearNum >= endMonthNum {
+			c.IndentedJSON(http.StatusBadRequest, "Start Date Greater than End Date")
+			return
+		}
+
+		var allCosts = []dateCostInfo{}
+
+		for currentMonthNum != endMonthNum && currentYearNum != endYearNum {
+			if currentMonthNum < 12 {
+				currentMonthNum += 1
+			} else {
+				currentMonthNum = 1
+				currentYearNum += 1
+			}
+
+			var newCost dateCostInfo
+			newCost.Month = currentMonthNum
+			newCost.Year = currentYearNum
+			newCost.Cost, _ = strconv.ParseFloat(MySQL.GetPriceForMonth(currentDB, currentID, currentMonthNum, currentYearNum), 64)
+			allCosts = append(allCosts, newCost)
+		}
+
+		c.IndentedJSON(http.StatusOK, allCosts)
 	}
 }
