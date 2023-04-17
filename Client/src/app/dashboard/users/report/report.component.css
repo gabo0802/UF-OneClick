@@ -13,7 +13,7 @@
 
 .sub-box > mat-card > mat-card-title {
   font-weight: 500;
-  font-size: 1.5em;
+  font-size: 1.8em;
 }
 
 mat-card-title {
@@ -25,3 +25,28 @@ mat-card-title {
   color: black;
   font-weight: 700;
 } */
+
+/* .custom-accordion-description {
+  color: red;
+  font-size: 16px;
+} */
+
+mat-accordion ::ng-deep .mat-expansion-panel-header-description.custom-accordion-description {
+  color: black;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.query {
+  display: flex;
+  justify-content: space-between; /* or any other value for horizontal alignment */
+}
+
+.query-title {
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.query-desc {
+  font-style: italic;
+}

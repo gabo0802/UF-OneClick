@@ -49,7 +49,7 @@ export class ReportComponent implements OnInit{
       forkJoin(obs).subscribe(
         ([subQuery1, subQuery2, subQuery3, subQuery4, subQuery5, subQuery6, subQuery7, subQuery8]) => {
 
-        // A for loop wasn't accessing the variables properly so I just did it manuLLY
+        // // A for loop wasn't accessing the variables properly so I just did it manuLLY
         let x = subQuery1
         this.myQueries.push(x[0])
         this.myQueries.push(x[1])
@@ -81,7 +81,6 @@ export class ReportComponent implements OnInit{
         x = subQuery8
         this.myQueries.push(x[0])
         this.myQueries.push(x[1])
-        
         
         error: (error: HttpErrorResponse) => {
         this.dialogs.errorDialog("ERR", "Failed to fetch query");
