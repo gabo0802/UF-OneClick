@@ -1316,18 +1316,18 @@ func GetAllPricesInRange() gin.HandlerFunc {
 		var allCosts = []dateCostInfo{}
 
 		for currentMonthNum != endMonthNum && currentYearNum != endYearNum {
+			var newCost dateCostInfo
+			newCost.Month = currentMonthNum
+			newCost.Year = currentYearNum
+			newCost.Cost, _ = strconv.ParseFloat(MySQL.GetPriceForMonth(currentDB, currentID, currentMonthNum, currentYearNum), 64)
+			allCosts = append(allCosts, newCost)
+
 			if currentMonthNum < 12 {
 				currentMonthNum += 1
 			} else {
 				currentMonthNum = 1
 				currentYearNum += 1
 			}
-
-			var newCost dateCostInfo
-			newCost.Month = currentMonthNum
-			newCost.Year = currentYearNum
-			newCost.Cost, _ = strconv.ParseFloat(MySQL.GetPriceForMonth(currentDB, currentID, currentMonthNum, currentYearNum), 64)
-			allCosts = append(allCosts, newCost)
 		}
 
 		c.IndentedJSON(http.StatusOK, allCosts)
