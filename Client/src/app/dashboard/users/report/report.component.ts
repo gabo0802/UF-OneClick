@@ -34,8 +34,6 @@ export class ReportComponent implements OnInit{
 
   ngOnInit(): void {    
 
-    // This is randomly putting the queries into my array, not sure why
-
     const obs = [
       this.api.subQueries(0),
       this.api.subQueries(1),
@@ -87,22 +85,6 @@ export class ReportComponent implements OnInit{
       } 
       })
       console.log(this.myQueries)
-   
-    
-    // for(let i = 0; i < 8; i++) {
-    //   this.api.subQueries(i).subscribe({
-
-    //     next: (res: String[]) => {
-  
-    //       this.myQueries = this.myQueries.concat(res)
-    //       console.log(this.myQueries)
-    //     },
-    //     error: (error: HttpErrorResponse) => {
-          
-    //       this.dialogs.errorDialog("ERR", "Failed to fetch query");
-    //     }
-    //   });
-    // }
 
     this.comparePriceForm = new FormGroup({
       'month': new FormControl(null, [Validators.required, Validators.pattern('^[0-9]{2}$')]),
