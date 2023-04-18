@@ -9,6 +9,7 @@
     </mat-sidenav>
     <mat-sidenav-content id="content">
         <div class="subscription-manager" align="center" *ngIf="displaySubscriptions">
+            <br><br><br><br>
             <mat-card id="table">
                 <mat-card-header>
                 <mat-card-title id="title">
@@ -21,7 +22,7 @@
                     
                 </mat-card-title>
                 </mat-card-header>
-                <mat-card-content>                      
+                <mat-card-content>                   
                        <app-subscription-list [subscriptionList]="subscriptionList" 
                        (updateSubscriptions)="updateActiveSubscriptions($event)"
                        (isActive)="updateActiveSubscriptions($event)"
