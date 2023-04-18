@@ -8,13 +8,13 @@
 <mat-toolbar id="description" class="description" color="primary">
   <!-- Icons are placeholders to put something on the sides of the description -->
   <mat-icon class="description-icon"></mat-icon>
+  
   <mat-card class="description-card">
     <mat-card-title class="description-title">What is OneClick?</mat-card-title>
+    
     <mat-card-content class="description-content">
-      The UF-Sponsored OneClick subscription manager is a simple
-      and intuitive way for users to <i>manage</i> their <i>subscriptions</i>, all in just <i>one click!</i> <br>
-      Users can choose from a list of common subscription services or add their own unique subscriptions to the ever-expanding list. <br>
-      Users can then view all of their subscriptions, calculate their monthly dues, get email notifications on when to pay and plan their monthly savings. <br>
+      <br>
+      The UF-Sponsored OneClick subscription manager is a simple and intuitive way for users to manage their subscriptions, all in just one click! Users can choose from a list of common subscription services or add their own unique subscriptions to the ever-expanding list. Users can then view all of their subscriptions, calculate their monthly dues, get email notifications on when to pay and plan their monthly savings.
     </mat-card-content>
   </mat-card>
   <mat-icon class="description-icon"></mat-icon>
@@ -182,27 +182,28 @@
   <mat-tab-group class="tab-group">
     <mat-tab class="tab-label" label="First"> 
       <ng-template mat-tab-label>
-        <span class="my-tab-label">First</span>
+        <span class="my-tab-label">List</span>
       </ng-template>
-      
-        <img class="test-image" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Best_Nature_Picture_of_the_day.jpg">
+      <div class="tab-content"> 
+        <img class="tab-image" src="../../assets/DemonstrationImages/Sub-List.png">
+        <figcaption class="tab-desc">Add, remove, and see a list of your subscriptions</figcaption>
+      </div>
+        
       
     </mat-tab>
     <mat-tab class="tab-label" label="Second">
       <ng-template mat-tab-label>
-        <span class="my-tab-label">Second</span>
+        <span class="my-tab-label">Report</span>
       </ng-template>
-      
-        <img class="test-image" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Best_Nature_Picture_of_the_day.jpg">
-      
+        <img class="tab-image" src="../../assets/DemonstrationImages/Sub-Report.png">
+        <figcaption class="tab-desc">We provide a report on some of the common trends within your subscriptions</figcaption> 
     </mat-tab>
     <mat-tab class="tab-label" label="Third"> 
       <ng-template mat-tab-label>
-        <span class="my-tab-label">Third</span>
+        <span class="my-tab-label">Graph</span>
       </ng-template>
-      
-        <img class="test-image" src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Best_Nature_Picture_of_the_day.jpg">
-      
+        <img class="tab-image" src="../../assets/DemonstrationImages/Sub-Graph.png">
+        <figcaption class="tab-desc">We also provide a graphing tool to see how much you spend each month during a given timeframe</figcaption>
     </mat-tab>
   </mat-tab-group>
   

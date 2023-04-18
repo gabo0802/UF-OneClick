@@ -48,9 +48,11 @@
   background: var(--texture4);
   background-color: var(--themeBlue);
   height: 50vh;
+  color: black;
   display: flex;
   justify-content: center;
 }
+
 
 .description-icon {
   flex: 1;
@@ -58,6 +60,7 @@
   text-align: center;
   
 }
+
 .description-card {
   color: black;
   flex: 5;
@@ -71,20 +74,22 @@
 }
 
 .description-title {
-  text-align: center;
+  text-align: left;
+  margin-left: 25px;
   font-weight: 800;
+  font-size: 1.5em;
 }
 
 .description-content {
   max-height: 40vh;
-  text-align: center;
+  text-align: left;
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
   
-}
+} 
 
 .sub-list {
   height: 100px;
@@ -96,4 +101,30 @@
 
 .potential-list {
   height: 500px;
+}
+.tab-content {
+  max-height: 600px;
+}
+.tab-image {
+  padding-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 500px;
+}
+
+.tab-desc {
+  color: black;
+  font-style: italic;
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .app-visual {
+    max-height: 400px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+  .app-visual {
+    max-height: 600px;
+  }
 }

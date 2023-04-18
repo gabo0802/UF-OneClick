@@ -33,7 +33,13 @@ export class LoginComponent {
       next: (res) => {
 
         this.authService.userLogIn();
-        this.router.navigate(['users']);
+
+        if(this.authService.isAdmin()){
+          this.router.navigate(['admin'])
+        }
+        else{
+          this.router.navigate(['users']);
+        }        
         this.loginForm.reset();
       },
       error: (error: HttpErrorResponse) => {
