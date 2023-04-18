@@ -169,7 +169,7 @@ export class ApiService {
     return this.http.post('api/getallprices', dateData);
   } 
 
-  resetWebsite(){
+  resetWebsite(): Observable<Object>{
     return this.http.delete('api/reset');
   }
 

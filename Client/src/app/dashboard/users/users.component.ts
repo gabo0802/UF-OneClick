@@ -143,9 +143,12 @@ export class UsersComponent implements OnInit{
   }
 
   adminReset(): void{
-    alert("Website Back to Factory-Default Data!")
-    this.api.resetWebsite().subscribe({
-      
+    alert("UF-OneClick Will Be Reset!")
+    
+    this.api.resetWebsite().subscribe((res) => {
+        alert("UF-OneClick Has Been Reset!")
     });
+
+    
   }
 }
