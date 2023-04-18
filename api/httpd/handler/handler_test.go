@@ -57,7 +57,7 @@ func TestTryLogin(t *testing.T) {
 	//sets up a test request body
 	login := map[string]string{
 		// Uses admin credentials
-		"username": "root",
+		"username": "test",
 		"password": "password",
 	}
 	//Marshal returns the JSON encoding of login
@@ -118,7 +118,7 @@ func TestVerifyEmail(t *testing.T) {
 	possibleCodeEncrypted := base64.URLEncoding.EncodeToString(codeGenerator.Sum(nil))
 	q.Add("code", possibleCodeEncrypted)
 	expireDate := time.Now().Add(time.Hour * 24)
-	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vE\");", 1, possibleCodeEncrypted, expireDate)
+	currentDB.Exec("INSERT INTO Verification (UserID, Code, ExpireDate, Type) VALUES (?, ?, ?, \"vE\");", 2, possibleCodeEncrypted, expireDate)
 
 	req.URL.RawQuery = q.Encode()
 	c.Request = req
@@ -189,8 +189,8 @@ func TestGetAllCurrentUserInfo(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	//sets up test cookie with user ID of 1 (admin)
-	cookie := &http.Cookie{Name: "currentUserID", Value: "1"}
+	//sets up test cookie with user ID of 2 (test user)
+	cookie := &http.Cookie{Name: "currentUserID", Value: "2"}
 	c.Request = &http.Request{Header: http.Header{"Cookie": []string{cookie.String()}}}
 
 	//call GetAllCurrentUserInfo function
@@ -202,7 +202,7 @@ func TestGetAllCurrentUserInfo(t *testing.T) {
 	}
 
 	//checks response body (admin/root's information)
-	expectedBody := `{"userid":"","username":"root","password":"","email":"vanbestindustries@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`
+	expectedBody := `{"userid":"","username":"test","password":"","email":"sir.testmctestington.the.tester2@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`
 	if w.Body.String() != expectedBody {
 		t.Errorf("Expected response body to be %s, but got %s", expectedBody, w.Body.String())
 	}
@@ -227,8 +227,8 @@ func TestChangeUserPassword(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
 
-	//sets the currentID value to a valid ID (admin)
-	currentID = 1
+	//sets the currentID value to a valid ID (test user)
+	currentID = 2
 
 	//calls the function
 	ChangeUserPassword(c)
@@ -249,7 +249,7 @@ func TestChangeUserUsername(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
 	//creates a new HTTP request with a test JSON payload
-	req, err := http.NewRequest("PUT", "/changeusername", bytes.NewBuffer([]byte(`{"userid":"","username":"newUser","password":"","email":"vanbestindustries@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
+	req, err := http.NewRequest("PUT", "/changeusername", bytes.NewBuffer([]byte(`{"userid":"","username":"newUser","password":"","email":"sir.testmctestington.the.tester2@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -261,8 +261,8 @@ func TestChangeUserUsername(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
 
-	//sets the currentID value to a valid ID (admin)
-	currentID = 1
+	//sets the currentID value to a valid ID (test user)
+	currentID = 2
 
 	//calls the function
 	ChangeUserUsername(c)
@@ -283,7 +283,7 @@ func TestChangeUserEmail(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
 	//creates a new HTTP request with a test JSON payload
-	req, err := http.NewRequest("PUT", "/changeemail", bytes.NewBuffer([]byte(`{"userid":"1","username":"root","password":"","email":"vanbestindustries@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
+	req, err := http.NewRequest("PUT", "/changeemail", bytes.NewBuffer([]byte(`{"userid":"","username":"root","password":"","email":"sir.testmctestington.the.tester2@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -295,8 +295,8 @@ func TestChangeUserEmail(t *testing.T) {
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
 
-	//sets the currentID value to a valid ID (admin)
-	currentID = 1
+	//sets the currentID value to a valid ID (test user)
+	currentID = 2
 
 	//calls the function
 	ChangeUserEmail(c)
@@ -320,8 +320,8 @@ func TestDeleteUser(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	//sets the current user ID to 1 for testing
-	currentID = 1
+	//sets the current user ID to 2 for testing
+	currentID = 2
 
 	//calls function
 	DeleteUser(c)
@@ -333,7 +333,7 @@ func TestDeleteUser(t *testing.T) {
 
 	//checks the database to see if the user was deleted
 	var name string
-	err := currentDB.QueryRow("SELECT username FROM users WHERE userid=?", 1).Scan(&name)
+	err := currentDB.QueryRow("SELECT username FROM users WHERE userid=?", 2).Scan(&name)
 	if err != sql.ErrNoRows {
 		t.Errorf("Expected user to be deleted, but found name %q", name)
 	}
@@ -397,15 +397,15 @@ func TestChangeTimezone(t *testing.T) {
 func TestGetAllCurrentUserSubscriptions(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	//adds usersubs to test with the admin user
-	MySQL.AddOldUserSub(db, 1, "Disney+ (Basic)", "2023-02-15 01:18:56", "2023-03-02 11:45:53")
+	//adds usersubs to test with the test user
+	MySQL.AddOldUserSub(db, 2, "Disney+ (Basic)", "2023-02-15 01:18:56", "2023-03-02 11:45:53")
 	//MySQL.AddOldUserSub(db, 1, "Hulu (Student)", "2022-02-01 09:28:33", "2023-01-01 11:48:53")
 	// Creates a test context and request
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	//sets the user ID cookie to 1 (admin)
-	cookie := &http.Cookie{Name: "currentUserID", Value: "1"}
+	//sets the user ID cookie to 2 (test user)
+	cookie := &http.Cookie{Name: "currentUserID", Value: "2"}
 	c.Request = httptest.NewRequest("GET", "/subscriptions", nil)
 	c.Request.AddCookie(cookie)
 
@@ -416,14 +416,6 @@ func TestGetAllCurrentUserSubscriptions(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
 	}
-
-	//TODO: the function outputs the entirety of the userData struct and is an indented json,
-	//so need to separate and convert it into only the necessary sub info
-	// Checks that the response body contains the expected JSON
-	/*expected := `[{"Name":"Disney+ (Basic)","Price":"$12.99","DateAdded":"2023-02-15 01:18:56","DateRemoved":"2023-03-02 11:45:53"}]`
-	if w.Body.String() != expected {
-		t.Errorf("expected body %q but got %q", expected, w.Body.String())
-	}*/
 }
 
 func TestGetAllSubscriptionServices(t *testing.T) {
@@ -442,18 +434,12 @@ func TestGetAllSubscriptionServices(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
 	}
-
-	// Checks that the response body contains the expected JSON
-	/*expected := `[]`
-	if w.Body.String() != expected {
-		t.Errorf("expected body %q but got %q", expected, w.Body.String())
-	}*/
 }
 
 func TestNewSubscriptionService(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	currentID = 1
+	currentID = 2
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"AppleTV", "price":"4.99"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/createsubscription", bytes.NewBuffer(jsonString))
@@ -496,7 +482,7 @@ func TestNewSubscriptionService(t *testing.T) {
 func TestNewUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	currentID = 1
+	currentID = 2
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Amazon Prime"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/addsubscription", bytes.NewBuffer(jsonString))
@@ -527,11 +513,12 @@ func TestNewUserSubscription(t *testing.T) {
 
 	//checks if usersub was actually created in the database
 	var count int
-	err = currentDB.QueryRow("SELECT COUNT(*) FROM Usersubs WHERE UserID = '1'").Scan(&count)
+	err = currentDB.QueryRow("SELECT COUNT(*) FROM Usersubs WHERE UserID = '2'").Scan(&count)
 	if err != nil {
 		t.Fatalf("Failed to query usersubs table: %v", err)
 	}
-	if count != 1 {
+	//there are already 5 usersubs, so if one more is created, the total count will be 6
+	if count != 6 {
 		t.Error("Expected 1 usersub to be created, but found", count)
 	}
 }
@@ -539,7 +526,7 @@ func TestNewUserSubscription(t *testing.T) {
 func TestNewPreviousUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	currentID = 1
+	currentID = 2
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Amazon Prime", "dateadded":"2022-02-01 09:28:33", "dateremoved":"2023-01-01 11:48:53"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/addoldsubscription", bytes.NewBuffer(jsonString))
@@ -570,11 +557,12 @@ func TestNewPreviousUserSubscription(t *testing.T) {
 
 	//checks if usersub was actually created in the database
 	var count int
-	err = currentDB.QueryRow("SELECT COUNT(*) FROM Usersubs WHERE UserID = '1'").Scan(&count)
+	err = currentDB.QueryRow("SELECT COUNT(*) FROM Usersubs WHERE UserID = '2'").Scan(&count)
 	if err != nil {
 		t.Fatalf("Failed to query usersubs table: %v", err)
 	}
-	if count != 1 {
+	if count != 6 {
+		//there are already 5 usersubs, so if one more is created, the total count will be 6
 		t.Error("Expected 1 usersub to be created, but found", count)
 	}
 }
@@ -643,12 +631,12 @@ func TestDeleteUserSubID(t *testing.T) {
 func TestGetMostUsedUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	MySQL.AddOldUserSub(db, 1, "Disney+ (Basic)", "2022-01-15 01:20:00", "2023-02-22 12:50:07")
+	MySQL.AddOldUserSub(db, 2, "Netflix (Basic)", "2019-01-16 01:20:00", "2023-02-22 12:50:07")
 	//creates a new gin context for testing
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 
-	currentID = 1
+	currentID = 2
 	//calls the GetMostUsedUserSubscription handler
 	GetMostUsedUserSubscriptionHandler := GetMostUsedUserSubscription(true, false)
 
@@ -673,7 +661,7 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 		}
 
 		//checks the response body again
-		expectedBody := "{\"Disney+ (Basic)\":\"Active For: 1 year 1 month 1 week 1 day 1 hour 1 minute 1 second \"}"
+		expectedBody := `{"Netflix (Basic)":"Active For: 4 years 1 month 1 week 1 days 1 hour 1 minute 1 second "}`
 		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
 			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
 		}
@@ -683,7 +671,7 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 func TestGetAvgPriceofAllCurrentUserSubscriptions(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	//creates a new mock context
+	//creates a new test context
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	//adds up already existing usersubs from test user
