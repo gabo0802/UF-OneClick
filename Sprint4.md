@@ -139,7 +139,7 @@ Each unit test checks the general functionality of their respective function:
 
 **Handler Package Tests**
 
-The unit tests create mock gin contexts and cookies to test output:
+These unit tests create mock gin contexts and cookies to test output:
 * TestSetDB(t *testing.T)
 * TestTryLogin(t *testing.T)
 * TestVerifyEmail(t *testing.T)
