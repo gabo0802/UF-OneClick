@@ -29,7 +29,7 @@ Mason Enojo (enojom) <br><br>
 2. Terminal -> Split Terminal
 3. Run <code> make first </code> in first terminal
 4. Run <code> make second </code> in second terminal
-5. Go to: http://localhost:4200/ <br>
+5. Go to: http://localhost:4200/ <br> (should open automatically)
 
 ## How to Install MySQL
 ### How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
