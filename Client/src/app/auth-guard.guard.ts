@@ -40,5 +40,26 @@ export class LogInGuard implements CanActivate {
     
 }
 
+@Injectable({
+  providedIn: 'root'
+})
+export class AdminGuard implements CanActivate {
+
+  constructor(private authService: AuthService) {}
+
+
+  canActivate(route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    
+    if(this.authService.isAdmin() === true){
+      return true;
+      
+    }
+    
+    return false;
+  }  
+    
+}
+
 
 

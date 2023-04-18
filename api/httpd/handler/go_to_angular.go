@@ -344,17 +344,21 @@ func DailyReminder(c *gin.Context) {
 }
 
 func NewsLetter(c *gin.Context) {
-	var newsMessage newsLetterInfo
-	c.BindJSON(&newsMessage)
+	if currentID == 1 {
+		var newsMessage newsLetterInfo
+		c.BindJSON(&newsMessage)
 
-	message := newsMessage.Message
-	fmt.Println(message)
+		message := newsMessage.Message
+		fmt.Println(message)
 
-	currentTime := time.Now()
-	stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
+		currentTime := time.Now()
+		stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
 
-	SendEmailToAllUsers("UF-OneClick Newsletter "+stringDate, message)
-	c.JSON(http.StatusOK, gin.H{"Success": "Newsletter Sent!"})
+		SendEmailToAllUsers("UF-OneClick Newsletter "+stringDate, message)
+		c.JSON(http.StatusOK, gin.H{"Success": "Newsletter Sent!"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Not Admin User!"})
+	}
 }
 
 func deleteUnverified() {
@@ -1193,15 +1197,19 @@ func ResetALL(c *gin.Context) {
 	if currentID == 1 {
 		MySQL.ResetAllTables(currentDB)
 		MySQL.SetUpTables(currentDB)
-		MySQL.CreateAdminUser(currentDB)
 		MySQL.CreateCommonSubscriptions(currentDB)
-		c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
-		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
+
+		MySQL.CreateAdminUser(currentDB)
+		MySQL.CreateTestUser(currentDB)
+
+		//c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
+		//c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 
 		c.JSON(http.StatusOK, gin.H{"Success": "Reset Successful"})
 		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Not Admin User ID"})
+		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 	}
 }

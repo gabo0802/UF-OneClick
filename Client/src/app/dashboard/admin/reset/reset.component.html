@@ -1,0 +1,26 @@
+<div class="container">
+    <mat-card id="table">
+        <mat-card-header>
+            <mat-card-title id="title">
+                <div>
+                    <h3>{{ todayDate | date: 'longDate'}}</h3>
+                </div>
+                <div>
+                    <h3>Reset All Data</h3>
+                </div>
+                
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div id="message">
+            <h3 id="warning">Warning!</h3>
+                <p>Resetting the data will return the database to its initial state. 
+                    All user information and subscription information will be deleted. Are you sure you wish to continue?
+                </p>
+            </div>
+            <mat-card-actions align="end">                
+                <button mat-raised-button color="primary" (click)="adminReset()">Reset UF-OneClick</button>
+            </mat-card-actions>                      
+     </mat-card-content>
+    </mat-card>
+</div>

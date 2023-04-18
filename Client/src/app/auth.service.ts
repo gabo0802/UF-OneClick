@@ -19,6 +19,16 @@ export class AuthService {
     return this.userLoggedIn;
   }
 
+  isAdmin(): boolean {
+
+    if(document.cookie.includes("currentUserID=1")){
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   userLogIn(): void {
 
     this.userLoggedIn = true;    
