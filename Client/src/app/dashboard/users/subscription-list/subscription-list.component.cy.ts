@@ -26,7 +26,7 @@ describe('SubscriptionListComponent', () => {
           providers: [ApiService, AuthGuard, AuthService, Router]
         })
 
-        cy.get('[class="buttons-container mat-elevation-z3"]').get('button').first().should('have.text', 'Add Active Subscription')
+        cy.get('[class="buttons-container mat-elevation-z2"]').get('button').first().should('have.text', 'Add Active Subscription')
     })
 
     it('Add Inactive Subscription Button has text Add Inactive Subscription', () => {
@@ -35,7 +35,7 @@ describe('SubscriptionListComponent', () => {
         providers: [ApiService, AuthGuard, AuthService, Router]
       })
 
-      cy.get('[class="buttons-container mat-elevation-z3"]').get('button').next().should('have.text', 'Add Inactive Subscription')
+      cy.get('[class="buttons-container mat-elevation-z2"]').get('button').next().should('have.text', 'Add Inactive Subscription')
   })
 
 })

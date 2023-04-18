@@ -76,6 +76,7 @@ Api Service:
 * can PUT user passwords info to updateUserPassword
 * can PUT user passwords info to updateTimezone
 * can DELETE user account to deleteUserAccount
+* can POST dates info to graphPrices
 
 Subscription list Component:
 * subscription table should have initial column values
@@ -84,11 +85,27 @@ Subscription list Component:
 * getInactive should change table display columns
 * getInactive should change active to false
 
+Graph Component:
+* startMonth should be initially null
+* endMonth should be initially null
+* startYear should be initially null
+* endYear should be initially null
+* initialState should be initially false
+* barChartLegend should initially be false
+* barChartPlugins should initially be empty []
+
 **Cypress tests:**
 
 Subscription-list Component:
 * Updated - Add Active Subscription Button has text Add Active Subscription
 * Add Inactive Subscription Button has text Add Inactive Subscription
+
+Graph Component:
+* has correct title
+* Start Date has correct label of Start Date:
+* End Date has correct label of End Date:
+* Able to type in Start Year input
+* Able to type in End Year input
 
 ## Back-End API
 <b>[Error Codes Can Be Viewed In UF-OneClick/ProjectNotes/errorcode.txt]</b>

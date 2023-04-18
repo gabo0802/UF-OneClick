@@ -347,4 +347,22 @@ describe('ApiService', () => {
 
     httpTestingController.verify();
   });
+
+  it('can POST dates info to graphPrices', () => {
+    
+    const testUserData = {startMonth: 3, startYear: 2019, endMonth: 4, endYear: 2021};
+
+    service.graphPrices(testUserData.startMonth, testUserData.startYear, testUserData.endMonth, testUserData.endYear).subscribe(data => {
+
+      expect(data).toEqual(testUserData)
+    })
+
+    const req = httpTestingController.expectOne('api/getallprices');
+
+    expect(req.request.method).toEqual('POST');
+
+    req.flush(testUserData);
+
+    httpTestingController.verify();
+  });
 });
