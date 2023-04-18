@@ -112,6 +112,11 @@
   max-height: 500px;
 }
 
+.tab-desc {
+  color: black;
+  font-style: italic;
+  margin-top: 10px;
+}
 @media (max-width: 600px) {
   .app-visual {
     max-height: 400px;
