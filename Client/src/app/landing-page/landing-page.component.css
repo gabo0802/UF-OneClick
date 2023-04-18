@@ -102,3 +102,29 @@
 .potential-list {
   height: 500px;
 }
+.tab-content {
+  max-height: 600px;
+}
+.tab-image {
+  padding-top: 20px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 500px;
+}
+
+.tab-desc {
+  color: black;
+  font-style: italic;
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .app-visual {
+    max-height: 400px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+  .app-visual {
+    max-height: 600px;
+  }
+}
