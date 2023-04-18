@@ -25,6 +25,7 @@ Mason Enojo (enojom) <br><br>
 7. Navigate to the client folder <code>cd Client</code> and run the command <code>npm install</code> (Libraries to install: ng2-charts, cypress) 
 
 ## How to Run Project (Using Visual Studio)
+0. Have the MySQLPassword.txt and EmailCode.txt files in same folder as makefile
 1. Terminal -> New Terminal
 2. Terminal -> Split Terminal
 3. Run <code> make first </code> in first terminal
