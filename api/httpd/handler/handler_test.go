@@ -810,6 +810,38 @@ func TestGetAllPricesInRange(t *testing.T) {
 	}
 }
 
+func TestNewsLetter(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new gin context with a JSON request body
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	requestBody := gin.H{
+		"message": "Insert Newsletter message",
+	}
+	requestBytes, _ := json.Marshal(requestBody)
+	requestReader := bytes.NewReader(requestBytes)
+	c.Request, _ = http.NewRequest("POST", "/news", requestReader)
+	c.Request.Header.Set("Content-Type", "application/json")
+
+	//calls the function
+	NewsLetter(c)
+
+	//checks the response
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %v but got %v", http.StatusOK, w.Code)
+	}
+	expectedResponse := gin.H{"Success": "Newsletter Sent!"}
+	var actualResponse gin.H
+	err := json.Unmarshal(w.Body.Bytes(), &actualResponse)
+	if err != nil {
+		t.Errorf("Error parsing response JSON: %v", err)
+	}
+	if !reflect.DeepEqual(expectedResponse, actualResponse) {
+		t.Errorf("Expected response %v but got %v", expectedResponse, actualResponse)
+	}
+}
+
 func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	//sets the current database for the function to use
@@ -864,37 +896,5 @@ func TestDailyReminder(t *testing.T) {
 	}
 	if w.Body.String() != "{\"Success\":\"Emails Were Sent!\"}" {
 		t.Errorf("Expected response body %v but got %v", "{\"Success\":\"Emails Were Sent!\"}", w.Body.String())
-	}
-}
-
-func TestNewsLetter(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//creates a new gin context with a JSON request body
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	requestBody := gin.H{
-		"message": "Newsletter message",
-	}
-	requestBytes, _ := json.Marshal(requestBody)
-	requestReader := bytes.NewReader(requestBytes)
-	c.Request, _ = http.NewRequest("POST", "/news", requestReader)
-	c.Request.Header.Set("Content-Type", "application/json")
-
-	//calls the function
-	NewsLetter(c)
-
-	//checks the response
-	if w.Code != http.StatusOK {
-		t.Errorf("Expected status code %v but got %v", http.StatusOK, w.Code)
-	}
-	expectedResponse := gin.H{"Success": "Newsletter Sent!"}
-	var actualResponse gin.H
-	err := json.Unmarshal(w.Body.Bytes(), &actualResponse)
-	if err != nil {
-		t.Errorf("Error parsing response JSON: %v", err)
-	}
-	if !reflect.DeepEqual(expectedResponse, actualResponse) {
-		t.Errorf("Expected response %v but got %v", expectedResponse, actualResponse)
 	}
 }
