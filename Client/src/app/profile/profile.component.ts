@@ -41,7 +41,7 @@ export class ProfileComponent implements OnInit{
   }
  
   back(): void {
-    if(this.username == 'root'){
+    if(this.authService.isAdmin() == true){
       this.router.navigate(['admin']);
     }else{
       this.router.navigate(['users']);
