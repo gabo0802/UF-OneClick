@@ -253,7 +253,7 @@ Subscription-list Component:
 <br>
 
 <code> GetALlPricesInRange() gin.HandlerFunc </code> 
-<br> <b>Works with POST request. Returns an array of objects that correspondtotal cost of subscriptions between two months and year combinations
+<br> <b>Works with POST request only.</b> Returns JSON object that contains an array of objects that correspond to the total cost of subscriptions between two months and year combinations
 <br>
 <br>
 
