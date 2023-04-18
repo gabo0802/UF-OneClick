@@ -6,6 +6,18 @@ UF OneClick: Subscription Manager <br>
 ## Project Description
 A subscription manager that allows users to track their subscriptions in one click. It has a login page so that every individual user's subscriptions can tracked by month. Actions that can be done include: adding a new subscription, calculating the total cost of subscriptions per month and by year, tracking when the subscription has been used, etc. <br>
 
+## Project Features
+
+### Subscription List
+![image](https://user-images.githubusercontent.com/92041237/232912902-e5d79f0d-fafb-4926-a775-c85bde788a6e.png)
+<br>
+### Subscription Report
+![image](https://user-images.githubusercontent.com/92041237/232912604-6c50400c-4d3c-4bbb-a5b5-2b7df7ddaaaf.png)
+<br>
+### Subscription Graph
+![image](https://user-images.githubusercontent.com/92041237/232912837-72ad4607-fb22-474c-9fd2-5c63d8fb0043.png)
+<br>
+
 ## Project Members
 ### Front-End
 Gabriel Castejon (gabo0802) <br>
