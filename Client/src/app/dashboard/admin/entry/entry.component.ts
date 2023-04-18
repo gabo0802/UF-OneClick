@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class EntryComponent {
 
+  todayDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 }
