@@ -9,6 +9,7 @@ Front-End
 * Added functionality for adding inactive subscription
 * Added delete functionality for inactive subscriptions
 * Added side navigation for subscriptions and report
+* Added graph
 
 Back-End
 * Added UserSubID to MySQL table UserSubs
@@ -16,6 +17,7 @@ Back-End
 * Fixed Bugs in SendAllReminders, DeleteUserSub, and dateToString Function (Angular)
 * Added Specific Timezones
 * Average Price of Subscriptions and Average Age of Subscriptions Queries Added
+* Added GetAllCosts function for graph
 * Code cleanup
 
 ## Front-End Unit Tests
