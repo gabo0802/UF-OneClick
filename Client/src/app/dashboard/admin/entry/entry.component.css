@@ -1,0 +1,15 @@
+.admin-features{
+    background-image: var(--background-image3);
+    background-position: center;
+    background-size: cover; 
+
+    background-color: rgba(121, 219, 252, 0.774);
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 4%;
+    padding-left: 2%;
+    min-height: 100vh;
+}

@@ -34,6 +34,7 @@ For future reference on aligning items:
     2. The properties "align" and "layout-align" seem to work best
     with angular materials stuff.
 */
+
 .subscription-manager {    
     background-image: var(--background-image8);
     background-position: center;
@@ -53,7 +54,7 @@ For future reference on aligning items:
 }
 
 .graph-report {    
-    background-image: var(--background-image8);
+    background-image: var(--background-image9);
     background-position: center;
     background-size: cover;
 

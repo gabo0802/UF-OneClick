@@ -23,7 +23,6 @@ export class UsersComponent implements OnInit{
   isLoading: boolean = true;
 
   ngOnInit(): void {
-
     forkJoin({
       userInfo: this.api.getUserInfo(),
       activeSubs: this.api.getActiveUserSubscriptions(),
@@ -90,6 +89,7 @@ export class UsersComponent implements OnInit{
       this.displaySubscriptions = false;
       this.displayReport = true;
       this.displayGraph = false;
+
     }
   }
 
@@ -116,4 +116,7 @@ export class UsersComponent implements OnInit{
       this.displayReport = false;
     }
   }
+
+  
 }
+
