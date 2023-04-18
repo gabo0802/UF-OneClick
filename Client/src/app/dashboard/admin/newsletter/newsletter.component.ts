@@ -7,6 +7,7 @@ import { ApiService } from 'src/app/api.service';
   styleUrls: ['./newsletter.component.css']
 })
 export class NewsletterComponent {
+  
   constructor(private api: ApiService) { }
   todayDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
