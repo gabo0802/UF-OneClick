@@ -25,7 +25,6 @@ export class UsersComponent implements OnInit{
   isAdmin: boolean = false;
   displayAdmin: boolean = false;
 
-
   ngOnInit(): void {
 
     if (document.cookie == "currentUserID=1"){
@@ -146,9 +145,20 @@ export class UsersComponent implements OnInit{
     alert("UF-OneClick Will Be Reset!")
     
     this.api.resetWebsite().subscribe((res) => {
-        alert("UF-OneClick Has Been Reset!")
+        alert("UF-OneClick Has Been Reset!");
     });
-
-    
   }
+
+  newsLetter(): void{
+    var message:string = (document.getElementById('newslettermessage') as HTMLInputElement).value;
+
+    if(message != "Enter Message For Newsletter"){
+      this.api.sendNews(message).subscribe( (res) => {
+          alert("Message Sent");
+          (document.getElementById('newslettermessage') as HTMLInputElement).value = "Enter Message For Newsletter";
+      })
+    }
+  }
+  
 }
+

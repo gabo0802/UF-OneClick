@@ -173,6 +173,11 @@ export class ApiService {
     return this.http.delete('api/reset');
   }
 
+  sendNews(newsLetterMessage: string): Observable<Object>{
+    let dateData = {message: newsLetterMessage};
+    return this.http.post('api/news', dateData);
+  }
+
 
   /*
   State is a number that determines which query we are looking for in the report:

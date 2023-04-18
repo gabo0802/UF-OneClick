@@ -57,7 +57,15 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>                      
-                <button class = "admin-button" mat-raised-button color="primary" (click)="adminReset()">Reset UF-OneClick</button>
+                <textarea type="text" id="newslettermessage" name="name" rows="6" cols="50">Enter Message For Newsletter</textarea>
+                <mat-card-actions>
+                    <button type="submit" mat-raised-button color="primary" (click)="newsLetter()">Send Newsletter</button>
+                </mat-card-actions>
+
+                <mat-card-actions>
+                    <button class = "admin-button" mat-raised-button color="primary" (click)="adminReset()">Reset UF-OneClick</button>
+                </mat-card-actions>
+
          </mat-card-content>
         </mat-card>                  
         </div>
