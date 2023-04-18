@@ -18,9 +18,28 @@ export class TimezoneFieldComponent {
   @Input() oldTimeZone: string = '';
 
   // Available Timezones
+  // "-0400UTC"
   timezones: String[] = [
-    "test"
+    "Eastern Standard Time",
+    "Central Standard Time",
+    "Mountain Daylight Time",
+    "Mountain Standard Time",
+    "Pacific Daylight Time",
+    "Alaska Daylight Time",
+    "Hawaii-Aleutian Daylight Time",
+    "Hawaii Standard Time"
   ];
+
+  timezonevar: String[] = [
+    "-0400UTC",
+    "-0500UTC",
+    "-0600UTC",
+    "-0700UTC",
+    "-0700UTC",
+    "-0800UTC",
+    "-0900UTC",
+    "-1000UTC"
+  ]
   timeZoneForm: FormControl = new FormControl({value: this.oldTimeZone, disabled: true}, [Validators.required, Validators.pattern('^[-+]{0,1}[0-9]{4}(UTC)+$')])
   
   editTimeZone(): void {

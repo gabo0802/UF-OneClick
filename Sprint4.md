@@ -107,6 +107,66 @@ Graph Component:
 * Able to type in Start Year input
 * Able to type in End Year input
 
+## Back-End Unit Tests
+* To run unit tests, the files of "MySQLPassword.txt" and "EmailCode.txt" are required to be in the same folder as their respective packages.
+
+**MySQL Package Tests**
+
+Each unit test checks the general functionality of their respective function:
+* TestMySQLConnect(t *testing.T)
+* TestGetDatabaseSize(t *testing.T)
+* TestSetUpTables(t *testing.T)
+* TestGetTableSize(t *testing.T)
+* TestResetTable(t *testing.T)
+* TestResetAllTables(t *testing.T)
+* TestCreateNewUser(t *testing.T)
+* TestCreateAdminUser(t *testing.T)
+* TestCreateCommonSubscriptions(t *testing.T)
+* TestGetPassword(t *testing.T)
+* TestChangePassword(t *testing.T)
+* TestGetEmail(t *testing.T)
+* TestChangeEmail(t *testing.T)
+* TestGetUsername(t *testing.T)
+* TestChangeUsername(t *testing.T)
+* TestCreateNewSub(t *testing.T)
+* TestCreateNewUserSub(t *testing.T)
+* TestAddOldUserSub(t *testing.T)
+* TestCancelUserSub(t *testing.T)
+* TestDeleteUser(t *testing.T)
+* TestLogin(t *testing.T)
+* TestGetMostUsedSubscription(t *testing.T)
+* TestGetPriceForMonth(t *testing.T)
+
+**Handler Package Tests**
+
+These unit tests create mock gin contexts and cookies to test output:
+* TestSetDB(t *testing.T)
+* TestTryLogin(t *testing.T)
+* TestVerifyEmail(t *testing.T)
+* TestNewUser(t *testing.T)
+* TestGetAllCurrentUserInfo(t *testing.T)
+* TestChangeUserPassword(t *testing.T)
+* TestChangeUserUsername(t *testing.T)
+* TestChangeUserEmail(t *testing.T)
+* TestDeleteUser(t *testing.T)
+* TestGetAllTimezones(t *testing.T)
+* TestChangeTimezone(t *testing.T)
+* TestGetAllCurrentUserSubscriptions(t *testing.T)
+* TestGetAllSubscriptionServices(t *testing.T)
+* TestNewSubscriptionService(t *testing.T)
+* TestNewUserSubscription(t *testing.T)
+* TestNewPreviousUserSubscription(t *testing.T)
+* TestCancelSubscriptionService(t *testing.T)
+* TestDeleteUserSubID(t *testing.T)
+* TestGetMostUsedUserSubscription(t *testing.T)
+* TestGetAvgPriceofAllCurrentUserSubscriptions(t *testing.T)
+* TestGetAvgAgeofAllCurrentUserSubscriptionsHandler(t *testing.T)
+* TestGetPriceForMonth(t *testing.T)
+* TestGetAllPricesInRange(t *testing.T)
+* TestNewsLetter(t *testing.T)
+* TestSendEmailToAllUsers(t *testing.T)
+* TestDailyReminder(t *testing.T)
+
 ## Back-End API
 <b>[Error Codes Can Be Viewed In UF-OneClick/ProjectNotes/errorcode.txt]</b>
 

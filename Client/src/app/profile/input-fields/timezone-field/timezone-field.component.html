@@ -10,7 +10,7 @@
             <mat-select matInput [formControl]="timeZoneForm">
                 <mat-option>None</mat-option>
                 <!-- Will add all of the timezones ina n array in the ts file -->
-                <mat-option *ngFor="let timezone of timezones" [value]="timezone">{{timezone}}</mat-option>
+                <mat-option *ngFor="let timezone of timezones; let i = index" [value]="timezonevar[i]">{{timezone}}</mat-option>
               </mat-select>
             <mat-error *ngIf="timeZoneForm.hasError('pattern')">Please enter a valid Time Zone</mat-error>
             <mat-error *ngIf="timeZoneForm.hasError('duplicate')">Time Zone unchanged</mat-error>
