@@ -37,14 +37,6 @@ export class NewsletterComponent {
         })
       }
     }
-    // if(message != "Enter Message For Newsletter!"){
-    //   if(confirm("Message Will Be Sent To All Users!")){
-    //     this.api.sendNews(message).subscribe( (res) => {
-    //         alert("Message Sent");
-    //         (document.getElementById('newslettermessage') as HTMLInputElement).value = "Enter Message For Newsletter!";
-    //     })
-    //   }
-    // }
   }
 
   resetMessage(): void{
