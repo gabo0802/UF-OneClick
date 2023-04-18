@@ -7,10 +7,20 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
+
     height: 100%;
     padding: 4%;
     padding-left: 2%;
     min-height: 100vh;
+}
+
+#table {
+    max-width: 950px;
+}
+
+#info {
+    text-align: left;
+    margin-bottom: 10px;
 }
 
 #title {
@@ -24,10 +34,14 @@ textarea{
     padding: 1%;
     align-self: center;
     display: flex;
-    width: 98%;
+    width: 100%;
 }
 
 .mat-mdc-card-header {
     display: block;
     margin-bottom: 10px;
+}
+
+mat-form-field {
+    width: 95%;
 }

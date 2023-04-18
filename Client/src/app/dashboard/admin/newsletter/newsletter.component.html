@@ -1,24 +1,32 @@
 <div class="container" align="center">
     <mat-card id="table">
         <mat-card-header>
-            <mat-card-title id="title">
-                <div>
-                    <h3>{{ todayDate | date: 'longDate'}}</h3>
-                </div>
+            <mat-card-title id="title">                
                 <div>
                     <h3>Newsletter</h3>
                 </div>
                 
             </mat-card-title>
-        </mat-card-header>
+        </mat-card-header>       
         
-        <textarea type="text" id="newslettermessage" name="name" rows="20" style="font-size:13pt">Enter Message For Newsletter!</textarea>
+        <!-- <textarea type="text" id="newslettermessage" name="name" rows="20" style="font-size:13pt">Enter Message For Newsletter!</textarea> -->
+        <mat-card-content>
+        <div id="info">
+            <p>Your message will be sent to all users.</p>
+        </div> 
+        <div>
+        <mat-form-field>
+            <textarea matInput [formControl]="newsletter" cols="40" rows="10" placeholder="Newsletter Message"  required></textarea>
+            <mat-error *ngIf="this.newsletter.errors">Please enter a message</mat-error> 
+        </mat-form-field>
+        </div>
         
-        <mat-card-content> 
             <mat-card-actions align="end">
-                <button style="margin-right: 5px" mat-raised-button color="primary" (click)="newsLetter()">Send Newsletter</button>
-                <button style="margin-right: 5px" mat-raised-button color="primary" (click)="resetMessage()">Reset Message</button>
-                <button mat-raised-button color="primary" (click)="remindTime()">Send Reminders</button>
+                
+                
+                <button mat-raised-button color="primary" (click)="remindTime()">Send Reminders</button>                
+                <button mat-raised-button style="margin-right: 5px" color="accent" (click)="resetMessage()">Reset Message</button>
+                <button  mat-raised-button color="primary" (click)="sendNewsletter()">Send Newsletter</button>                
             </mat-card-actions>
      </mat-card-content>
     </mat-card>  
