@@ -45,7 +45,6 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   
   addActiveSubscription(): void {
     this.dialogs.addSubscription().afterClosed().subscribe((res: {isCreated: boolean, name: string, price: string, dateAdded: Date}) => {
-  //    this.isLoading = true;
       //successful creation of sub will fire this to add it
       if(res.isCreated === true){
 
@@ -96,7 +95,6 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         }       
       }
     });
-  //  this.isLoading = false
   }
 
   addInactiveSubscription(): void {
@@ -104,7 +102,6 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
   }
 
   deactivateSub(subName: string): void {
-  //  this.isLoading = true;
     this.api.deactivateSubscription(subName).subscribe({
 
       next: (res) => {
@@ -116,12 +113,11 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         this.dialogs.errorDialog("Error Deactivating Subscription!", "There was an error deactivating your subscription. Please try again later.");
       }
     })
-  //  this.isLoading = false;
   }
 
   deleteSub(userSubID: string){
 
-  //  this.isLoading = true
+
     this.api.deleteUserSubscription(userSubID).subscribe({
       
       next: (res) => {        
@@ -132,12 +128,10 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         this.dialogs.errorDialog("Error Deleting Subscription!", "An error occured while trying to delete your subscription. Please try again later.");
       }
     });
-  //  this.isLoading = false
   }
 
   reactivateSub(subName: string): void {
 
-  //  this.isLoading = true
     this.api.reactivateSubscription(subName).subscribe({
 
       next: (res) => {
@@ -151,7 +145,7 @@ export class SubscriptionListComponent implements AfterViewInit, OnChanges{
         this.isLoading = false
       }
     })
-  //  this.isLoading = false
+
   }
 
   getActive(): void {
