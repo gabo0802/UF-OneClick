@@ -72,6 +72,15 @@ var currentTimezone int = -400
 var allTimezones = []timezoneInfo{{"Eastern Standard Time (EST)", "-0500UTC"}, {"Eastern Daylight Time (EDT)", "-0400UTC"}, {"Central Standard Time (CST)", "-0600UTC"},
 	{"Central Daylight Time (CDT)", "-0500UTC"}, {"Pacific Standard Time (PST)", "-0800UTC"}, {"Pacific Daylight Time (PDT)", "-0700UTC"}} //only for US at the current moment
 
+func getUserID(c *gin.Context) {
+	cookie, err := c.Cookie("currentUserID")
+	if err == nil {
+		currentID, _ = strconv.Atoi(cookie)
+	} else {
+		currentID = -1
+	}
+}
+
 func SetDB(db *sql.DB) {
 	currentDB = db
 }
@@ -344,6 +353,8 @@ func DailyReminder(c *gin.Context) {
 }
 
 func NewsLetter(c *gin.Context) {
+	getUserID(c)
+
 	if currentID == 1 {
 		var newsMessage newsLetterInfo
 		c.BindJSON(&newsMessage)
@@ -684,17 +695,13 @@ func GetAllSubscriptionServices() gin.HandlerFunc {
 
 func GetAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cookie, err := c.Cookie("currentUserID")
-		if err == nil {
-			currentID, _ = strconv.Atoi(cookie)
-		} else {
-			currentID = -1
-		}
+		getUserID(c)
 
 		var usersubInfo = []userData{}
 
 		if currentID != -1 {
 			var rows *sql.Rows
+			var err error
 
 			if onlyActive {
 				rows, err = currentDB.Query("SELECT UserSubID, UserSubs.SubID, Name, Price, DateAdded, DateRemoved FROM UserSubs INNER JOIN Subscriptions ON UserSubs.SubID = Subscriptions.SubID WHERE UserID = ? AND DateRemoved is NULL ORDER BY DateAdded ASC", currentID)
@@ -814,6 +821,8 @@ func convertSecondstoTimeString(totalSeconds int) string {
 
 func GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		getUserID(c)
+
 		if currentID != -1 {
 			subName, usageTimeSeconds := MySQL.GetMostUsedSubscription(currentDB, currentID, isContinuous, isActive)
 			message := "Active For: " + convertSecondstoTimeString(usageTimeSeconds)
@@ -826,6 +835,8 @@ func GetMostUsedUserSubscription(isContinuous bool, isActive bool) gin.HandlerFu
 
 func GetAvgPriceofAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		getUserID(c)
+
 		if currentID != -1 {
 			var rows *sql.Rows
 			var err error
@@ -856,6 +867,8 @@ func GetAvgPriceofAllCurrentUserSubscriptions(onlyActive bool) gin.HandlerFunc {
 
 func GetAvgAgeofAllCurrentUserSubscriptions(mergeSame bool, onlyActive bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		getUserID(c)
+
 		if currentID != -1 {
 			var rows *sql.Rows
 			var err error
@@ -910,6 +923,8 @@ func DeleteUserSubID(c *gin.Context) {
 }
 
 func NewUserSubscription(c *gin.Context) {
+	getUserID(c)
+
 	if currentID != -1 {
 		var userSubscriptionData userData
 		c.BindJSON(&userSubscriptionData)
@@ -954,6 +969,8 @@ func NewUserSubscription(c *gin.Context) {
 }
 
 func NewPreviousUserSubscription(c *gin.Context) {
+	getUserID(c)
+
 	if currentID != -1 {
 		var userSubscriptionData userData
 		c.BindJSON(&userSubscriptionData)
@@ -1024,6 +1041,8 @@ func NewPreviousUserSubscription(c *gin.Context) {
 }
 
 func NewSubscriptionService(c *gin.Context) {
+	getUserID(c)
+
 	if currentID != -1 {
 		var subscriptionData userData
 		c.BindJSON(&subscriptionData)
@@ -1060,6 +1079,8 @@ func NewSubscriptionService(c *gin.Context) {
 }
 
 func CancelSubscriptionService(c *gin.Context) {
+	getUserID(c)
+
 	if currentID != -1 {
 		var userSubscriptionData userData
 		c.BindJSON(&userSubscriptionData)
@@ -1094,6 +1115,8 @@ func CancelSubscriptionService(c *gin.Context) {
 }
 
 func ChangeUserPassword(c *gin.Context) {
+	getUserID(c)
+
 	if currentID != -1 {
 		var passwordInfo passwordChange
 		c.BindJSON(&passwordInfo)
@@ -1129,6 +1152,7 @@ func ChangeUserPassword(c *gin.Context) {
 }
 
 func ChangeUserUsername(c *gin.Context) {
+	getUserID(c)
 	var changeInfo userData
 	c.BindJSON(&changeInfo)
 
@@ -1143,6 +1167,7 @@ func ChangeUserUsername(c *gin.Context) {
 }
 
 func ChangeUserEmail(c *gin.Context) {
+	getUserID(c)
 	var changeInfo userData
 	c.BindJSON(&changeInfo)
 
@@ -1159,12 +1184,7 @@ func ChangeUserEmail(c *gin.Context) {
 }
 
 func GetAllCurrentUserInfo(c *gin.Context) {
-	cookie, err := c.Cookie("currentUserID")
-	if err == nil {
-		currentID, _ = strconv.Atoi(cookie)
-	} else {
-		currentID = -1
-	}
+	getUserID(c)
 
 	if currentID != -1 {
 		outputUserData := userData{}
@@ -1194,6 +1214,8 @@ func GetAllCurrentUserInfo(c *gin.Context) {
 }
 
 func ResetALL(c *gin.Context) {
+	getUserID(c)
+
 	if currentID == 1 {
 		MySQL.ResetAllTables(currentDB)
 		MySQL.SetUpTables(currentDB)
@@ -1202,12 +1224,15 @@ func ResetALL(c *gin.Context) {
 		MySQL.CreateAdminUser(currentDB)
 		MySQL.CreateTestUser(currentDB)
 
-		//c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
+		c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
 		//c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
+
+		fmt.Print("test")
 
 		c.JSON(http.StatusOK, gin.H{"Success": "Reset Successful"})
 		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
+		fmt.Print("?")
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Not Admin User ID"})
 		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
@@ -1216,6 +1241,8 @@ func ResetALL(c *gin.Context) {
 
 func GetAllUserData() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		getUserID(c)
+
 		if currentID == 1 {
 			var allUserData = []userData{}
 			var id int

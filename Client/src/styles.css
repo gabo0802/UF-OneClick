@@ -61,6 +61,10 @@ body {
    /* Credit to brotiN biswaS in pexels.com*/ /*Newspaper*/
    --background-image11: url(https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg);
 
+   /* Credit to brotiN biswaS in pexels.com*/ /*Library*/
+   --background-image12: url(https://images.pexels.com/photos/1290141/pexels-photo-1290141.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+
+   
 
    /* CSS Textures, credit to: https://codepen.io/bitmap/pen/AzowBq */
   --texture1: repeating-linear-gradient(-26deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 2px, transparent 3px, transparent 7px);
