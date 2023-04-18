@@ -44,4 +44,4 @@ Mason Enojo (enojom) <br><br>
 * (For Mac): <code> /usr/local/mysql/bin/mysql -h oneclickserver.mysql.database.azure.com -u adminUser -p </code>
 * Hostname: oneclickserver.mysql.database.azure.com
 * Username: adminUser
-* Password: [Found in MySQLPassword.txt]
+* Password: <b>Found in MySQLPassword.txt</b>
