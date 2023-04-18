@@ -16,6 +16,11 @@ export class TimezoneFieldComponent {
   
   editing: boolean = false;
   @Input() oldTimeZone: string = '';
+
+  // Available Timezones
+  timezones: String[] = [
+    "test"
+  ];
   timeZoneForm: FormControl = new FormControl({value: this.oldTimeZone, disabled: true}, [Validators.required, Validators.pattern('^[-+]{0,1}[0-9]{4}(UTC)+$')])
   
   editTimeZone(): void {
