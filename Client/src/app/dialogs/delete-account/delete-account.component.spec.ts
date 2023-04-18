@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MaterialDesignModule } from 'src/app/material-design/material-design.module';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { DeleteAccountComponent } from './delete-account.component';
 
 describe('DeleteAccountComponent', () => {
@@ -8,7 +12,17 @@ describe('DeleteAccountComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DeleteAccountComponent ]
+      declarations: [ 
+        DeleteAccountComponent
+      ],
+      imports: [
+        MaterialDesignModule, 
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        RouterTestingModule
+      ],
     })
     .compileComponents();
 
