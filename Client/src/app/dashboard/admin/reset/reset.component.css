@@ -1,5 +1,5 @@
 .container {
-    /* background-image: var(--background-image10); */
+    background-image: var(--background-image10);    
     background-color: rgba(121, 219, 252, 0.774);
     background-position: center;
     background-size: cover; 
