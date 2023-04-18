@@ -34,7 +34,7 @@ Mason Enojo (enojom) <br><br>
 4. Install MySQL (might be optional, see <i> How to Install MySQL </i> for more info) <br>
 5. Clone respository <code>git clone https\://github.com/gabo0802/UF-OneClick.git</code> or via SSH
 6. Run <code> go get github.com/gin-gonic/gin </code>
-7. Navigate to the client folder <code>cd Client</code> and run the command <code>npm install</code> (Libraries to install: ng2-charts, cypress) 
+7. Navigate to the client folder <code>cd Client</code> and run the command <code>npm install ng2-charts</code> and <code>npm install cypress</code>
 
 ## How to Run Project (Using Visual Studio)
 1. Have the MySQLPassword.txt and EmailCode.txt files in same folder as makefile
