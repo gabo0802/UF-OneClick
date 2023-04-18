@@ -21,7 +21,8 @@ Mason Enojo (enojom) <br><br>
 3. Install Angular via the command line <code>npm install -g @angular/cli</code>
 4. Install MySQL (might be optional, see <i> How to Install MySQL </i> for more info) <br>
 5. Clone respository <code>git clone https\://github.com/gabo0802/UF-OneClick.git</code> or via SSH
-6. Navigate to the client folder <code>cd Client</code> and run the command <code>npm install</code>
+6. Run <code> go get github.com/gin-gonic/gin </code> (Also see: How to Install MySQL)
+7. Navigate to the client folder <code>cd Client</code> and run the command <code>npm install</code> (Libraries to install: ng2-charts, cypress) 
 
 ## How to Run Project (Using Visual Studio)
 1. Terminal -> New Terminal
