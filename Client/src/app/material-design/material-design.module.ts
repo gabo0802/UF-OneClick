@@ -25,6 +25,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatNativeDateModule,
     MatSidenavModule,
     MatListModule,
-    MatSelectModule
+    MatSelectModule,
+    TextFieldModule
   ]
 })
 export class MaterialDesignModule { }

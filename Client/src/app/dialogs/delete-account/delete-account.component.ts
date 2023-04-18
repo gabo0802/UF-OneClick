@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/api.service';
+import { AuthService } from 'src/app/auth.service';
 import { DialogsService } from 'src/app/dialogs.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { DialogsService } from 'src/app/dialogs.service';
 })
 export class DeleteAccountComponent {
 
-  constructor(private api: ApiService, private dialogs: DialogsService, private router: Router) {}
+  constructor(private api: ApiService, private dialogs: DialogsService, private router: Router, private auth: AuthService) {}
 
   deleteAccount(): void {
 
@@ -19,7 +20,8 @@ export class DeleteAccountComponent {
 
       next: (res) => {
         this.dialogs.successDialog("Account succesfully deleted");
-        this.router.navigate(['/']);
+        this.auth.userLogOut();
+        this.router.navigate(['login']);
       },
       error: (error: HttpErrorResponse) => {
         this.dialogs.errorDialog("Error Deleting Accounting", "An Error occurred deleting your account. Please try again later.");
