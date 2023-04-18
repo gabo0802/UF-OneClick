@@ -21,7 +21,7 @@ export class AuthService {
 
   isAdmin(): boolean {
 
-    if(document.cookie.includes("currentUserID=1")){
+    if(document.cookie == "currentUserID=1" /*|| document.cookie.includes("currentUserID=1")*/){
       return true;
     }
     else {

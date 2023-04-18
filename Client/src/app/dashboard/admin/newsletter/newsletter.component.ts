@@ -27,4 +27,10 @@ export class NewsletterComponent {
   resetMessage(): void{
     (document.getElementById('newslettermessage') as HTMLInputElement).value = "Enter Message For Newsletter!";
   }
+
+  remindTime(): void{
+    this.api.sendDailyRemind().subscribe((res) => {
+      alert(JSON.stringify(res).replaceAll("\"","").replace("{","").replace("}","").replace(":",": "));
+    });
+  }
 }

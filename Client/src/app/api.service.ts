@@ -178,6 +178,10 @@ export class ApiService {
     return this.http.post('api/news', dateData);
   }
 
+  sendDailyRemind(): Observable<Object>{
+    return this.http.get('api/remind');
+  }
+
 
   /*
   State is a number that determines which query we are looking for in the report:
