@@ -25,12 +25,12 @@ Mason Enojo (enojom) <br><br>
 7. Navigate to the client folder <code>cd Client</code> and run the command <code>npm install</code> (Libraries to install: ng2-charts, cypress) 
 
 ## How to Run Project (Using Visual Studio)
-0. Have the MySQLPassword.txt and EmailCode.txt files in same folder as makefile
-1. Terminal -> New Terminal
-2. Terminal -> Split Terminal
-3. Run <code> make first </code> in first terminal
-4. Run <code> make second </code> in second terminal
-5. Go to: http://localhost:4200/ <br> (should open automatically)
+1. Have the MySQLPassword.txt and EmailCode.txt files in same folder as makefile
+2. Terminal -> New Terminal
+3. Terminal -> Split Terminal
+4. Run <code> make first </code> in first terminal
+5. Run <code> make second </code> in second terminal
+6. Go to: http://localhost:4200/ <br> (should open automatically)
 
 ## How to Install MySQL
 ### How to get MySQLStuff.go to work with Go and Visual Studios (Windows 10):
