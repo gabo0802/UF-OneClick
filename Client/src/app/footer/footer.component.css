@@ -25,3 +25,12 @@ footer {
 .footer-stuff > .links > a:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 1000px) {
+  .footer-stuff {
+    font-size: 1em;
+  }
+  .footer-stuff > .socials > a {
+    font-size: 1em;
+  }
+}
