@@ -1,3 +1,20 @@
+#content {
+    height: 100%;
+}
+
+.mat-mdc-card-header {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.mat-drawer {
+    background-color: #1978e4;
+}
+
+.nav-item {
+    color: white;
+}
+
 .admin-features{
     background-image: var(--background-image3);
     background-position: center;
