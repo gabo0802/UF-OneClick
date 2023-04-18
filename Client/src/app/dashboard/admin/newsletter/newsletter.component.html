@@ -1,2 +1,22 @@
-<div class="container">
+<div class="container" align="center">
+    <mat-card id="table">
+        <mat-card-header>
+            <mat-card-title id="title">
+                <div>
+                    <h3>{{ todayDate | date: 'longDate'}}</h3>
+                </div>
+                <div>
+                    <h3>Newsletter</h3>
+                </div>
+                
+            </mat-card-title>
+        </mat-card-header>
+        
+        <textarea type="text" id="newslettermessage" name="name" rows="20" style="font-size:13pt">Enter Message For Newsletter!</textarea>
+        
+        <mat-card-content> 
+            <mat-card-actions><button type="submit" mat-raised-button color="primary" (click)="newsLetter()">Send Newsletter</button></mat-card-actions>
+            <mat-card-actions><button type="submit" mat-raised-button color="primary" (click)="resetMessage()">Reset Message</button></mat-card-actions>                 
+     </mat-card-content>
+    </mat-card>  
 </div>

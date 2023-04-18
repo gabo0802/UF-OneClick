@@ -1,10 +1,9 @@
 <mat-sidenav-container>
     <mat-sidenav opened="true" mode="side" disableClose="true">
         <mat-nav-list>
-            <a mat-list-item [hidden] ="isAdmin" [disabled]="isAdmin"[class.active]="displaySubscriptions" class="e" (click)="showSubscriptions()"><span class="nav-item">Subscriptions</span></a>
-            <a mat-list-item [hidden] ="isAdmin" [disabled]="isAdmin" (click)="showReport()"><span class="nav-item">Report</span></a>
-            <a mat-list-item [hidden] ="isAdmin" [disabled]="isAdmin" (click)="showGraph()"><span class="nav-item">Graph</span></a>
-            <a mat-list-item [hidden] ="!isAdmin" [disabled]="!isAdmin" (click)="showAdmin()"><span class="nav-item">Admin Functions</span></a>
+            <a mat-list-item [class.active]="displaySubscriptions" class="e" (click)="showSubscriptions()"><span class="nav-item">Subscriptions</span></a>
+            <a mat-list-item (click)="showReport()"><span class="nav-item">Report</span></a>
+            <a mat-list-item (click)="showGraph()"><span class="nav-item">Graph</span></a>
         </mat-nav-list>
 
     </mat-sidenav>
@@ -41,33 +40,6 @@
         </div>
         <div class="graph-report" *ngIf="displayGraph">
             <app-graph></app-graph> 
-        </div>
-
-        <div class="admin-features" align="center" *ngIf="displayAdmin">
-            <mat-card id="table">
-            <mat-card-header>
-                <mat-card-title id="title">
-                    <div>
-                        <h3>{{ todayDate | date: 'longDate'}}</h3>
-                    </div>
-                    <div>
-                        <h3>{{ username }}'s Admin Functions</h3>
-                    </div>
-                    
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>                      
-                <textarea type="text" id="newslettermessage" name="name" rows="20" cols="100">Enter Message For Newsletter</textarea>
-                <mat-card-actions>
-                    <button type="submit" mat-raised-button color="primary" (click)="newsLetter()">Send Newsletter</button>
-                </mat-card-actions>
-
-                <mat-card-actions>
-                    <button class = "admin-button" mat-raised-button color="primary" (click)="adminReset()">Reset UF-OneClick</button>
-                </mat-card-actions>
-
-         </mat-card-content>
-        </mat-card>                  
         </div>
 
     </mat-sidenav-content>

@@ -58,6 +58,10 @@ body {
    /* Credit to Digital Buggu in pexels.com*/ /*Gears*/
    --background-image10: url(https://images.pexels.com/photos/171198/pexels-photo-171198.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
 
+   /* Credit to brotiN biswaS in pexels.com*/ /*Newspaper*/
+   --background-image11: url(https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg);
+
+
    /* CSS Textures, credit to: https://codepen.io/bitmap/pen/AzowBq */
   --texture1: repeating-linear-gradient(-26deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 2px, transparent 3px, transparent 7px);
   --texture2: repeating-linear-gradient(-45deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 1px, transparent 1px, transparent 6px);

@@ -1,3 +1,21 @@
-<div class="container">
-    
-</div>
+<mat-card>
+<div class="container" align = "center">
+
+    <mat-card id="table">
+        <mat-card-header>
+            <mat-card-title id="title">
+                <div>
+                    <h3>{{ todayDate | date: 'longDate'}}</h3>
+                </div>
+                <div>
+                    <h3>Reset All Data</h3>
+                </div>
+                
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content> 
+            <button class = "admin-button" mat-raised-button color="primary" (click)="adminReset()" style="width:1000px;height:500px;font-size:100px">Reset UF-OneClick</button>                     
+     </mat-card-content>
+    </mat-card>  
+    </div>                
+</mat-card>
