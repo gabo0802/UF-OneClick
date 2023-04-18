@@ -661,7 +661,7 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 		}
 
 		//checks the response body again
-		expectedBody := `{"Netflix (Basic)":"Active For: 4 years 1 month 1 week 1 days 1 hour 1 minute 1 second "}`
+		expectedBody := `{"Netflix (Basic)":"Active For: 4 years 1 month 1 week 1 day 1 hour 1 minute 1 second "}`
 		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
 			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
 		}
