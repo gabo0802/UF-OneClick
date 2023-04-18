@@ -22,7 +22,17 @@ export class UsersComponent implements OnInit{
   displayGraph: boolean = false;
   isLoading: boolean = true;
 
+  isAdmin: boolean = false;
+  displayAdmin: boolean = false;
+
+
   ngOnInit(): void {
+
+    if (document.cookie == "currentUserID=1"){
+      this.isAdmin = true
+      this.displayAdmin = true;
+      this.displaySubscriptions = false;
+    }
 
     forkJoin({
       userInfo: this.api.getUserInfo(),
@@ -90,6 +100,8 @@ export class UsersComponent implements OnInit{
       this.displaySubscriptions = false;
       this.displayReport = true;
       this.displayGraph = false;
+      this.displayAdmin = false;
+
     }
   }
 
@@ -101,6 +113,7 @@ export class UsersComponent implements OnInit{
       this.displaySubscriptions = true;
       this.displayReport = false;
       this.displayGraph = false;
+      this.displayAdmin = false;
 
       this.updateActiveSubscriptions(true);
     }    
@@ -114,6 +127,25 @@ export class UsersComponent implements OnInit{
       this.displayGraph = true;
       this.displaySubscriptions = false;
       this.displayReport = false;
+      this.displayAdmin = false;
+
     }
+  }
+
+  showAdmin(): void {
+    if(this.displayAdmin !== true){
+
+      this.displayAdmin = true;
+      this.displayGraph = false;
+      this.displaySubscriptions = false;
+      this.displayReport = false;
+    }
+  }
+
+  adminReset(): void{
+    alert("Website Back to Factory-Default Data!")
+    this.api.resetWebsite().subscribe({
+      
+    });
   }
 }

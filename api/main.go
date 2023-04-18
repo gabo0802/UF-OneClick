@@ -89,7 +89,7 @@ func main() {
 
 		//Admin Commands:
 		api.POST("/news", handler.NewsLetter)
-		api.POST("/reset", handler.ResetALL)
+		api.DELETE("/reset", handler.ResetALL)
 		api.GET("/alldata", handler.GetAllUserData())
 	}
 

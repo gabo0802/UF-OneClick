@@ -52,6 +52,12 @@ body {
   /* Credit to Ellie Burgin in pexels.com*/ /*Bed and Netflix*/
   --background-image8: url(https://images.pexels.com/photos/4057890/pexels-photo-4057890.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
 
+  /* Credit to Pixabay in pexels.com*/ /*Tablet and Netflix*/
+  --background-image9: url(https://images.pexels.com/photos/265685/pexels-photo-265685.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+
+   /* Credit to Digital Buggu in pexels.com*/ /*Gears*/
+   --background-image10: url(https://images.pexels.com/photos/171198/pexels-photo-171198.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+
    /* CSS Textures, credit to: https://codepen.io/bitmap/pen/AzowBq */
   --texture1: repeating-linear-gradient(-26deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 2px, transparent 3px, transparent 7px);
   --texture2: repeating-linear-gradient(-45deg, rgba(255,255,255, 0.25), rgba(255,255,255, 0.25) 1px, transparent 1px, transparent 6px);

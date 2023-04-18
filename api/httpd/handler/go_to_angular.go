@@ -1193,15 +1193,19 @@ func ResetALL(c *gin.Context) {
 	if currentID == 1 {
 		MySQL.ResetAllTables(currentDB)
 		MySQL.SetUpTables(currentDB)
-		MySQL.CreateAdminUser(currentDB)
 		MySQL.CreateCommonSubscriptions(currentDB)
-		c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
-		c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
+
+		MySQL.CreateAdminUser(currentDB)
+		MySQL.CreateTestUser(currentDB)
+
+		//c.SetCookie("didReminder", "yes", -1, "/", "localhost", false, true)
+		//c.SetCookie("currentUserID", strconv.Itoa(currentID), -1, "/", "localhost", false, false)
 
 		c.JSON(http.StatusOK, gin.H{"Success": "Reset Successful"})
 		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, "/login")
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Not Admin User ID"})
+		//c.Redirect(http.StatusTemporaryRedirect, "/login")
 		//c.Redirect(http.StatusTemporaryRedirect, "/api/subscriptions")
 	}
 }

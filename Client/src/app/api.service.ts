@@ -169,6 +169,11 @@ export class ApiService {
     return this.http.post('api/getallprices', dateData);
   } 
 
+  resetWebsite(){
+    return this.http.delete('api/reset');
+  }
+
+
   /*
   State is a number that determines which query we are looking for in the report:
   You can read the cases there
