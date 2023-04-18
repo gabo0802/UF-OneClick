@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ChartConfiguration } from 'chart.js';
@@ -19,6 +19,7 @@ interface Month {
 })
 export class GraphComponent {
   
+  @Input() isLoading: boolean = false;
   constructor(private api: ApiService, private dialogs: DialogsService) {}
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
@@ -75,6 +76,7 @@ export class GraphComponent {
   
   getData(): void {
 
+    this.isLoading = true;
     const startMonth = this.datesForm.get('startMonth')?.getRawValue();
     const startYear = parseInt(this.datesForm.get('startYear')?.getRawValue());
 
@@ -84,7 +86,6 @@ export class GraphComponent {
     this.api.graphPrices(startMonth, startYear, endMonth, endYear).subscribe({
 
       next: res => {
-        
         let dataStr = JSON.stringify(res);
         let data = JSON.parse(dataStr);
         let processed_data = this.processData(data);
@@ -97,12 +98,16 @@ export class GraphComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.dialogs.errorDialog("Error Getting Graph!", "An error occured. Please try again later.");
-      }
+        this.isLoading = false
+      },
+      complete: () => this.isLoading = false
     })
+    
+  
   }
 
   private processData(data: {month: number, year: number, cost: number}[]): {date_labels: string[], price_data: number[]} {
-
+    
     const months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     let date_labels: string[] = [];
     let price_data: number[] = []
@@ -111,7 +116,6 @@ export class GraphComponent {
       date_labels.push(months[element.month-1] + " " + element.year);
       price_data.push(element.cost);
     })
-    
     return {date_labels, price_data};
   }
 
