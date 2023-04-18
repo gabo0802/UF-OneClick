@@ -344,17 +344,21 @@ func DailyReminder(c *gin.Context) {
 }
 
 func NewsLetter(c *gin.Context) {
-	var newsMessage newsLetterInfo
-	c.BindJSON(&newsMessage)
+	if currentID == 1 {
+		var newsMessage newsLetterInfo
+		c.BindJSON(&newsMessage)
 
-	message := newsMessage.Message
-	fmt.Println(message)
+		message := newsMessage.Message
+		fmt.Println(message)
 
-	currentTime := time.Now()
-	stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
+		currentTime := time.Now()
+		stringDate := strconv.Itoa(int(currentTime.Month())) + "/" + strconv.Itoa(int(currentTime.Day())) + "/" + strconv.Itoa(int(currentTime.Year()))
 
-	SendEmailToAllUsers("UF-OneClick Newsletter "+stringDate, message)
-	c.JSON(http.StatusOK, gin.H{"Success": "Newsletter Sent!"})
+		SendEmailToAllUsers("UF-OneClick Newsletter "+stringDate, message)
+		c.JSON(http.StatusOK, gin.H{"Success": "Newsletter Sent!"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Not Admin User!"})
+	}
 }
 
 func deleteUnverified() {
