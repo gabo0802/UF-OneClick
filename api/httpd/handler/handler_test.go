@@ -753,7 +753,75 @@ func TestGetAvgAgeofAllCurrentUserSubscriptionsHandler(t *testing.T) {
 	}
 }
 
-// Extra test cases
+func TestGetPriceForMonth(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//adds another usersub in the same month so it can be tested properly
+	//7.99 + 6.99
+	db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", "2", "1", "2023-02-05 09:28:33", "2023-03-01 11:48:53")
+	//creates a new HTTP request with JSON payload
+	reqBody := `{"month": 2, "year": 2023}`
+	req, err := http.NewRequest("POST", "/getprice", strings.NewReader(reqBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+	//uses test user ID
+	currentID = 2
+
+	//creates a new HTTP response writer
+	w := httptest.NewRecorder()
+
+	//creates test Gin context using the response writer and request
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	// calls function
+	GetPriceForMonth()(c)
+
+	//checks the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
+	}
+
+	//checks the response body
+	expectedBody := `{
+    "Total Cost": "$14.98"
+}`
+	if w.Body.String() != expectedBody {
+		t.Errorf("expected body %q but got %q", expectedBody, w.Body.String())
+	}
+}
+
+func TestGetAllPricesInRange(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//adds another usersub in the same month so it can be tested properly
+	db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", "2", "1", "2023-02-05 09:28:33", "2023-03-01 11:48:53")
+	//creates a new HTTP request with JSON payload
+	reqBody := `{"startmonth": 2, "startyear": 2023, "endmonth": 3, "endyear": 2023}`
+	req, err := http.NewRequest("POST", "/getallprices", strings.NewReader(reqBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+	//uses test user ID
+	currentID = 2
+
+	//creates a new HTTP response writer
+	w := httptest.NewRecorder()
+
+	//creates test Gin context using the response writer and request
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//calls function
+	GetAllPricesInRange()(c)
+
+	//checks the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
+	}
+}
+
 func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	//sets the current database for the function to use
@@ -814,7 +882,7 @@ func TestDailyReminder(t *testing.T) {
 func TestNewsLetter(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	// creates a new gin context with a JSON request body
+	//creates a new gin context with a JSON request body
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	requestBody := gin.H{
