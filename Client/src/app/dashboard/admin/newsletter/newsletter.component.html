@@ -26,7 +26,7 @@
                 
                 <button mat-raised-button style="margin-right: 5px" color="primary" (click)="remindTime()">Send Reminders</button>                
                 <button mat-raised-button style="margin-right: 5px" color="accent" (click)="resetMessage()">Reset Message</button>
-                <button  mat-raised-button color="primary" (click)="sendNewsletter()">Send Newsletter</button>                
+                <button  mat-raised-button color="primary" [disabled]="newsletter.invalid" (click)="sendNewsletter()">Send Newsletter</button>                
             </mat-card-actions>
      </mat-card-content>
     </mat-card>  

@@ -15,12 +15,12 @@ export class NewsletterComponent {
 
   todayDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
-  newsletter: FormControl = new FormControl<string>('', [Validators.required]);
+  newsletter: FormControl = new FormControl<string>('', [Validators.required, Validators.pattern('^.*\\S.*[a-zA-z0-9 ]*$')]);
 
   sendNewsletter(): void{
     let message: string = this.newsletter.getRawValue();
     
-    if(message !== ''){
+    if(message !== ' '){
 
       if(confirm("Message will be sent to all users!")){
 
