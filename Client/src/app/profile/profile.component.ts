@@ -41,7 +41,11 @@ export class ProfileComponent implements OnInit{
   }
  
   back(): void {
-    this.router.navigate(['users']);
+    if(this.username == 'root'){
+      this.router.navigate(['admin']);
+    }else{
+      this.router.navigate(['users']);
+    }
   }
 
   delete(): void {
