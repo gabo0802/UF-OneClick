@@ -47,8 +47,11 @@ export class HeaderComponent {
 
   changeRoute(): Array<string> {
     
-    if(this.authService.isLoggedIn()){
+    if(this.authService.isLoggedIn() && this.authService.isAdmin() == false){
       return ['users'];
+    }
+    else if(this.authService.isLoggedIn() && this.authService.isAdmin() == true){
+      return ['admin'];
     }
     else{
       return ['/'];

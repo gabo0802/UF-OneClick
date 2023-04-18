@@ -16,8 +16,11 @@ export class AppComponent {
 
   ngOnInit(): void {
     
-    if(this.authService.isLoggedIn()){
+    if(this.authService.isLoggedIn() && this.authService.isAdmin() == false){
       this.router.navigate(['users']);
+    }
+    else if(this.authService.isLoggedIn() && this.authService.isAdmin() == true){
+      this.router.navigate(['admin']);
     }
   }
 
@@ -37,6 +40,9 @@ export class AppComponent {
       case "users":
         this.myHeaderState = 3;
       break;
+      case "admin":
+        this.myHeaderState = 3;
+        break;
       default:
         this.myHeaderState = 1;
         console.log("An error occurred and you were sent to the main page!");

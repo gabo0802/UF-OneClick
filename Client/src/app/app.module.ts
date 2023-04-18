@@ -11,7 +11,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AuthGuard, LogInGuard } from './auth-guard.guard';
+import { AdminGuard, AuthGuard, LogInGuard } from './auth-guard.guard';
 import { AuthService } from './auth.service';
 import { ApiService } from './api.service';
 import { UsersComponent } from './dashboard/users/users.component';
@@ -33,6 +33,9 @@ import { AddInactiveSubscriptionComponent } from './dialogs/add-inactive-subscri
 import { ReportComponent } from './dashboard/users/report/report.component';
 import { GraphComponent } from './dashboard/users/graph/graph.component';
 import { NgChartsModule } from 'ng2-charts';
+import { ResetComponent } from './dashboard/admin/reset/reset.component';
+import { EntryComponent } from './dashboard/admin/entry/entry.component';
+import { NewsletterComponent } from './dashboard/admin/newsletter/newsletter.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +62,9 @@ import { NgChartsModule } from 'ng2-charts';
     AddInactiveSubscriptionComponent,
     ReportComponent,
     GraphComponent,
+    ResetComponent,
+    EntryComponent,
+    NewsletterComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,7 +77,7 @@ import { NgChartsModule } from 'ng2-charts';
     MaterialDesignModule,
         NgChartsModule
   ],
-  providers: [AuthService, AuthGuard, ApiService, LogInGuard, DialogsService],
+  providers: [AuthService, AuthGuard, ApiService, LogInGuard, DialogsService, AdminGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
