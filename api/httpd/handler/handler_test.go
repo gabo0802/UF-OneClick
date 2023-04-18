@@ -493,6 +493,153 @@ func TestNewSubscriptionService(t *testing.T) {
 	}
 }
 
+func TestNewUserSubscription(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	currentID = 1
+	//creates a new HTTP request with a JSON body
+	jsonString := []byte(`{"name":"Amazon Prime"}`)
+	req, err := http.NewRequest("POST", "/subscriptions/addsubscription", bytes.NewBuffer(jsonString))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new recorder to capture the response
+	w := httptest.NewRecorder()
+
+	//creates a new gin context with the request and recorder
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//calls function
+	NewUserSubscription(c)
+
+	//checks the response status code
+	if status := w.Code; status != http.StatusCreated {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	//checks the response body for success or error messages
+	expected := `{"Success":"Subscription to Amazon Prime Added"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+
+	//checks if usersub was actually created in the database
+	var count int
+	err = currentDB.QueryRow("SELECT COUNT(*) FROM Usersubs WHERE UserID = '1'").Scan(&count)
+	if err != nil {
+		t.Fatalf("Failed to query usersubs table: %v", err)
+	}
+	if count != 1 {
+		t.Error("Expected 1 usersub to be created, but found", count)
+	}
+}
+
+func TestNewPreviousUserSubscription(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	currentID = 1
+	//creates a new HTTP request with a JSON body
+	jsonString := []byte(`{"name":"Amazon Prime", "dateadded":"2022-02-01 09:28:33", "dateremoved":"2023-01-01 11:48:53"}`)
+	req, err := http.NewRequest("POST", "/subscriptions/addoldsubscription", bytes.NewBuffer(jsonString))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new recorder to capture the response
+	w := httptest.NewRecorder()
+
+	//creates a new gin context with the request and recorder
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//calls function
+	NewPreviousUserSubscription(c)
+
+	//checks the response status code
+	if status := w.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	//checks the response body for success or error messages
+	expected := `{"Success":"Subscription to Amazon Prime Added"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+
+	//checks if usersub was actually created in the database
+	var count int
+	err = currentDB.QueryRow("SELECT COUNT(*) FROM Usersubs WHERE UserID = '1'").Scan(&count)
+	if err != nil {
+		t.Fatalf("Failed to query usersubs table: %v", err)
+	}
+	if count != 1 {
+		t.Error("Expected 1 usersub to be created, but found", count)
+	}
+}
+
+func TestCancelSubscriptionService(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//ID #2 is for test user
+	currentID = 2
+	//creates a new HTTP request with a JSON body
+	jsonString := []byte(`{"name":"Disney+ (Basic)"}`)
+	req, err := http.NewRequest("POST", "/subscriptions/cancelsubscription", bytes.NewBuffer(jsonString))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//creates a new recorder to capture the response
+	w := httptest.NewRecorder()
+
+	//creates a new gin context with the request and recorder
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+
+	//calls function
+	CancelSubscriptionService(c)
+
+	//checks the response status code
+	if status := w.Code; status != http.StatusAccepted {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	//checks the response body for success or error messages
+	//will now have a DateRemoved value in that column
+	expected := `{"Success":"Subscription to Disney+ (Basic) Canceled"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+}
+
+func TestDeleteUserSubID(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new recorder to capture the response
+	w := httptest.NewRecorder()
+
+	//creates a new gin context with the request and recorder
+	c, _ := gin.CreateTestContext(w)
+	userSubID := "1"
+	c.Params = gin.Params{{Key: "id", Value: userSubID}}
+
+	//calls function
+	DeleteUserSubID(c)
+
+	//checks the response status code
+	if status := w.Code; status != http.StatusAccepted {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	//checks the response body for success or error messages
+	expected := `{"Success":"User Subscription Deleted!"}`
+	if w.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
+	}
+}
+
 func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	// sets the current database for the function to use
