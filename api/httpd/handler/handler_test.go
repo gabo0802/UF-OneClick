@@ -640,17 +640,131 @@ func TestDeleteUserSubID(t *testing.T) {
 	}
 }
 
+func TestGetMostUsedUserSubscription(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	MySQL.AddOldUserSub(db, 1, "Disney+ (Basic)", "2022-01-15 01:20:00", "2023-02-22 12:50:07")
+	//creates a new gin context for testing
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+
+	currentID = 1
+	//calls the GetMostUsedUserSubscription handler
+	GetMostUsedUserSubscriptionHandler := GetMostUsedUserSubscription(true, false)
+
+	//checks the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
+	}
+
+	//checks the response body
+	expectedBody := gin.H{"Error": "Invalid User ID"}
+	if currentID == -1 {
+		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
+			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
+		}
+	} else {
+		//calls the GetMostUsedUserSubscription handler again
+		GetMostUsedUserSubscriptionHandler(c)
+
+		//checks the response status code again
+		if w.Code != http.StatusOK {
+			t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
+		}
+
+		//checks the response body again
+		expectedBody := "{\"Disney+ (Basic)\":\"Active For: 1 year 1 month 1 week 1 day 1 hour 1 minute 1 second \"}"
+		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
+			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
+		}
+	}
+}
+
+func TestGetAvgPriceofAllCurrentUserSubscriptions(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//creates a new mock context
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	//adds up already existing usersubs from test user
+	currentID = 2
+	onlyActive := true
+
+	//calls function for active subscriptions
+	GetAvgPriceofAllCurrentUserSubscriptions(onlyActive)(c)
+
+	// Check the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %d but got %d", http.StatusOK, w.Code)
+	}
+
+	// Check the response body
+	expected := gin.H{"AVG Price: ": "$46.46"}
+	var response gin.H
+	err := json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Errorf("Error unmarshaling response: %v", err)
+	}
+	if !reflect.DeepEqual(expected, response) {
+		t.Errorf("Expected response body %+v but got %+v", expected, response)
+	}
+}
+
+func TestGetAvgAgeofAllCurrentUserSubscriptionsHandler(t *testing.T) {
+	db := ConnectResetAndSetUpDB()
+	SetDB(db)
+	//removes usersubs based on current time to test since it is not possible to predict ahead of time
+	db.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", 1)
+	db.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", 2)
+	db.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", 3)
+	db.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", 5)
+	//adds another usersub that has already been canceled
+	db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", "2", "1", "2022-05-01 09:28:33", "2023-01-01 11:48:53")
+	//create a test HTTP request
+	req, err := http.NewRequest("GET", "/avgageallsubs", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Set up the Gin context
+	w := httptest.NewRecorder()
+	c, _ := gin.CreateTestContext(w)
+	c.Request = req
+	currentID = 2
+
+	//calls the handler function
+	GetAvgAgeofAllCurrentUserSubscriptions(true, false)(c)
+
+	//checks the response status code
+	if w.Code != http.StatusOK {
+		t.Errorf("expected status OK, but got %d", w.Code)
+	}
+
+	//checks the response body
+	var response map[string]string
+	err = json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expected := "9 months 2 weeks 1 day 15 hours 58 minutes 26 seconds "
+	if response["AVG Age: "] != expected {
+		t.Errorf("expected response body '%s', but got '%s'", expected, response["AVG Age: "])
+	}
+}
+
+// Extra test cases
 func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
-	// sets the current database for the function to use
+	//sets the current database for the function to use
 	SetDB(db)
 
-	// calls the function with test data
+	//calls the function with test data
 	emailSubject := "Test Subject"
 	emailMessage := "Test Message"
 	result := SendEmailToAllUsers(emailSubject, emailMessage)
 
-	// checks the result
+	//checks the result
 	if !result {
 		t.Errorf("SendEmailToAllUsers returned false")
 	}
@@ -726,69 +840,5 @@ func TestNewsLetter(t *testing.T) {
 	}
 	if !reflect.DeepEqual(expectedResponse, actualResponse) {
 		t.Errorf("Expected response %v but got %v", expectedResponse, actualResponse)
-	}
-}
-
-/*func TestGetAllSubscriptionServices(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	//creates a new recorder to capture the response
-	w := httptest.NewRecorder()
-
-	//creates a new gin context with the recorder
-	c, _ := gin.CreateTestContext(w)
-
-	//calls the function being tested
-	GetAllSubscriptionServices()(c)
-
-	//checks response status code
-	if status := w.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-
-	//checks the response body for success or error messages
-	expected := `[{"userid":"","username":"","password":"","email":"","subid":"1","name":"Netflix (Basic with ads)","price":"6.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"2","name":"Netflix (Basic)","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"3","name":"Netflix (Standard)","price":"15.49","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"4","name":"Netflix (Premium)","price":"19.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"5","name":"Amazon Prime","price":"14.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"6","name":"Amazon Prime (Yearly)","price":"139","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"7","name":"Amazon Prime (Student)","price":"7.49","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"8","name":"Amazon Prime (Student) (Yearly)","price":"69","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"9","name":"Prime Video","price":"8.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"10","name":"Disney+ (Basic)","price":"7.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"11","name":"Disney+ (Premium)","price":"10.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"12","name":"Hulu","price":"7.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"13","name":"Hulu (Student)","price":"1.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"14","name":"Hulu (No Ads)","price":"14.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"15","name":"ESPN+","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"16","name":"ESPN+ (Yearly)","price":"99.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"17","name":"Disney Bundle Duo Basic","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"18","name":"Disney Bundle Trio Basic","price":"12.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"19","name":"Disney Bundle Trio Premium","price":"19.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"20","name":"HBO Max (With ADS)","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"21","name":"HBO Max (AD-Free)","price":"15.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"22","name":"Playstation Plus (Essential)","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"23","name":"Playstation Plus (Essential) (3 Months)","price":"24.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"24","name":"Playstation Plus (Essential) (Yearly)","price":"59.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"25","name":"Playstation Plus (Extra)","price":"14.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"26","name":"Playstation Plus (Extra) (3 Months)","price":"39.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"27","name":"Playstation Plus (Extra) (Yearly)","price":"99.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"28","name":"Playstation Plus (Premium)","price":"17.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"29","name":"Playstation Plus (Premium) (3 Months)","price":"49.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"30","name":"Playstation Plus (Premium) (Yearly)","price":"119.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"31","name":"XBOX Live Gold","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"32","name":"XBOX Live Gold (3 Months)","price":"24.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"33","name":"XBOX Live Gold (Yearly)","price":"59.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"34","name":"XBOX Game Pass (PC)","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"36","name":"XBOX Game Pass (Console)","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"37","name":"XBOX Game Pass (Ultimate)","price":"14.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"38","name":"Spotify Premium (Individual)","price":"9.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"39","name":"Spotify Premium (Duo)","price":"12.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"40","name":"Spotify Premium (Family)","price":"15.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"41","name":"Spotify Premium (Student)","price":"4.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"42","name":"Apple Music (Voice)","price":"4.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"43","name":"Apple Music (Student)","price":"5.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"44","name":"Apple Music (Individual)","price":"10.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"45","name":"Apple Music (Family)","price":"16.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"46","name":"AMC+","price":"8.99","dateadded":"","dateremoved":"","timezone":""},{"userid":"","username":"","password":"","email":"","subid":"47","name":"AMC+ (Yearly)","price":"83.88","dateadded":"","dateremoved":"","timezone":""}]`
-	if w.Body.String() != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v", w.Body.String(), expected)
-	}
-}*/
-
-func TestGetMostUsedUserSubscription(t *testing.T) {
-	db := ConnectResetAndSetUpDB()
-	SetDB(db)
-	MySQL.AddOldUserSub(db, 1, "Disney+ (Basic)", "2022-01-15 01:20:00", "2023-02-22 12:50:07")
-	//creates a new gin context for testing
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-
-	currentID = 1
-	//calls the GetMostUsedUserSubscription handler
-	GetMostUsedUserSubscriptionHandler := GetMostUsedUserSubscription(true, false)
-
-	//checks the response status code
-	if w.Code != http.StatusOK {
-		t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
-	}
-
-	//checks the response body
-	expectedBody := gin.H{"Error": "Invalid User ID"}
-	if currentID == -1 {
-		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
-			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
-		}
-	} else {
-		//calls the GetMostUsedUserSubscription handler again
-		GetMostUsedUserSubscriptionHandler(c)
-
-		//checks the response status code again
-		if w.Code != http.StatusOK {
-			t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
-		}
-
-		//checks the response body again
-		expectedBody := "{\"Disney+ (Basic)\":\"Active For: 1 year 1 month 1 week 1 day 1 hour 1 minute 1 second \"}"
-		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
-			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
-		}
 	}
 }
