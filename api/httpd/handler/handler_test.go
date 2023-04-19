@@ -56,7 +56,7 @@ func TestTryLogin(t *testing.T) {
 
 	//sets up a test request body
 	login := map[string]string{
-		// Uses admin credentials
+		// Uses test user credentials
 		"username": "test",
 		"password": "password",
 	}
@@ -228,7 +228,7 @@ func TestChangeUserPassword(t *testing.T) {
 	c.Request = req
 
 	//sets the currentID value to a valid ID (test user)
-	currentID = 2
+	c.Request.AddCookie(&http.Cookie{Name: "currentUserID", Value: "2"})
 
 	//calls the function
 	ChangeUserPassword(c)
@@ -439,7 +439,6 @@ func TestGetAllSubscriptionServices(t *testing.T) {
 func TestNewSubscriptionService(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	currentID = 2
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"AppleTV", "price":"4.99"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/createsubscription", bytes.NewBuffer(jsonString))
@@ -453,6 +452,7 @@ func TestNewSubscriptionService(t *testing.T) {
 	//creates a new gin context with the request and recorder
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
+	c.Request.AddCookie(&http.Cookie{Name: "currentUserID", Value: "2"})
 
 	//calls function
 	NewSubscriptionService(c)
