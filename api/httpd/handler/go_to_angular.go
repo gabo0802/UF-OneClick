@@ -128,8 +128,8 @@ func getReminderMessage(subName string, subPrice string, dateRenew string, dateA
 		dateAddedTime, _ := time.Parse(reference, dateAdded)
 		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
 
-		//fmt.Println("Yearly ", subName)
-		//fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
+		fmt.Println("Yearly ", subName)
+		fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
 
 		if int(dateRenewTime.Month()) == int(dateAddedTime.Month()) {
 			userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
@@ -139,14 +139,14 @@ func getReminderMessage(subName string, subPrice string, dateRenew string, dateA
 		dateAddedTime, _ := time.Parse(reference, dateAdded)
 		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
 
-		//fmt.Println("3 Months ", subName)
-		//fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
+		fmt.Println("3 Months ", subName)
+		fmt.Println(int(dateRenewTime.Month()), ",", int(dateAddedTime.Month()))
 
 		if (int(dateRenewTime.Month())-int(dateAddedTime.Month()))%3 == 0 {
 			userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
 		}
 	} else {
-		//fmt.Println("Monthly ", subName)
+		fmt.Println("Monthly ", subName)
 
 		dateRenew = strings.Replace(dateRenew, " 00:00:00", "", 1)
 		userMessage = "[" + dateRenew + "] " + subName + ": $" + subPrice + "\n"
@@ -300,7 +300,7 @@ func SendAllReminders() int {
 		return -502
 	}
 
-	if rows.Next() && !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Day Left)") {
+	if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Day Left)") {
 		return -401
 	}
 
@@ -320,7 +320,7 @@ func SendAllReminders() int {
 		return -502
 	}
 
-	if rows.Next() && !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Week Left)") {
+	if !sendReminders(rows, "Subscriptions to Renew", "Subscriptions to Renew "+stringDate+" (1 Week Left)") {
 		return -401
 	}
 
