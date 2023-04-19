@@ -15,7 +15,7 @@ A subscription manager that allows users to track their subscriptions in one cli
 ![image](https://user-images.githubusercontent.com/92041237/232912604-6c50400c-4d3c-4bbb-a5b5-2b7df7ddaaaf.png)
 <br>
 ### Subscription Graph
-![image](https://user-images.githubusercontent.com/92041237/232912837-72ad4607-fb22-474c-9fd2-5c63d8fb0043.png)
+![image](https://user-images.githubusercontent.com/92041237/232935983-aeb65c51-4890-4757-bd40-53af3735d64f.png)
 <br>
 
 ## Project Members
