@@ -27,6 +27,7 @@ func TestMySQLConnect(t *testing.T) {
 
 func TestGetDatabaseSize(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 
 	db.Exec("CREATE TABLE IF NOT EXISTS Users (UserID int NOT NULL AUTO_INCREMENT, Email varchar(255) NOT NULL, Username varchar(255) NOT NULL, Password varchar(255) NOT NULL, UNIQUE(Username), UNIQUE(Email), PRIMARY KEY(UserID));")
@@ -41,6 +42,7 @@ func TestGetDatabaseSize(t *testing.T) {
 
 func TestSetUpTables(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 
@@ -55,6 +57,7 @@ func TestSetUpTables(t *testing.T) {
 
 func TestGetTableSize(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 
@@ -83,6 +86,7 @@ func TestGetTableSize(t *testing.T) {
 
 func TestResetTable(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 
@@ -99,6 +103,7 @@ func TestResetTable(t *testing.T) {
 
 func TestResetAllTables(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 
@@ -115,6 +120,7 @@ func TestResetAllTables(t *testing.T) {
 
 func TestCreateNewUser(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -170,6 +176,7 @@ func TestCreateNewUser(t *testing.T) {
 
 func TestCreateAdminUser(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -185,6 +192,7 @@ func TestCreateAdminUser(t *testing.T) {
 
 func TestCreateCommonSubscriptions(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateCommonSubscriptions(db)
@@ -200,6 +208,7 @@ func TestCreateCommonSubscriptions(t *testing.T) {
 
 func TestGetPassword(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -215,6 +224,7 @@ func TestGetPassword(t *testing.T) {
 
 func TestChangePassword(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -248,6 +258,7 @@ func TestChangePassword(t *testing.T) {
 
 func TestGetEmail(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -263,6 +274,7 @@ func TestGetEmail(t *testing.T) {
 
 func TestChangeEmail(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -296,6 +308,7 @@ func TestChangeEmail(t *testing.T) {
 
 func TestGetUsername(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -311,6 +324,7 @@ func TestGetUsername(t *testing.T) {
 
 func TestChangeUsername(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -344,6 +358,7 @@ func TestChangeUsername(t *testing.T) {
 
 func TestCreateNewSub(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateNewSub(db, "HBO Max", "9.99")
@@ -359,6 +374,7 @@ func TestCreateNewSub(t *testing.T) {
 
 func TestCreateNewUserSub(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -376,6 +392,7 @@ func TestCreateNewUserSub(t *testing.T) {
 
 func TestAddOldUserSub(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -393,6 +410,7 @@ func TestAddOldUserSub(t *testing.T) {
 
 func TestCancelUserSub(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -419,6 +437,7 @@ func TestCancelUserSub(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -436,6 +455,7 @@ func TestDeleteUser(t *testing.T) {
 
 func TestLogin(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -452,6 +472,7 @@ func TestLogin(t *testing.T) {
 
 func TestGetMostUsedSubscription(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
@@ -470,6 +491,7 @@ func TestGetMostUsedSubscription(t *testing.T) {
 
 func TestGetPriceForMonth(t *testing.T) {
 	db := MySQLConnect()
+	defer db.Close()
 	ResetAllTables(db)
 	SetUpTables(db)
 	CreateAdminUser(db)
