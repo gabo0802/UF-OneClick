@@ -38,6 +38,7 @@ func ConnectResetAndSetUpDB() *sql.DB {
 func TestSetDB(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 
 	//verifies that the currentDB variable has been updated
 	if currentDB == nil {
@@ -49,6 +50,8 @@ func TestTryLogin(t *testing.T) {
 	//establishes a connection to the database
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
+
 	//sets up a test Gin context
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
@@ -101,6 +104,7 @@ func TestTryLogin(t *testing.T) {
 func TestVerifyEmail(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 
 	//sets up a test Gin context
 	gin.SetMode(gin.TestMode)
@@ -142,6 +146,7 @@ func TestVerifyEmail(t *testing.T) {
 func TestNewUser(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"username":"testuser", "password":"testpassword", "email":"testuser@example.com"}`)
 	req, err := http.NewRequest("POST", "/newuser", bytes.NewBuffer(jsonString))
@@ -184,6 +189,7 @@ func TestNewUser(t *testing.T) {
 func TestGetAllCurrentUserInfo(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//sets up test Gin context
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
@@ -211,6 +217,7 @@ func TestGetAllCurrentUserInfo(t *testing.T) {
 func TestChangeUserPassword(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a test JSON payload to satisfy "c.BindJSON(&passwordInfo)" in ChangeUserPassword()
 	req, err := http.NewRequest("PUT", "/changepassword", bytes.NewBuffer([]byte(`{
 		"oldPassword": "password",
@@ -248,6 +255,7 @@ func TestChangeUserPassword(t *testing.T) {
 func TestChangeUserUsername(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a test JSON payload
 	req, err := http.NewRequest("PUT", "/changeusername", bytes.NewBuffer([]byte(`{"userid":"","username":"newUser","password":"","email":"sir.testmctestington.the.tester2@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
 	if err != nil {
@@ -282,6 +290,7 @@ func TestChangeUserUsername(t *testing.T) {
 func TestChangeUserEmail(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a test JSON payload
 	req, err := http.NewRequest("PUT", "/changeemail", bytes.NewBuffer([]byte(`{"userid":"","username":"root","password":"","email":"sir.testmctestington.the.tester2@gmail.com","subid":"","name":"","price":"","usersubid":"","dateadded":"","dateremoved":"","timezone":"-0400"}`)))
 	if err != nil {
@@ -316,6 +325,7 @@ func TestChangeUserEmail(t *testing.T) {
 func TestDeleteUser(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//sets up a test Gin context
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
@@ -366,6 +376,7 @@ func TestGetAllTimezones(t *testing.T) {
 func TestChangeTimezone(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a mock context
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
@@ -397,6 +408,7 @@ func TestChangeTimezone(t *testing.T) {
 func TestGetAllCurrentUserSubscriptions(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//adds usersubs to test with the test user
 	MySQL.AddOldUserSub(db, 2, "Disney+ (Basic)", "2023-02-15 01:18:56", "2023-03-02 11:45:53")
 	//MySQL.AddOldUserSub(db, 1, "Hulu (Student)", "2022-02-01 09:28:33", "2023-01-01 11:48:53")
@@ -421,7 +433,7 @@ func TestGetAllCurrentUserSubscriptions(t *testing.T) {
 func TestGetAllSubscriptionServices(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-
+	defer db.Close()
 	// Creates a test context and request
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
@@ -439,6 +451,7 @@ func TestGetAllSubscriptionServices(t *testing.T) {
 func TestNewSubscriptionService(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"AppleTV", "price":"4.99"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/createsubscription", bytes.NewBuffer(jsonString))
@@ -482,6 +495,7 @@ func TestNewSubscriptionService(t *testing.T) {
 func TestNewUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Amazon Prime"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/addsubscription", bytes.NewBuffer(jsonString))
@@ -526,6 +540,7 @@ func TestNewUserSubscription(t *testing.T) {
 func TestNewPreviousUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Amazon Prime", "dateadded":"2022-02-01 09:28:33", "dateremoved":"2023-01-01 11:48:53"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/addoldsubscription", bytes.NewBuffer(jsonString))
@@ -570,6 +585,7 @@ func TestNewPreviousUserSubscription(t *testing.T) {
 func TestCancelSubscriptionService(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Disney+ (Basic)"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/cancelsubscription", bytes.NewBuffer(jsonString))
@@ -605,6 +621,7 @@ func TestCancelSubscriptionService(t *testing.T) {
 func TestDeleteUserSubID(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new recorder to capture the response
 	w := httptest.NewRecorder()
 
@@ -631,6 +648,7 @@ func TestDeleteUserSubID(t *testing.T) {
 func TestGetMostUsedUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	MySQL.AddOldUserSub(db, 2, "Netflix (Basic)", "2019-01-16 01:20:00", "2023-02-22 12:50:07")
 	//creates a new request and adds a cookie
 	req := httptest.NewRequest("GET", "/longestcontinuoussub", nil)
@@ -675,6 +693,7 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 func TestGetAvgPriceofAllCurrentUserSubscriptions(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new request and adds a cookie
 	req := httptest.NewRequest("GET", "/avgpriceactivesub", nil)
 	//adds up already existing usersubs from test user
@@ -710,6 +729,7 @@ func TestGetAvgPriceofAllCurrentUserSubscriptions(t *testing.T) {
 func TestGetAvgAgeofAllCurrentUserSubscriptionsHandler(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//removes usersubs based on current time to test since it is not possible to predict ahead of time
 	db.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", 1)
 	db.Exec("DELETE FROM UserSubs WHERE UserSubID = ?;", 2)
@@ -753,6 +773,7 @@ func TestGetAvgAgeofAllCurrentUserSubscriptionsHandler(t *testing.T) {
 func TestGetPriceForMonth(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//adds another usersub in the same month so it can be tested properly
 	//7.99 + 6.99
 	db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", "2", "1", "2023-02-05 09:28:33", "2023-03-01 11:48:53")
@@ -792,6 +813,7 @@ func TestGetPriceForMonth(t *testing.T) {
 func TestGetAllPricesInRange(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//adds another usersub in the same month so it can be tested properly
 	db.Exec("INSERT INTO UserSubs(UserID, SubID, DateAdded, DateRemoved) VALUES (?,?,?,?);", "2", "1", "2023-02-05 09:28:33", "2023-03-01 11:48:53")
 	//creates a new HTTP request with JSON payload
@@ -822,6 +844,7 @@ func TestGetAllPricesInRange(t *testing.T) {
 func TestNewsLetter(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new gin context with a JSON request body
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
@@ -831,6 +854,8 @@ func TestNewsLetter(t *testing.T) {
 	requestBytes, _ := json.Marshal(requestBody)
 	requestReader := bytes.NewReader(requestBytes)
 	c.Request, _ = http.NewRequest("POST", "/news", requestReader)
+	//must have an ID that corresponds to the admin (1) to work
+	c.Request.AddCookie(&http.Cookie{Name: "currentUserID", Value: "1"})
 	c.Request.Header.Set("Content-Type", "application/json")
 
 	//calls the function
@@ -855,6 +880,7 @@ func TestSendEmailToAllUsers(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	//sets the current database for the function to use
 	SetDB(db)
+	defer db.Close()
 
 	//calls the function with test data
 	emailSubject := "Test Subject"
@@ -870,6 +896,7 @@ func TestSendEmailToAllUsers(t *testing.T) {
 func TestDailyReminder(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
+	defer db.Close()
 	//creates a new gin context
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
