@@ -482,7 +482,6 @@ func TestNewSubscriptionService(t *testing.T) {
 func TestNewUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	currentID = 2
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Amazon Prime"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/addsubscription", bytes.NewBuffer(jsonString))
@@ -496,6 +495,7 @@ func TestNewUserSubscription(t *testing.T) {
 	//creates a new gin context with the request and recorder
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
+	c.Request.AddCookie(&http.Cookie{Name: "currentUserID", Value: "2"})
 
 	//calls function
 	NewUserSubscription(c)
@@ -526,7 +526,6 @@ func TestNewUserSubscription(t *testing.T) {
 func TestNewPreviousUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	currentID = 2
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Amazon Prime", "dateadded":"2022-02-01 09:28:33", "dateremoved":"2023-01-01 11:48:53"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/addoldsubscription", bytes.NewBuffer(jsonString))
@@ -540,6 +539,7 @@ func TestNewPreviousUserSubscription(t *testing.T) {
 	//creates a new gin context with the request and recorder
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
+	c.Request.AddCookie(&http.Cookie{Name: "currentUserID", Value: "2"})
 
 	//calls function
 	NewPreviousUserSubscription(c)
@@ -570,8 +570,6 @@ func TestNewPreviousUserSubscription(t *testing.T) {
 func TestCancelSubscriptionService(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	//ID #2 is for test user
-	currentID = 2
 	//creates a new HTTP request with a JSON body
 	jsonString := []byte(`{"name":"Disney+ (Basic)"}`)
 	req, err := http.NewRequest("POST", "/subscriptions/cancelsubscription", bytes.NewBuffer(jsonString))
@@ -585,6 +583,8 @@ func TestCancelSubscriptionService(t *testing.T) {
 	//creates a new gin context with the request and recorder
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
+	//ID #2 is for test user
+	c.Request.AddCookie(&http.Cookie{Name: "currentUserID", Value: "2"})
 
 	//calls function
 	CancelSubscriptionService(c)
@@ -632,13 +632,19 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
 	MySQL.AddOldUserSub(db, 2, "Netflix (Basic)", "2019-01-16 01:20:00", "2023-02-22 12:50:07")
-	//creates a new gin context for testing
+	//creates a new request and adds a cookie
+	req := httptest.NewRequest("GET", "/longestcontinuoussub", nil)
+	cookie := &http.Cookie{Name: "currentUserID", Value: "2"}
+	req.AddCookie(cookie)
+
+	//wraps request in a Gin context
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-
-	currentID = 2
-	//calls the GetMostUsedUserSubscription handler
+	c.Request = req
+	//stores GetMostUsedUserSubscription
 	GetMostUsedUserSubscriptionHandler := GetMostUsedUserSubscription(true, false)
+	//calls the GetMostUsedUserSubscription handler
+	GetMostUsedUserSubscriptionHandler(c)
 
 	//checks the response status code
 	if w.Code != http.StatusOK {
@@ -647,14 +653,12 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 
 	//checks the response body
 	expectedBody := gin.H{"Error": "Invalid User ID"}
+
 	if currentID == -1 {
 		if !reflect.DeepEqual(w.Body.String(), expectedBody) {
 			t.Errorf("expected body %v but got %v", expectedBody, w.Body.String())
 		}
 	} else {
-		//calls the GetMostUsedUserSubscription handler again
-		GetMostUsedUserSubscriptionHandler(c)
-
 		//checks the response status code again
 		if w.Code != http.StatusOK {
 			t.Errorf("expected status code %d but got %d", http.StatusOK, w.Code)
@@ -671,11 +675,16 @@ func TestGetMostUsedUserSubscription(t *testing.T) {
 func TestGetAvgPriceofAllCurrentUserSubscriptions(t *testing.T) {
 	db := ConnectResetAndSetUpDB()
 	SetDB(db)
-	//creates a new test context
+	//creates a new request and adds a cookie
+	req := httptest.NewRequest("GET", "/avgpriceactivesub", nil)
+	//adds up already existing usersubs from test user
+	cookie := &http.Cookie{Name: "currentUserID", Value: "2"}
+	req.AddCookie(cookie)
+
+	//wraps request in a Gin context
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
-	//adds up already existing usersubs from test user
-	currentID = 2
+	c.Request = req
 	onlyActive := true
 
 	//calls function for active subscriptions
@@ -718,7 +727,7 @@ func TestGetAvgAgeofAllCurrentUserSubscriptionsHandler(t *testing.T) {
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
-	currentID = 2
+	c.Request.AddCookie(&http.Cookie{Name: "currentUserID", Value: "2"})
 
 	//calls the handler function
 	GetAvgAgeofAllCurrentUserSubscriptions(true, false)(c)
