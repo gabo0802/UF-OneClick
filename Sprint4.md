@@ -262,9 +262,6 @@ These unit tests create mock gin contexts and cookies to test output:
 <code> ChangeTimezone(c *gin.Context) </code>
 <br> <b>Works only with a POST or PUT request with the timezonedifference parameter being not null.</b> Sets the global variable of currentTimezone to timezonedifference.<br>
 
-<code> TwoFactorAuthentication() </code> 
-<br> <b> Currently not functional </b> <br>
-
 <code> TryLogin(c *gin.Context) </code> 
 <br> <b>Works only with a POST or PUT request with the username and password parameters being not null.</b> Calls MySQL.Login() and if there is no error code returns a JSON object with a success message, updates the currentUserID to the returned userID, and creates a cookie with the userID that lasts 1 hour. Returns a JSON object with an error corresponding to the proper error code.<br>
 
@@ -282,9 +279,6 @@ These unit tests create mock gin contexts and cookies to test output:
 
 <code> GetAvgAgeofAllCurrentUserSubscriptions(mergeSame bool, onlyActive bool) gin.HandlerFunc </code> 
 <br> <b>Works with any HTTP request.</b> Returns the average age of all the user subscriptions depending on the boolean. <br>
-
-<code> Logout() </code> 
-<br> <b> Currently not functional </b> <br>
 
 <code> DeleteUser(c *gin.Context) </code> 
 <br> <b>Works with any HTTP request.</b> Calls MySQL.DeleteUser(). Deletes the user whose userID is equal to currentUserID. Also deletes the cookie containing currentuserID. <br>
