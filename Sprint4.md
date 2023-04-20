@@ -321,7 +321,6 @@ These unit tests create mock gin contexts and cookies to test output:
 
 <code> GetAllUserData(c *gin.Context) </code> 
 <br> <b>Works with any HTTP request. currentUserID must be equal to 1.</b> Returns a JSON object with all of the user data, subscriptions data, and usersubs data from the database.<br>
-<br>
 
 <code> GetALlPricesInRange() gin.HandlerFunc </code> 
 <br> <b>Works with POST request only.</b> Returns JSON object that contains an array of objects that correspond to the total cost of subscriptions between two months and year combinations
