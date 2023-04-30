@@ -1,10 +1,10 @@
 # UF-OneClick
 
-## Project Name
-UF OneClick: Subscription Manager <br>
+![image](https://user-images.githubusercontent.com/92041237/235376184-34ef540e-3140-44ab-bb0d-2b975346f05a.png)
 
 ## Project Description
-A subscription manager that allows users to track their subscriptions in one click. It has a login page so that every individual user's subscriptions can tracked by month. Actions that can be done include: adding a new subscription, calculating the total cost of subscriptions per month and by year, tracking when the subscription has been used, etc. <br>
+
+<br>![description](https://user-images.githubusercontent.com/92041237/235376157-6d556f31-729a-4726-8993-f689d3db8b9f.gif)
 
 ## Project Features
 
@@ -24,7 +24,8 @@ Gabriel Castejon (gabo0802) <br>
 Matthew Denslinger (mslinger) <br><br>
 
 ### Back-End
-Vladimir Alekseev (valekseev03) <br>
+Vladimir Alekseev (valekseev03) 
+
 Mason Enojo (enojom) <br><br>
 
 ## Project Setup
