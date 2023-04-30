@@ -57,3 +57,9 @@ Mason Enojo (enojom) <br>
 * Hostname: oneclickserver.mysql.database.azure.com
 * Username: adminUser
 * Password: <b>Found in MySQLPassword.txt</b>
+
+```diff
+- DISCLAIMER: Our subscription to the remote database service was cancelled so it can no longer be accessed
+- To utilize the app's full features, a personal mySQL server and database must be utilized.
+```
+* Setting up a different branch that allows for this is in the works
