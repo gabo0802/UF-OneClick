@@ -1,10 +1,12 @@
 # UF-OneClick
 
-## Project Name
-UF OneClick: Subscription Manager <br>
+![image](https://user-images.githubusercontent.com/92041237/235376184-34ef540e-3140-44ab-bb0d-2b975346f05a.png)
 
 ## Project Description
-A subscription manager that allows users to track their subscriptions in one click. It has a login page so that every individual user's subscriptions can tracked by month. Actions that can be done include: adding a new subscription, calculating the total cost of subscriptions per month and by year, tracking when the subscription has been used, etc. <br>
+
+<br>![description](https://user-images.githubusercontent.com/92041237/235376157-6d556f31-729a-4726-8993-f689d3db8b9f.gif)
+<br>
+<br>The UF-Sponsored OneClick subscription manager simplifies the subscription management process by consolidating all subscriptions into one convenient platform. Users can choose from a list of common subscription services or add their unique subscriptions, view all subscriptions, calculate monthly dues, get email notifications on when to pay, and plan monthly savings. OneClick saves users time, effort, and money, providing a simple, user-friendly solution to manage subscriptions and stay in control of finances. <br>
 
 ## Project Features
 
@@ -21,11 +23,11 @@ A subscription manager that allows users to track their subscriptions in one cli
 ## Project Members
 ### Front-End
 Gabriel Castejon (gabo0802) <br>
-Matthew Denslinger (mslinger) <br><br>
+Matthew Denslinger (mslinger) <br>
 
 ### Back-End
 Vladimir Alekseev (valekseev03) <br>
-Mason Enojo (enojom) <br><br>
+Mason Enojo (enojom) <br>
 
 ## Project Setup
 1. Install the go programming language https://go.dev/dl/
